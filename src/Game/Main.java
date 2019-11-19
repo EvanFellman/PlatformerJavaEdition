@@ -28,8 +28,6 @@ public class Main {
 			level.add(new Wall(i, 250));
 		}
 		level.add(new Wall(300, 225));
-		level.add(new Wall(300, 200));
-		level.add(new Wall(300, 175));
 		for(Thing i: level) {
 			insertToMap(i);
 		}
