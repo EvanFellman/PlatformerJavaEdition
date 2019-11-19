@@ -14,16 +14,16 @@ public abstract class Thing {
 		Main.insertToMap(this);
 	}
 	
-	float x, y, dx, dy;
+	protected float x, y, dx, dy;
 	String id;
 	Image pic;
 	
-	float getX() { return this.x; }
-	float getY() { return this.y; }
-	float getDx() {	return this.dx; }
-	float getDy() {	return this.dy;	}	
-	void setDx(float dx) { this.dx = dx; }
-	void setDy(float dy) { this.dy = dy; }
+	public float getX() { return this.x; }
+	public float getY() { return this.y; }
+	public float getDx() {	return this.dx; }
+	public float getDy() {	return this.dy;	}	
+	public void setDx(float dx) { this.dx = dx; }
+	public void setDy(float dy) { this.dy = dy; }
 	
 	boolean isTouching(Thing other) {
 		return Math.abs(this.getX() - other.getX()) < 1 && Math.abs(this.getY() - other.getY()) < 1;
