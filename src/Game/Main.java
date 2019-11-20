@@ -16,7 +16,7 @@ public class Main {
 	public static boolean isWPressed = false;
 	public static boolean isAPressed = false;
 	public static boolean isDPressed = false;
-	public static final float GRAVITY = 0.005f;
+	public static final float GRAVITY = 0.02f;
 	public static final int SPRITE_HEIGHT = 25;
 	public static final int SPRITE_WIDTH = 25;
 	public static void main(String[] args) throws IOException, InterruptedException {
@@ -26,10 +26,13 @@ public class Main {
 		Player player = new Player(50, 200);
 		level.add(player);
 		level.add(new Wall(50, 150));
+		level.add(new Wall(75, 150));
 		for(int i = 0; i < 500; i+=25) {
 			level.add(new Wall(i, 250));
 		}
-		level.add(new Wall(300, 225));
+		for(int i = 225; i > 175;i-=25) {
+			level.add(new Wall(300, i));
+		}
 		for(Thing i: level) {
 			insertToMap(i);
 		}
@@ -38,7 +41,7 @@ public class Main {
 		window.add(gp);
 		window.setVisible(true);
 		while(true) {
-			Thread.sleep(1 / 15);
+			Thread.sleep(1000 / 360);
 			while(player.getX() - cameraX < 100) {
 				cameraX --;
 			}

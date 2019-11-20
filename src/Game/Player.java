@@ -1,5 +1,6 @@
 package Game;
 
+import java.awt.Rectangle;
 import java.io.File;
 import java.io.IOException;
 import java.util.Hashtable;
@@ -16,68 +17,49 @@ public class Player extends Thing {
 	@Override
 	void move(Hashtable<Integer, Hashtable<Integer, Thing>> map) {
 		Main.removeFromMap(this);
-		this.dy += Main.GRAVITY;
 		if(this.dy > 5) {
 			this.dy = 5;
 		}
+		this.dx = 0;
 		if(Main.isAPressed) {
-			this.dx = -1;
-			for(int i = (int) (this.dx - Main.SPRITE_WIDTH); i <= 0; i++) {
-				for(int j = 0; j <= Main.SPRITE_HEIGHT; j++) {
-					Thing a = Main.getFromMap(this.x + i, this.y - j);
-					if(a != null && a.id.equals("wall")) {
-						this.x = a.x + Main.SPRITE_WIDTH;
-						this.dx = 0;
-					}
-				}
-			}
-		} else if(Main.isDPressed) {
-			this.dx = 1;
-			for(int i = 0; i <= this.dx + Main.SPRITE_WIDTH; i++) {
-				for(int j = 0; j <= Main.SPRITE_HEIGHT; j++) {
-					Thing a = Main.getFromMap(this.x + i, this.y - j);
-					if(a != null && a.id.equals("wall")) {
-						this.x = -1 + (a.x - Main.SPRITE_WIDTH);
-						this.dx = 0;
-					}
-				}
-			}
-		} else {
-			this.dx = 0;
+			this.dx = -1f;
+		}
+		if(Main.isDPressed) {
+			this.dx = 1f;
 		}
 		this.x += this.dx;
-		if(dy >= 0) {
-			for(int i = 0; i <= (this.dy + Main.SPRITE_HEIGHT); i++) {
-				for(int j = -1 * (int) Main.SPRITE_WIDTH; j < Main.SPRITE_WIDTH; j++) {
-					Thing a = Main.getFromMap(this.x - j, this.y + i);
-					if(a != null && a.id.equals("wall")) {
-						this.y = a.y - Main.SPRITE_HEIGHT;
-						if(Main.isWPressed) {
-							this.dy = -1;
-						} else {
-							this.dy = 0;
-						}
-						break;
-					}
-				}				
-			}
-		} else {
-			for(int i = (int) this.dy - Main.SPRITE_HEIGHT; i <= 0; i++) {
-				for(int j = -1 * (int) ( Main.SPRITE_WIDTH); j < Main.SPRITE_WIDTH; j++) {
-					Thing a = Main.getFromMap(this.x - j, this.y + i);
-					if(a != null && a.id.equals("wall")) {
-						this.y = a.y + Main.SPRITE_HEIGHT;
-						break;
-					}
+		for(Thing i: Main.level){
+			if(i.id.equals("wall") && (new Rectangle((int)this.getX(), (int)this.getY(), Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT)).intersects(new Rectangle((int)i.getX(), (int)i.getY(), Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT))) {
+				if(this.dx > 0) {
+					this.dx = 0;
+					this.x = i.x - Main.SPRITE_WIDTH;
+					break;
+				} else if(this.dx < 0) {
+					this.dx = 0;
+					this.x = i.x + Main.SPRITE_WIDTH;
+					break;
 				}
 			}
 		}
-		if(Main.getFromMap((int) this.x, (int) (this.y + this.dy)) != null) {
-			this.y = Main.getFromMap((int) this.x, (int) (this.y + this.dy)).y - Main.getFromMap((int) this.x, (int) (this.y + this.dy)).pic.getHeight(null);
-			this.dy = 0;
-		}
+		this.dy += Main.GRAVITY;
 		this.y += this.dy;
-		
+		for(Thing i: Main.level){
+			if(i.id.equals("wall") && (new Rectangle((int)this.getX(), (int)this.getY(), Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT)).intersects(new Rectangle((int)i.getX(), (int)i.getY(), Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT))) {
+				if(this.dy > 0) {
+					if(Main.isWPressed) {
+						this.dy = -2;
+					} else {
+						this.dy = 0;
+					}
+					this.y = i.y - Main.SPRITE_HEIGHT;
+					break;
+				} else if(this.dy < 0) {
+					this.dy = 0;
+					this.y = i.y + Main.SPRITE_HEIGHT;
+					break;
+				}
+			}
+		}
 		Main.insertToMap(this);
 	}
 }
