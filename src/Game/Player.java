@@ -2,7 +2,7 @@ package Game;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Hashtable;
 
 import javax.imageio.ImageIO;
 
@@ -14,7 +14,7 @@ public class Player extends Thing {
 	}
 
 	@Override
-	void move(ArrayList<ArrayList<Thing>> map) {
+	void move(Hashtable<Integer, Hashtable<Integer, Thing>> map) {
 		Main.removeFromMap(this);
 		this.dy += Main.GRAVITY;
 		if(this.dy > 5) {

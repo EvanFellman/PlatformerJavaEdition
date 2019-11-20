@@ -2,7 +2,8 @@ package Game;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Hashtable;
+
 import javax.imageio.ImageIO;
 
 public class Wall extends Thing {
@@ -13,7 +14,7 @@ public class Wall extends Thing {
 	}
 
 	@Override
-	void move(ArrayList<ArrayList<Thing>> map) {
+	void move(Hashtable<Integer, Hashtable<Integer, Thing>> map) {
 		//It's a wall. Can't move.
 	}
 

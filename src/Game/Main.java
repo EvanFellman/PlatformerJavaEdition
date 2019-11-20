@@ -4,11 +4,13 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Hashtable;
+
 import javax.swing.JFrame;
 
 public class Main {
 	public static ArrayList<Thing> level = new ArrayList<Thing>();
-	public static ArrayList<ArrayList<Thing>> map = new ArrayList<ArrayList<Thing>>();
+	public static Hashtable<Integer, Hashtable<Integer, Thing>> map = new Hashtable<Integer, Hashtable<Integer, Thing>>();
 	public static int cameraX = 0;
 	public static int cameraY = 0;
 	public static boolean isWPressed = false;
@@ -54,23 +56,20 @@ public class Main {
 	}
 	
 	public static void insertToMap(Thing u) {
-		while(map.size() <= (int) u.getX()) {
-			map.add(new ArrayList<Thing>());
+		if(!map.containsKey((int) u.getX())) {
+			map.put((int) u.getX(), new Hashtable<Integer, Thing>());
 		}
-		while(map.get((int) u.getX()).size() <= (int) u.getY()) {
-			map.get((int) u.getX()).add(null);
-		}
-		map.get((int) u.getX()).set((int) u.getY(), u);
+		map.get((int) u.getX()).put((int) u.getY(), u);
 	}
 	
 	public static void removeFromMap(Thing u) {
-		map.get((int) u.getX()).set((int) u.getY(), null);
+		map.get((int) u.getX()).remove((int) u.getY());
 	}
 	
 	public static Thing getFromMap(int x, int y) {
-		if(map.size() <= x) {
+		if(!map.containsKey(x)){
 			return null;
-		} else if(map.get(x).size() <= y) {
+		} else if(!map.get(x).containsKey(y)) {
 			return null;
 		} else {
 			return map.get(x).get(y);
@@ -78,9 +77,9 @@ public class Main {
 	}
 	
 	public static Thing getFromMap(float x, float y) {
-		if(map.size() <= ((int) x)) {
+		if(!map.containsKey((int) x)){
 			return null;
-		} else if(map.get((int) x).size() <= ((int) y)) {
+		} else if(!map.get((int) x).containsKey((int) y)) {
 			return null;
 		} else {
 			return map.get((int) x).get((int) y);

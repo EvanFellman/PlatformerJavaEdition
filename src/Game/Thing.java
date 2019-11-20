@@ -1,7 +1,7 @@
 package Game;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.util.ArrayList;
+import java.util.Hashtable;
 
 public abstract class Thing {
 	public Thing(float x, float y, String id, Image pic) {
@@ -33,5 +33,5 @@ public abstract class Thing {
 		g.drawImage(this.pic, ((int)this.x) - Main.cameraX, ((int)this.y) - Main.cameraY, null);
 	}
 	
-	abstract void move(ArrayList<ArrayList<Thing>> map);
+	abstract void move(Hashtable<Integer, Hashtable<Integer, Thing>> map);
 }
