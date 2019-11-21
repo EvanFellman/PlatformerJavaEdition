@@ -1,7 +1,6 @@
 package Game;
 
 import java.awt.Graphics;
-
 import javax.swing.JPanel;
 
 public class GamePanel extends JPanel {
@@ -9,7 +8,7 @@ public class GamePanel extends JPanel {
 
 	public void paint(Graphics g) {
 		for(Thing i: Main.level) {
-			i.move(Main.map);
+			i.move();
 			i.display(g);
 		}
 	}

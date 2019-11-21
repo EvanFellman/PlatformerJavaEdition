@@ -33,5 +33,11 @@ public abstract class Thing {
 		g.drawImage(this.pic, ((int)this.x) - Main.cameraX, ((int)this.y) - Main.cameraY, null);
 	}
 	
-	abstract void move(Hashtable<Integer, Hashtable<Integer, Thing>> map);
+	void move() {
+		
+	}
+	
+	void die() {
+		
+	}
 }

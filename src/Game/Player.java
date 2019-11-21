@@ -3,19 +3,16 @@ package Game;
 import java.awt.Rectangle;
 import java.io.File;
 import java.io.IOException;
-import java.util.Hashtable;
-
 import javax.imageio.ImageIO;
 
 public class Player extends Thing {
 
 	public Player(float x, float y) throws IOException {
 		super(x, y, "player", ImageIO.read(new File("player.png")));
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	void move(Hashtable<Integer, Hashtable<Integer, Thing>> map) {
+	void move() {
 		Main.removeFromMap(this);
 		if(this.dy > 5) {
 			this.dy = 5;

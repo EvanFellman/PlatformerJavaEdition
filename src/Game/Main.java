@@ -10,6 +10,8 @@ import javax.swing.JFrame;
 
 public class Main {
 	public static ArrayList<Thing> level = new ArrayList<Thing>();
+	public static int startX;
+	public static int startY;
 	public static Hashtable<Integer, Hashtable<Integer, Thing>> map = new Hashtable<Integer, Hashtable<Integer, Thing>>();
 	public static int cameraX = 0;
 	public static int cameraY = 0;
@@ -23,6 +25,8 @@ public class Main {
 		JFrame window = new JFrame();
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setSize(new Dimension(500,500));
+		startX = 50;
+		startY = 50;
 		Player player = new Player(50, 200);
 		level.add(player);
 		level.add(new Wall(50, 150));
