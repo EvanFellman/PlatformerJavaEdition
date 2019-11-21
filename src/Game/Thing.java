@@ -32,6 +32,10 @@ public abstract class Thing {
 		g.drawImage(this.pic, ((int)this.x) - Main.cameraX, ((int)this.y) - Main.cameraY, null);
 	}
 	
+	boolean equals(Thing other) {
+		return other.id.equals(this.id) && (other.getX() == this.getX()) && (other.getDx() == this.getDx()) && (this.getY() == other.getY()) && (this.getDy() == other.getDy());
+	}
+	
 	void move() { }
 	void die() { }
 }

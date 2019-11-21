@@ -22,6 +22,8 @@ public class Main {
 	public static boolean isWPressed = false;
 	public static boolean isAPressed = false;
 	public static boolean isDPressed = false;
+	public static final int SCREEN_WIDTH = 500;
+	public static final int SCREEN_HEIGHT = 500;
 	public static final float GRAVITY = 0.02f;
 	public static final int SPRITE_HEIGHT = 25;
 	public static final int SPRITE_WIDTH = 25;
@@ -29,7 +31,7 @@ public class Main {
 	public static void main(String[] args) throws IOException, InterruptedException {
 		JFrame window = new JFrame();
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.setSize(new Dimension(500,500));
+		window.setSize(new Dimension(SCREEN_WIDTH,SCREEN_HEIGHT));
 		levelNumber = 1;
 		loadLevel();
 		GamePanel gp = new GamePanel();
@@ -74,6 +76,12 @@ public class Main {
 							startY = SPRITE_HEIGHT * y;
 							player = new Player(SPRITE_WIDTH * x, SPRITE_HEIGHT * y);
 							level.add(player);
+						} else if(pixel.getRed() == 255 && pixel.getGreen() == 255 && pixel.getBlue() == 2) {
+							level.add(new EnemyNoJump(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, 0.4f));
+						} else if(pixel.getRed() == 255 && pixel.getGreen() == 255 && pixel.getBlue() == 1) {
+							level.add(new EnemyNoJump(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, 0.25f));
+						} else if(pixel.getRed() == 255 && pixel.getGreen() == 255 && pixel.getBlue() == 0) {
+							level.add(new EnemyNoJump(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, 0.1f));
 						}
 					}
 				}

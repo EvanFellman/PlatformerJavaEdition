@@ -38,7 +38,8 @@ public class Player extends Thing {
 		}
 		this.dy += Main.GRAVITY;
 		this.y += this.dy;
-		for(Thing i: Main.level){
+		for(int j = 0; j < Main.level.size(); j++){
+			Thing i = Main.level.get(j);
 			if(this.isTouching(i)) {
 				if(i.id.equals("wall")) {
 					if(this.dy > 0) {
@@ -57,6 +58,18 @@ public class Player extends Thing {
 				} else if(i.id.equals("next level")) {
 					Main.levelNumber += 1;
 					Main.loadLevel();
+				} else if(i.id.contains("enemy")) {
+					if(this.dy > 1) {
+						if(Main.isWPressed) {
+							this.dy = -2.5f;
+						} else {
+							this.dy = 0;
+						}
+						i.die();
+						j--;
+					} else {
+						this.die();
+					}
 				}
 			}
 		}
