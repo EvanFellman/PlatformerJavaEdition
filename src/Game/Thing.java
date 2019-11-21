@@ -1,6 +1,7 @@
 package Game;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Rectangle;
 
 public abstract class Thing {
 	public Thing(float x, float y, String id, Image pic) {
@@ -24,7 +25,7 @@ public abstract class Thing {
 	public void setDy(float dy) { this.dy = dy; }
 	
 	boolean isTouching(Thing other) {
-		return Math.abs(this.getX() - other.getX()) < 1 && Math.abs(this.getY() - other.getY()) < 1;
+		return (new Rectangle((int)this.getX(), (int)this.getY(), Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT)).intersects(new Rectangle((int)other.getX(), (int)other.getY(), Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT));
 	}
 	
 	void display(Graphics g) {

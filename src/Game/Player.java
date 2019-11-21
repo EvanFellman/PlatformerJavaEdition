@@ -1,6 +1,5 @@
 package Game;
 
-import java.awt.Rectangle;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -25,7 +24,7 @@ public class Player extends Thing {
 		}
 		this.x += this.dx;
 		for(Thing i: Main.level){
-			if(i.id.equals("wall") && (new Rectangle((int)this.getX(), (int)this.getY(), Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT)).intersects(new Rectangle((int)i.getX(), (int)i.getY(), Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT))) {
+			if(i.id.equals("wall") && this.isTouching(i)) {
 				if(this.dx > 0) {
 					this.dx = 0;
 					this.x = i.x - Main.SPRITE_WIDTH;
@@ -40,7 +39,7 @@ public class Player extends Thing {
 		this.dy += Main.GRAVITY;
 		this.y += this.dy;
 		for(Thing i: Main.level){
-			if((new Rectangle((int)this.getX(), (int)this.getY(), Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT)).intersects(new Rectangle((int)i.getX(), (int)i.getY(), Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT))) {
+			if(this.isTouching(i)) {
 				if(i.id.equals("wall")) {
 					if(this.dy > 0) {
 						if(Main.isWPressed) {
