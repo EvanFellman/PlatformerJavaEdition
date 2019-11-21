@@ -11,6 +11,7 @@ public abstract class Thing {
 		this.dy = 0;
 		this.id = id;
 		this.pic = pic;
+		Main.putInMap(this);
 	}
 	
 	protected float x, y, dx, dy;
