@@ -1,45 +1,37 @@
 package Game;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Hashtable;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 public class Main {
 	public static ArrayList<Thing> level = new ArrayList<Thing>();
 	public static int startX;
 	public static int startY;
-//	public static Hashtable<Integer, Hashtable<Integer, Thing>> map = new Hashtable<Integer, Hashtable<Integer, Thing>>();
+	public static int levelNumber;
 	public static int cameraX = 0;
 	public static int cameraY = 0;
+	public static int DEATH_BELOW;
 	public static boolean isWPressed = false;
 	public static boolean isAPressed = false;
 	public static boolean isDPressed = false;
 	public static final float GRAVITY = 0.02f;
 	public static final int SPRITE_HEIGHT = 25;
 	public static final int SPRITE_WIDTH = 25;
+	public static Player player;
 	public static void main(String[] args) throws IOException, InterruptedException {
 		JFrame window = new JFrame();
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setSize(new Dimension(500,500));
-		startX = 50;
-		startY = 50;
-		Player player = new Player(50, 200);
-		level.add(player);
-		level.add(new Wall(50, 150));
-		level.add(new Wall(75, 150));
-		for(int i = 0; i < 500; i+=25) {
-			level.add(new Wall(i, 250));
-		}
-		for(int i = 225; i > 175;i-=25) {
-			level.add(new Wall(300, i));
-		}
-//		for(Thing i: level) {
-//			insertToMap(i);
-//		}
+		levelNumber = 1;
+		loadLevel();
 		GamePanel gp = new GamePanel();
 		window.addKeyListener(new MKeyListener());
 		window.add(gp);
@@ -63,8 +55,34 @@ public class Main {
 	}
 	
 	//resets level
-	public static void resetLevel() {
-		
+	public static void loadLevel() {
+		File imgFile = new File("./level" + Integer.toString(levelNumber) + ".png");
+		level = new ArrayList<Thing>();
+		if(imgFile.exists()) {
+			try {
+				BufferedImage img = ImageIO.read(imgFile);
+				DEATH_BELOW = img.getHeight() * SPRITE_HEIGHT;
+				for(int x = 0; x < img.getWidth(); x++) {
+					for(int y = 0; y < img.getHeight(); y++) {
+						Color pixel = new Color(img.getRGB(x, y));
+						if(pixel.getRed() == 0 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
+							level.add(new Wall(SPRITE_WIDTH * x, SPRITE_HEIGHT * y));
+						} else if(pixel.getRed() == 0 && pixel.getGreen() == 255 && pixel.getBlue() == 0) {
+							level.add(new NextLevel(SPRITE_WIDTH * x, SPRITE_HEIGHT * y));
+						} else if(pixel.getRed() == 0 && pixel.getGreen() == 0 && pixel.getBlue() == 255) {
+							startX = SPRITE_WIDTH * x;
+							startY = SPRITE_HEIGHT * y;
+							player = new Player(SPRITE_WIDTH * x, SPRITE_HEIGHT * y);
+							level.add(player);
+						}
+					}
+				}
+			} catch (IOException e) {
+				System.exit(0);
+			}			
+		} else {
+			System.exit(0);
+		}
 	}
 }
 

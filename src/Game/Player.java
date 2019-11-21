@@ -40,25 +40,33 @@ public class Player extends Thing {
 		this.dy += Main.GRAVITY;
 		this.y += this.dy;
 		for(Thing i: Main.level){
-			if(i.id.equals("wall") && (new Rectangle((int)this.getX(), (int)this.getY(), Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT)).intersects(new Rectangle((int)i.getX(), (int)i.getY(), Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT))) {
-				if(this.dy > 0) {
-					if(Main.isWPressed) {
-						this.dy = -2;
-					} else {
+			if((new Rectangle((int)this.getX(), (int)this.getY(), Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT)).intersects(new Rectangle((int)i.getX(), (int)i.getY(), Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT))) {
+				if(i.id.equals("wall")) {
+					if(this.dy > 0) {
+						if(Main.isWPressed) {
+							this.dy = -2;
+						} else {
+							this.dy = 0;
+						}
+						this.y = i.y - Main.SPRITE_HEIGHT;
+						break;
+					} else if(this.dy < 0) {
 						this.dy = 0;
+						this.y = i.y + Main.SPRITE_HEIGHT;
+						break;
 					}
-					this.y = i.y - Main.SPRITE_HEIGHT;
-					break;
-				} else if(this.dy < 0) {
-					this.dy = 0;
-					this.y = i.y + Main.SPRITE_HEIGHT;
-					break;
+				} else if(i.id.equals("next level")) {
+					Main.levelNumber += 1;
+					Main.loadLevel();
 				}
 			}
+		}
+		if(this.y > Main.DEATH_BELOW) {
+			this.die();
 		}
 	}
 	
 	void die() {
-		Main.resetLevel();
+		Main.loadLevel();
 	}
 }
