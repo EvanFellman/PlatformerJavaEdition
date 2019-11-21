@@ -12,7 +12,7 @@ public class Main {
 	public static ArrayList<Thing> level = new ArrayList<Thing>();
 	public static int startX;
 	public static int startY;
-	public static Hashtable<Integer, Hashtable<Integer, Thing>> map = new Hashtable<Integer, Hashtable<Integer, Thing>>();
+//	public static Hashtable<Integer, Hashtable<Integer, Thing>> map = new Hashtable<Integer, Hashtable<Integer, Thing>>();
 	public static int cameraX = 0;
 	public static int cameraY = 0;
 	public static boolean isWPressed = false;
@@ -37,9 +37,9 @@ public class Main {
 		for(int i = 225; i > 175;i-=25) {
 			level.add(new Wall(300, i));
 		}
-		for(Thing i: level) {
-			insertToMap(i);
-		}
+//		for(Thing i: level) {
+//			insertToMap(i);
+//		}
 		GamePanel gp = new GamePanel();
 		window.addKeyListener(new MKeyListener());
 		window.add(gp);
@@ -62,35 +62,9 @@ public class Main {
 		}
 	}
 	
-	public static void insertToMap(Thing u) {
-		if(!map.containsKey((int) u.getX())) {
-			map.put((int) u.getX(), new Hashtable<Integer, Thing>());
-		}
-		map.get((int) u.getX()).put((int) u.getY(), u);
-	}
-	
-	public static void removeFromMap(Thing u) {
-		map.get((int) u.getX()).remove((int) u.getY());
-	}
-	
-	public static Thing getFromMap(int x, int y) {
-		if(!map.containsKey(x)){
-			return null;
-		} else if(!map.get(x).containsKey(y)) {
-			return null;
-		} else {
-			return map.get(x).get(y);
-		}
-	}
-	
-	public static Thing getFromMap(float x, float y) {
-		if(!map.containsKey((int) x)){
-			return null;
-		} else if(!map.get((int) x).containsKey((int) y)) {
-			return null;
-		} else {
-			return map.get((int) x).get((int) y);
-		}
+	//resets level
+	public static void resetLevel() {
+		
 	}
 }
 

@@ -1,7 +1,6 @@
 package Game;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.util.Hashtable;
 
 public abstract class Thing {
 	public Thing(float x, float y, String id, Image pic) {
@@ -11,7 +10,6 @@ public abstract class Thing {
 		this.dy = 0;
 		this.id = id;
 		this.pic = pic;
-		Main.insertToMap(this);
 	}
 	
 	protected float x, y, dx, dy;
@@ -33,11 +31,6 @@ public abstract class Thing {
 		g.drawImage(this.pic, ((int)this.x) - Main.cameraX, ((int)this.y) - Main.cameraY, null);
 	}
 	
-	void move() {
-		
-	}
-	
-	void die() {
-		
-	}
+	void move() { }
+	void die() { }
 }

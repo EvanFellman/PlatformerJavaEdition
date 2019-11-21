@@ -13,7 +13,6 @@ public class Player extends Thing {
 
 	@Override
 	void move() {
-		Main.removeFromMap(this);
 		if(this.dy > 5) {
 			this.dy = 5;
 		}
@@ -57,6 +56,9 @@ public class Player extends Thing {
 				}
 			}
 		}
-		Main.insertToMap(this);
+	}
+	
+	void die() {
+		Main.resetLevel();
 	}
 }

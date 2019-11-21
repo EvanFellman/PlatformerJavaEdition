@@ -8,6 +8,5 @@ import javax.imageio.ImageIO;
 public class Wall extends Thing {
 	public Wall(float x, float y) throws IOException {
 		super(x, y, "wall", ImageIO.read(new File("wall.png")));
-		// TODO Auto-generated constructor stub
 	}
 }
