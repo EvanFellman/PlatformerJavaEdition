@@ -32,6 +32,7 @@ public class Main {
 	public static Player player;
 	public static String STATE = "menu";
 	public static JFrame window;
+	public static boolean isBlueGateOpen = false;
 	
 	public static void main(String[] args) throws IOException, InterruptedException {
 		window = new JFrame();
@@ -148,6 +149,12 @@ public class Main {
 							level.add(new EnemyNoJump(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, 0.1f));
 						} else if(pixel.getRed() == 255 && pixel.getGreen() == 255 && pixel.getBlue() == 3) {
 							level.add(new EnemyOnlyJump(SPRITE_WIDTH * x, SPRITE_HEIGHT * y));
+						} else if(pixel.getRed() == 0 && pixel.getGreen() == 0 && pixel.getBlue() == 254) {
+							level.add(new BlueGate(SPRITE_WIDTH * x, SPRITE_HEIGHT * y));
+						} else if(pixel.getRed() == 0 && pixel.getGreen() == 0 && pixel.getBlue() == 253) {
+							level.add(new ReverseBlueGate(SPRITE_WIDTH * x, SPRITE_HEIGHT * y));
+						} else if(pixel.getRed() == 0 && pixel.getGreen() == 0 && pixel.getBlue() == 252) {
+							level.add(new BlueSwitch(SPRITE_WIDTH * x, SPRITE_HEIGHT * y));
 						}
 					}
 				}

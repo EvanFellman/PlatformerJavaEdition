@@ -22,7 +22,7 @@ public class Player extends Thing {
 		for(int i = -1 * Main.SPRITE_WIDTH; i <= Main.SPRITE_WIDTH; i++) {
 			for(int j = 1 + (-1 * Main.SPRITE_HEIGHT); j < Main.SPRITE_HEIGHT; j++) {
 				Thing a = Main.getFromMap(i + this.x, j + this.y);
-				if(a != null && a.id.equals("wall")) {
+				if(a != null && a.id.contains("wall")) {
 					if(this.dx > 0) {
 						this.dx = 0;
 						this.x = a.getX() - Main.SPRITE_WIDTH;
@@ -41,7 +41,7 @@ public class Player extends Thing {
 			for(int j = -1 * Main.SPRITE_HEIGHT; j < Main.SPRITE_HEIGHT; j++) {
 				Thing a = Main.getFromMap(i + this.x, j + this.y);
 				if(a != null) {
-					if(a.id.equals("wall")) {
+					if(a.id.contains("wall")) {
 						if(this.dy > 0) {
 							if(Main.isWPressed && a.getY() > this.y) {
 								this.dy = -2;
