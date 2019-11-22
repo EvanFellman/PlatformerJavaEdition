@@ -31,9 +31,10 @@ public class Main {
 	public static final int SPRITE_WIDTH = 25;
 	public static Player player;
 	public static String STATE = "menu";
+	public static JFrame window;
 	
 	public static void main(String[] args) throws IOException, InterruptedException {
-		JFrame window = new JFrame();
+		window = new JFrame();
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JLabel playLabel = new JLabel("Play");
 		playLabel.addMouseListener(new MouseAdapter() {
