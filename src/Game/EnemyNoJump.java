@@ -62,21 +62,6 @@ public class EnemyNoJump extends Thing {
 				}
 			}
 		}
-//		for(Thing i: Main.level){
-//			if(this.isTouching(i)) {
-//				if(i.id.equals("wall") || (!i.equals(this) && i.id.contains("enemy"))) {
-//					if(this.dy > 0) {
-//						this.dy = 0;
-//						this.y = i.y - Main.SPRITE_HEIGHT;
-//						break;
-//					} else if(this.dy < 0) {
-//						this.dy = 0;
-//						this.y = i.y + Main.SPRITE_HEIGHT;
-//						break;
-//					}
-//				}
-//			}
-//		}
 		if(this.y > Main.DEATH_BELOW) {
 			this.die();
 		}
