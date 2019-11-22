@@ -2,15 +2,24 @@ package Game;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 public abstract class Thing {
-	public Thing(float x, float y, String id, Image pic) {
+	public Thing(float x, float y, String id, int picX, int picY) {
 		this.x = x;
 		this.y = y;
 		this.dx = 0;
 		this.dy = 0;
 		this.id = id;
-		this.pic = pic;
+		try {
+			this.pic = ImageIO.read(new File("textures.png")).getSubimage(picX * Main.SPRITE_WIDTH, picY * Main.SPRITE_HEIGHT, Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		Main.putInMap(this);
 	}
 	

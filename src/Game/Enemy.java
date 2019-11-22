@@ -1,28 +1,20 @@
 package Game;
 
-public class Player extends Thing {
-	public Player(float x, float y) {
-		super(x, y, "player", 1, 0);
+public abstract class Enemy extends Thing {
+	public Enemy(float x, float y, String id, int picX, int picY) {
+		super(x, y, id, picX, picY);
 	}
-
-	@Override
+	
 	void move() {
 		Main.removeFromMap(this);
 		if(this.dy > 5) {
 			this.dy = 5;
 		}
-		this.dx = 0;
-		if(Main.isAPressed) {
-			this.dx = -1f;
-		}
-		if(Main.isDPressed) {
-			this.dx = 1f;
-		}
 		this.x += this.dx;
-		for(int i = -1 * Main.SPRITE_WIDTH; i <= Main.SPRITE_WIDTH; i++) {
+		for(int i = 1 + (-1 * Main.SPRITE_WIDTH); i <= Main.SPRITE_WIDTH; i++) {
 			for(int j = 1 + (-1 * Main.SPRITE_HEIGHT); j < Main.SPRITE_HEIGHT; j++) {
 				Thing a = Main.getFromMap(i + this.x, j + this.y);
-				if(a != null && a.id.equals("wall")) {
+				if(a != null && (a.id.equals("wall") || a.id.contains("enemy")) ) {
 					if(this.dx > 0) {
 						this.dx = 0;
 						this.x = a.getX() - Main.SPRITE_WIDTH;
@@ -41,11 +33,9 @@ public class Player extends Thing {
 			for(int j = -1 * Main.SPRITE_HEIGHT; j < Main.SPRITE_HEIGHT; j++) {
 				Thing a = Main.getFromMap(i + this.x, j + this.y);
 				if(a != null) {
-					if(a.id.equals("wall")) {
+					if(a.id.equals("wall") || a.id.contains("enemy")) {
 						if(this.dy > 0) {
-							if(Main.isWPressed && a.getY() > this.y) {
-								this.dy = -2;
-							} else {
+							if(a.getDy() < 0 || !a.id.contains("enemy")){
 								this.dy = 0;
 							}
 							if(a.getY() > this.y) {
@@ -56,20 +46,6 @@ public class Player extends Thing {
 							this.dy = 0;
 							this.y = a.y + Main.SPRITE_HEIGHT;
 							break;
-						}
-					} else if(a.id.equals("next level")) {
-						Main.levelNumber += 1;
-						Main.loadLevel();
-					} else if(a.id.contains("enemy")) {
-						if(this.dy > 0) {
-							if(Main.isWPressed) {
-								this.dy = -2.5f;
-							} else {
-								this.dy = 0;
-							}
-							a.die();
-						} else {
-							this.die();
 						}
 					}
 				}
@@ -82,6 +58,7 @@ public class Player extends Thing {
 	}
 	
 	void die() {
-		Main.loadLevel();
+		Main.removeFromMap(this);
+		Main.level.remove(this);
 	}
 }
