@@ -1,16 +1,16 @@
 package Game;
 
-public class BlueSwitch extends Thing {
+public class RedSwitch extends Thing {
 	private int touchedLast;
-	public BlueSwitch(float x, float y) {
-		super(x, y, "blue switch", 2, 0);
+	public RedSwitch(float x, float y) {
+		super(x, y, "red switch", 3, 0);
 		this.touchedLast = 0;
 	}
 	
 	public void move() {
 		if(Main.player.isTouching(this)) {
 			if(this.touchedLast <= 0) {
-				Main.isBlueGateOpen = !Main.isBlueGateOpen;
+				Main.isRedGateOpen = !Main.isRedGateOpen;
 			}
 			this.touchedLast = 5;
 		} else {

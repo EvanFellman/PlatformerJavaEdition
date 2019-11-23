@@ -3,7 +3,7 @@ package Game;
 public class EnemyOnlyJump extends Enemy {
 
 	public EnemyOnlyJump(float x, float y) {
-		super(x, y, "enemy only jump", 2, 0);
+		super(x, y, "enemy only jump", 0, 2);
 	}
 	
 	public void move() {

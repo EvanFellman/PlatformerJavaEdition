@@ -5,8 +5,8 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-public class ReverseBlueGate extends Thing {
-	public ReverseBlueGate(float x, float y) {
+public class BlueReverseGate extends Thing {
+	public BlueReverseGate(float x, float y) {
 		super(x, y, Main.isBlueGateOpen ? "wall blue gate" : "open blue gate", 2, Main.isBlueGateOpen ? 1 : 2);
 	}
 	

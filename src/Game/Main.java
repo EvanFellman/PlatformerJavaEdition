@@ -33,6 +33,7 @@ public class Main {
 	public static String STATE = "menu";
 	public static JFrame window;
 	public static boolean isBlueGateOpen = false;
+	public static boolean isRedGateOpen = false;
 	
 	public static void main(String[] args) throws IOException, InterruptedException {
 		window = new JFrame();
@@ -122,6 +123,8 @@ public class Main {
 	
 	//resets level
 	public static void loadLevel() {
+		isBlueGateOpen = false;
+		isRedGateOpen = false;
 		File imgFile = new File("./level" + Integer.toString(levelNumber) + ".png");
 		level = new ArrayList<Thing>();
 		levelMap = new Hashtable<Integer, Hashtable<Integer, Thing>>();
@@ -152,9 +155,15 @@ public class Main {
 						} else if(pixel.getRed() == 0 && pixel.getGreen() == 0 && pixel.getBlue() == 254) {
 							level.add(new BlueGate(SPRITE_WIDTH * x, SPRITE_HEIGHT * y));
 						} else if(pixel.getRed() == 0 && pixel.getGreen() == 0 && pixel.getBlue() == 253) {
-							level.add(new ReverseBlueGate(SPRITE_WIDTH * x, SPRITE_HEIGHT * y));
+							level.add(new BlueReverseGate(SPRITE_WIDTH * x, SPRITE_HEIGHT * y));
 						} else if(pixel.getRed() == 0 && pixel.getGreen() == 0 && pixel.getBlue() == 252) {
 							level.add(new BlueSwitch(SPRITE_WIDTH * x, SPRITE_HEIGHT * y));
+						} else if(pixel.getRed() == 254 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
+							level.add(new RedGate(SPRITE_WIDTH * x, SPRITE_HEIGHT * y));
+						} else if(pixel.getRed() == 253 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
+							level.add(new RedReverseGate(SPRITE_WIDTH * x, SPRITE_HEIGHT * y));
+						} else if(pixel.getRed() == 252 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
+							level.add(new RedSwitch(SPRITE_WIDTH * x, SPRITE_HEIGHT * y));
 						}
 					}
 				}
