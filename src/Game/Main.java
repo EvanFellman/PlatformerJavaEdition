@@ -35,12 +35,13 @@ public class Main {
 	public static JFrame window;
 	public static boolean isBlueGateOpen = false;
 	public static boolean isRedGateOpen = false;
-	
+	private static GamePanel gp;
+	private static MKeyListener keyListener;
 	public static void main(String[] args) throws IOException, InterruptedException {
 		window = new JFrame();
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JPanel menuPanel = new JPanel();
-		JLabel playLabel = new JLabel("Play");
+		JLabel playLabel = new JLabel("Play your levels");
 		playLabel.addMouseListener(new MouseAdapter() {
 	        public void mouseClicked(MouseEvent e) {
 	        	window.remove(menuPanel);
@@ -57,7 +58,7 @@ public class Main {
 		});
 		menuPanel.add(quitGameLabel);
 		window.setVisible(true);
-		MKeyListener keyListener = new MKeyListener();
+		keyListener = new MKeyListener();
 		while(true) {
 			Thread.sleep(1/30);
 			switch(STATE) {
@@ -75,11 +76,11 @@ public class Main {
 				STATE="play0";
 				levelNumber = 1;
 				loadLevel();
-				GamePanel gp = new GamePanel();
+				gp = new GamePanel();
 				window.addKeyListener(keyListener);
 				window.add(gp);
 				window.setVisible(true);
-				while(true) {
+				while(STATE.equals("play0")) {
 					if(isEscapePressed) {
 						JLabel quitLabel = new JLabel("paused - Press w to quit or escape to continue");
 						window.add(quitLabel);
@@ -200,10 +201,24 @@ public class Main {
 					putInMap(i);
 				}
 			} catch (IOException e) {
-				System.exit(0);
+				window.remove(gp);
+				window.removeKeyListener(keyListener);
+				STATE = "menu";
+				isWPressed = false;
+				isAPressed = false;
+				isDPressed = false;
+				isEscapePressed = false;
+				STATE = "menu";
 			}			
 		} else {
-			System.exit(0);
+			window.remove(gp);
+			window.removeKeyListener(keyListener);
+			STATE = "menu";
+			isWPressed = false;
+			isAPressed = false;
+			isDPressed = false;
+			isEscapePressed = false;
+			STATE = "menu";
 		}
 	}
 }

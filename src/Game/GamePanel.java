@@ -11,7 +11,11 @@ public class GamePanel extends JPanel {
 			
 			if(Main.level.get(i).getX() <= Main.cameraX + Main.window.getWidth() && Main.level.get(i).getX() >= Main.cameraX - Main.window.getWidth() && Main.level.get(i).getY() <= Main.cameraY + Main.window.getHeight() && Main.level.get(i).getY() >= Main.cameraY - Main.window.getHeight()) {
 				Main.level.get(i).move();
-				Main.level.get(i).display(g);
+				try {
+					Main.level.get(i).display(g);
+				} catch(Exception e) {
+					
+				}
 			}
 		}
 	}
