@@ -12,6 +12,7 @@ import java.util.Hashtable;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 public class Main {
 	public static ArrayList<Thing> level = new ArrayList<Thing>();
@@ -38,13 +39,23 @@ public class Main {
 	public static void main(String[] args) throws IOException, InterruptedException {
 		window = new JFrame();
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		JPanel menuPanel = new JPanel();
 		JLabel playLabel = new JLabel("Play");
 		playLabel.addMouseListener(new MouseAdapter() {
 	        public void mouseClicked(MouseEvent e) {
-	        	window.remove(playLabel);
+	        	window.remove(menuPanel);
 	        	STATE="play";
 	        }
 		});
+		menuPanel.add(playLabel);
+		playLabel.setBounds(0, 0, 50,50);
+		JLabel quitGameLabel = new JLabel("Quit");
+		quitGameLabel.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				System.exit(0);
+			}
+		});
+		menuPanel.add(quitGameLabel);
 		window.setVisible(true);
 		MKeyListener keyListener = new MKeyListener();
 		while(true) {
@@ -52,9 +63,13 @@ public class Main {
 			switch(STATE) {
 			case "menu":
 				window.setSize(200,100);
-				window.add(playLabel);
+				window.add(menuPanel);
 				STATE="menu0";
 				break;
+			case "random":
+				window.setSize(500, 500);
+				STATE="random0";
+				window.addKeyListener(keyListener);
 			case "play":
 				window.setSize(500,500);
 				STATE="play0";
@@ -68,6 +83,8 @@ public class Main {
 					if(isEscapePressed) {
 						JLabel quitLabel = new JLabel("paused - Press w to quit or escape to continue");
 						window.add(quitLabel);
+						window.remove(gp);
+						window.setVisible(true);
 						while(isEscapePressed) { Thread.sleep(50); }
 						while(!isEscapePressed && !isWPressed) { Thread.sleep(50); }
 						if(isWPressed) {
@@ -75,6 +92,18 @@ public class Main {
 							window.remove(gp);
 							window.removeKeyListener(keyListener);
 							STATE = "menu";
+							isWPressed = false;
+							isAPressed = false;
+							isDPressed = false;
+							isEscapePressed = false;
+							break;
+						} else if(isEscapePressed) {
+							window.remove(quitLabel);
+							window.add(gp);
+							window.repaint();
+							window.setVisible(true);
+							isEscapePressed = false;
+							continue;
 						}
 					}
 					Thread.sleep(1000 / 300);
