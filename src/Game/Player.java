@@ -19,10 +19,10 @@ public class Player extends Thing {
 			this.dx = 1f;
 		}
 		this.x += this.dx;
-		for(int i = -1 * Main.SPRITE_WIDTH; i <= Main.SPRITE_WIDTH; i++) {
-			for(int j = 1 + (-1 * Main.SPRITE_HEIGHT); j < Main.SPRITE_HEIGHT; j++) {
-				Thing a = Main.getFromMap(i + this.x, j + this.y);
-				if(a != null && a.id.contains("wall")) {
+		for(int i = -1; i <= 1; i++) {
+			for(int j = -1; j <= 1; j++) {
+				Thing a = Main.getFromMap(this.x + (i * Main.SPRITE_WIDTH), this.y + (j * Main.SPRITE_HEIGHT));
+				if(a != null && a.id.contains("wall") && this.isTouching(a)) {
 					if(this.dx > 0) {
 						this.dx = 0;
 						this.x = a.getX() - Main.SPRITE_WIDTH;
@@ -37,10 +37,10 @@ public class Player extends Thing {
 		}
 		this.dy += Main.GRAVITY;
 		this.y += this.dy;
-		for(int i = 1 + (int)(-1 * Main.SPRITE_WIDTH); i < Main.SPRITE_WIDTH; i++) {
-			for(int j = -1 * Main.SPRITE_HEIGHT; j < Main.SPRITE_HEIGHT; j++) {
-				Thing a = Main.getFromMap(i + this.x, j + this.y);
-				if(a != null) {
+		for(int i = -1; i <= 1; i++) {
+			for(int j = -1; j <= 1; j++) {
+				Thing a = Main.getFromMap(this.x + (i * Main.SPRITE_WIDTH), this.y + (j * Main.SPRITE_HEIGHT));
+				if(!this.equals(a) && this.isTouching(a)) {
 					if(a.id.contains("wall")) {
 						if(this.dy > 0) {
 							if(Main.isWPressed && a.getY() > this.y) {

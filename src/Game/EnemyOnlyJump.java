@@ -8,16 +8,12 @@ public class EnemyOnlyJump extends Enemy {
 	
 	public void move() {
 		if(Main.isWPressed) {
-			for(int i = 1 + (int)(-1 * Main.SPRITE_WIDTH); i < Main.SPRITE_WIDTH; i++) {
-				for(int j = -1 * Main.SPRITE_HEIGHT; j <= Main.SPRITE_HEIGHT; j++) {
-					Thing a = Main.getFromMap(i + this.x, j + this.y);
-					if(a != null) {
-						if(!a.equals(this) && (a.id.equals("wall") || a.id.contains("enemy"))) {
-							if(this.dy > 0) {
-								this.dy = -2;
-								break;
-							}
-						}
+			for(int i = -1; i <= 1; i++) {
+				for(int j = -1; j <= 1; j++) {
+					Thing a = Main.getFromMap(this.x + (i * Main.SPRITE_WIDTH), this.y + (j * Main.SPRITE_HEIGHT));
+					if(a != null && !a.equals(this) && (a.id.equals("wall") || a.id.contains("enemy")) && this.dy > 0) {
+						this.dy = -2;
+						break;
 					}
 				}
 			}

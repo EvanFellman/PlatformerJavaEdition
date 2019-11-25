@@ -11,10 +11,10 @@ public abstract class Enemy extends Thing {
 			this.dy = 5;
 		}
 		this.x += this.dx;
-		for(int i = 1 + (-1 * Main.SPRITE_WIDTH); i <= Main.SPRITE_WIDTH; i++) {
-			for(int j = 1 + (-1 * Main.SPRITE_HEIGHT); j < Main.SPRITE_HEIGHT; j++) {
-				Thing a = Main.getFromMap(i + this.x, j + this.y);
-				if(a != null && (a.id.contains("wall") || a.id.contains("enemy")) ) {
+		for(int i = -1; i <= 1; i++) {
+			for(int j = -1; j <= 1; j++) {
+				Thing a = Main.getFromMap(this.x + (i * Main.SPRITE_WIDTH), this.y + (j * Main.SPRITE_HEIGHT));
+				if(a != null && (a.id.contains("wall") || a.id.contains("enemy")) && this.isTouching(a)) {
 					if(this.dx > 0) {
 						this.dx = 0;
 						this.x = a.getX() - Main.SPRITE_WIDTH;
@@ -29,10 +29,10 @@ public abstract class Enemy extends Thing {
 		}
 		this.dy += Main.GRAVITY;
 		this.y += this.dy;
-		for(int i = 1 + (int)(-1 * Main.SPRITE_WIDTH); i < Main.SPRITE_WIDTH; i++) {
-			for(int j = -1 * Main.SPRITE_HEIGHT; j < Main.SPRITE_HEIGHT; j++) {
-				Thing a = Main.getFromMap(i + this.x, j + this.y);
-				if(a != null) {
+		for(int i = -1; i <= 1; i++) {
+			for(int j = -1; j <= 1; j++) {
+				Thing a = Main.getFromMap(this.x + (i * Main.SPRITE_WIDTH), this.y + (j * Main.SPRITE_HEIGHT));
+				if(a != null && this.isTouching(a)) {
 					if(a.id.equals("wall") || a.id.contains("enemy")) {
 						if(this.dy > 0) {
 							if(a.getDy() < 0 || !a.id.contains("enemy")){

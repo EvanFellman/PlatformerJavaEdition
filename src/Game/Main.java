@@ -127,10 +127,10 @@ public class Main {
 	}
 	
 	public static Thing getFromMap(int x, int y) {
-		if(levelMap.get(x) == null) {
+		if(levelMap.get((int) (x / SPRITE_WIDTH)) == null) {
 			return null;
 		} else {
-			return levelMap.get(x).get(y);
+			return levelMap.get((int) (x / SPRITE_WIDTH)).get((int) (y / SPRITE_HEIGHT));
 		}
 	}
 	
@@ -139,16 +139,14 @@ public class Main {
 	}
 	
 	public static void putInMap(Thing a) {
-		if(levelMap.get((int) a.getX()) == null) {
-			levelMap.put((int) a.getX(), new Hashtable<Integer, Thing>());
-			levelMap.get((int) a.getX()).put((int) a.getY(), a);
-		} else {
-			levelMap.get((int) a.getX()).put((int) a.getY(), a);
+		if(levelMap.get((int) a.getX() / SPRITE_WIDTH) == null) {
+			levelMap.put((int) (a.getX() / SPRITE_WIDTH), new Hashtable<Integer, Thing>());
 		}
+		levelMap.get((int) (a.getX() / SPRITE_WIDTH)).put((int) (a.getY() / SPRITE_HEIGHT), a);
 	}
 	
 	public static void removeFromMap(Thing a) {
-		levelMap.get((int) a.getX()).remove((int) a.getY());
+		levelMap.get((int) (a.getX() / SPRITE_HEIGHT)).remove((int) (a.getY() / SPRITE_WIDTH));
 	}
 	
 	//resets level

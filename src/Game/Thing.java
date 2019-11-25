@@ -33,6 +33,9 @@ public abstract class Thing {
 	public void setDy(float dy) { this.dy = dy; }
 	
 	boolean isTouching(Thing other) {
+		if(other == null) {
+			return false;
+		}
 		return (new Rectangle((int)this.getX(), (int)this.getY(), Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT)).intersects(new Rectangle((int)other.getX(), (int)other.getY(), Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT));
 	}
 	
@@ -40,10 +43,16 @@ public abstract class Thing {
 		g.drawImage(this.pic, ((int)this.x) - Main.cameraX, ((int)this.y) - Main.cameraY, null);
 	}
 	
-	boolean equals(Thing other) {
-		return other.id.equals(this.id) && (other.getX() == this.getX()) && (other.getDx() == this.getDx()) && (this.getY() == other.getY()) && (this.getDy() == other.getDy());
+	@Override
+	public boolean equals(Object o) {
+		if(o instanceof Thing) {
+			Thing other = (Thing) o;
+			return other.id.equals(this.id) && (other.getX() == this.getX()) && (other.getDx() == this.getDx()) && (this.getY() == other.getY()) && (this.getDy() == other.getDy());
+		} else {
+			return false;
+		}
 	}
 	
-	void move() { }
+	void move() {}
 	void die() { }
 }
