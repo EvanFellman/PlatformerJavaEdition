@@ -8,12 +8,20 @@ public class BlueSwitch extends Thing {
 	}
 	
 	public void move() {
-		if(Main.player.isTouching(this)) {
-			if(this.touchedLast <= 0) {
-				Main.isBlueGateOpen = !Main.isBlueGateOpen;
+		boolean wasTouched = false;
+		for(int i = -1; i <= 1; i++) {
+			for(int j = -1; j <= 1; j++) {
+				Thing a = Main.getFromMap(this.x + (i * Main.SPRITE_WIDTH), this.y + (j * Main.SPRITE_HEIGHT));
+				if(a != null && this.isTouching(a) && (a.id.equals("player") || a.id.contains("enemy"))) {
+					if(this.touchedLast <= 0) {
+						wasTouched = true;
+						Main.isBlueGateOpen = !Main.isBlueGateOpen;
+					}
+					this.touchedLast = 5;
+				}
 			}
-			this.touchedLast = 5;
-		} else {
+		}
+		if(!wasTouched) {
 			this.touchedLast -= 1;
 		}
 	}

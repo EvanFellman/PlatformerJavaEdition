@@ -51,11 +51,9 @@ public class Player extends Thing {
 							if(a.getY() > this.y) {
 								this.y = a.y - Main.SPRITE_HEIGHT;
 							}
-							break;
 						} else if(this.dy < 0) {
 							this.dy = 0;
 							this.y = a.y + Main.SPRITE_HEIGHT;
-							break;
 						}
 					} else if(a.id.equals("next level")) {
 						Main.levelNumber += 1;

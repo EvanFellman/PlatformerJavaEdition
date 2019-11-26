@@ -32,21 +32,19 @@ public abstract class Enemy extends Thing {
 		for(int i = -1; i <= 1; i++) {
 			for(int j = -1; j <= 1; j++) {
 				Thing a = Main.getFromMap(this.x + (i * Main.SPRITE_WIDTH), this.y + (j * Main.SPRITE_HEIGHT));
-				if(a != null && this.isTouching(a)) {
-					if(a.id.equals("wall") || a.id.contains("enemy")) {
-						if(this.dy > 0) {
-							if(a.getDy() < 0 || !a.id.contains("enemy")){
-								this.dy = 0;
-							}
-							if(a.getY() > this.y) {
-								this.y = a.y - Main.SPRITE_HEIGHT;
-							}
-							break;
-						} else if(this.dy < 0) {
+				if(a != null && this.isTouching(a) && (a.id.contains("wall") || a.id.contains("enemy"))) {
+					if(this.dy > 0) {
+						if(a.getDy() < 0){
 							this.dy = 0;
-							this.y = a.y + Main.SPRITE_HEIGHT;
-							break;
 						}
+						if(a.getY() > this.y) {
+							this.y = a.y - Main.SPRITE_HEIGHT;
+						}
+						break;
+					} else if(this.dy < 0) {
+						this.dy = 0;
+						this.y = a.y + Main.SPRITE_HEIGHT;
+						break;
 					}
 				}
 			}

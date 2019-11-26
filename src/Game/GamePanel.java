@@ -17,5 +17,6 @@ public class GamePanel extends JPanel {
 				}
 			}
 		}
+		Main.player.display(g);
 	}
 }

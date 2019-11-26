@@ -192,6 +192,18 @@ public class Main {
 							level.add(new RedReverseGate(SPRITE_WIDTH * x, SPRITE_HEIGHT * y));
 						} else if(pixel.getRed() == 252 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
 							level.add(new RedSwitch(SPRITE_WIDTH * x, SPRITE_HEIGHT * y));
+						} else if(pixel.getRed() == 251 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
+							level.add(new EnemyDumb(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, true, 0.4f));
+						} else if(pixel.getRed() == 250 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
+							level.add(new EnemyDumb(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, true, 0.25f));
+						} else if(pixel.getRed() == 249 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
+							level.add(new EnemyDumb(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, true, 0.1f));
+						} else if(pixel.getRed() == 248 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
+							level.add(new EnemyDumb(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, false, 0.4f));
+						} else if(pixel.getRed() == 247 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
+							level.add(new EnemyDumb(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, false, 0.25f));
+						} else if(pixel.getRed() == 246 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
+							level.add(new EnemyDumb(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, false, 0.1f));
 						}
 					}
 				}
