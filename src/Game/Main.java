@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Hashtable;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -81,6 +82,7 @@ public class Main {
 				window.add(gp);
 				window.setVisible(true);
 				while(STATE.equals("play0")) {
+					Date before = new Date();
 					if(isEscapePressed) {
 						JLabel quitLabel = new JLabel("paused - Press w to quit or escape to continue");
 						window.add(quitLabel);
@@ -107,7 +109,6 @@ public class Main {
 							continue;
 						}
 					}
-					Thread.sleep(1000 / 300);
 					while(player.getX() - cameraX < 100) {
 						cameraX --;
 					}
@@ -121,6 +122,11 @@ public class Main {
 						cameraY ++;
 					}
 					window.repaint();
+					Date after = new Date();
+					while(after.getTime() - before.getTime() <= 5) {
+						Thread.sleep(1);
+						after = new Date();
+					}
 				}				
 			}
 		}
@@ -210,8 +216,8 @@ public class Main {
 				for(Thing i: level) {
 					putInMap(i);
 				}
-				cameraX = (int) player.getX();
-				cameraY = (int) player.getY();
+				cameraX = (int) (player.getX() + (window.getWidth() * 12.5));
+				cameraY = (int) (player.getY() + (window.getHeight() * 12.5));
 			} catch (IOException e) {
 				window.remove(gp);
 				window.removeKeyListener(keyListener);

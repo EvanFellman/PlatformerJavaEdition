@@ -26,18 +26,16 @@ public class Player extends Thing {
 					if(this.dx > 0) {
 						this.dx = 0;
 						this.x = a.getX() - Main.SPRITE_WIDTH;
-						break;
 					} else if(this.dx < 0) {
 						this.dx = 0;
 						this.x = a.getX() + Main.SPRITE_WIDTH;
-						break;
 					}
 				}
 			}
 		}
 		this.dy += Main.GRAVITY;
 		this.y += this.dy;
-		for(int i = -1; i <= 1; i++) {
+		for(int i = -1; i <= 2; i++) {
 			for(int j = -1; j <= 1; j++) {
 				Thing a = Main.getFromMap(this.x + (i * Main.SPRITE_WIDTH), this.y + (j * Main.SPRITE_HEIGHT));
 				if(!this.equals(a) && this.isTouching(a)) {

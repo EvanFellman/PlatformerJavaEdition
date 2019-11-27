@@ -14,6 +14,9 @@ public class EnemyNoJump extends Enemy {
 		if(Main.player.getX() - 50 > this.x) {
 			this.dx = this.speed;
 		}
+		if(this.dx == 0) {
+			this.dx = Main.player.getX() < this.x ? -1 * speed : speed;
+		}
 		super.move();
 	}
 }

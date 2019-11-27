@@ -8,7 +8,9 @@ public class GamePanel extends JPanel {
 
 	public void paint(Graphics g) {
 		for(int i = 0; i < Main.level.size(); i++) {
-			if(Main.level.get(i).getX() <= Main.cameraX + Main.window.getWidth() && Main.level.get(i).getX() >= Main.cameraX - Main.window.getWidth() && Main.level.get(i).getY() <= Main.cameraY + Main.window.getHeight() && Main.level.get(i).getY() >= Main.cameraY - Main.window.getHeight()) {
+			float x = Main.level.get(i).getX() - Main.cameraX;
+			float y = Main.level.get(i).getY() - Main.cameraY;
+			if(x <= Main.window.getWidth() && x >= - 1* Main.window.getWidth() && y <= Main.window.getHeight() && y >= -1 * Main.window.getHeight()) {
 				Main.level.get(i).move();
 				try {
 					Main.level.get(i).display(g);

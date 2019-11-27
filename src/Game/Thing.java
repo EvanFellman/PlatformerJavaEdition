@@ -1,7 +1,6 @@
 package Game;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.Rectangle;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -36,7 +35,9 @@ public abstract class Thing {
 		if(other == null) {
 			return false;
 		}
-		return (new Rectangle((int)this.getX(), (int)this.getY(), Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT)).intersects(new Rectangle((int)other.getX(), (int)other.getY(), Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT));
+		float x = this.x - other.getX();
+		float y = this.y - other.getY();
+		return x < Main.SPRITE_WIDTH && x > -1 * Main.SPRITE_WIDTH && y < Main.SPRITE_HEIGHT && y > -1 * Main.SPRITE_HEIGHT; 
 	}
 	
 	void display(Graphics g) {
