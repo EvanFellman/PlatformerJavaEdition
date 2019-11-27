@@ -210,6 +210,8 @@ public class Main {
 				for(Thing i: level) {
 					putInMap(i);
 				}
+				cameraX = (int) player.getX();
+				cameraY = (int) player.getY();
 			} catch (IOException e) {
 				window.remove(gp);
 				window.removeKeyListener(keyListener);

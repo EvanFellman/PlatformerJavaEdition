@@ -54,5 +54,5 @@ public abstract class Thing {
 	}
 	
 	void move() {}
-	void die() { }
+	void die() {}
 }

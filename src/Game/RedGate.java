@@ -11,6 +11,7 @@ public class RedGate extends Thing {
 	}
 	
 	public void move() {
+		Main.removeFromMap(this);
 		if(Main.isRedGateOpen && this.id.equals("wall red gate")) {
 			this.id = "open red gate";
 			try {
@@ -26,5 +27,6 @@ public class RedGate extends Thing {
 				e.printStackTrace();
 			}
 		}
+		Main.putInMap(this);
 	}
 }
