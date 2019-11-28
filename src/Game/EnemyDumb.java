@@ -1,8 +1,8 @@
 package Game;
 
 public class EnemyDumb extends Enemy {
-	private boolean goLeft;
-	private float speed;
+	public boolean goLeft;
+	public float speed;
 	public EnemyDumb(float x, float y, boolean goLeft, float speed) {
 		super(x, y, "enemy dumb", 1, 2);
 		this.goLeft = goLeft;

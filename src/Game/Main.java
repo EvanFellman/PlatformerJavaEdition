@@ -1,5 +1,6 @@
 package Game;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,7 +33,9 @@ public class Main {
 	public static int DEATH_BELOW;
 	public static boolean isWPressed = false;
 	public static boolean isAPressed = false;
+	public static boolean isSPressed = false;
 	public static boolean isDPressed = false;
+	public static boolean isSpacePressed = false;
 	public static boolean isEscapePressed = false;
 	public static final float GRAVITY = 0.02f;
 	public static final int SPRITE_HEIGHT = 25;
@@ -45,8 +48,8 @@ public class Main {
 	public static float enemySpeed = 0.25f;
 	private static GamePanel gp;
 	private static EditPanel ep = new EditPanel();
-	private static MKeyListener keyListener;
-	private static String paint = "wall";
+	private static MKeyListener keyListener = new MKeyListener();
+	public static String paint = "wall";
 	public static void main(String[] args) throws IOException, InterruptedException {
 		window = new JFrame();
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -83,8 +86,14 @@ public class Main {
 		backEdit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				window.removeKeyListener(keyListener);
 				window.remove(editPanel);
-				window.remove(ep);
+				isWPressed = false;
+				isAPressed = false;
+				isSPressed = false;
+				isDPressed = false;
+				isSpacePressed = false;
+				isEscapePressed = false;
 				STATE="menu";
 			}
 		});
@@ -111,13 +120,139 @@ public class Main {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				paint = "wall";
+				highlightButton(wallEdit, editButtonPanel);
 			}
 		});
 		editButtonPanel.add(wallEdit);
+		JButton blueGateEdit = new JButton("Blue Gate");
+		blueGateEdit.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				paint = "blue gate";
+				highlightButton(blueGateEdit, editButtonPanel);
+			}
+		});
+		editButtonPanel.add(blueGateEdit);
+		JButton SaveEdit = new JButton("Save");
+		SaveEdit.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				int minX = Integer.MAX_VALUE;
+				int maxX = Integer.MIN_VALUE;
+				int minY = Integer.MAX_VALUE;
+				int maxY = Integer.MIN_VALUE;
+				boolean existsAPlayer = false;
+				for(Thing a: level) {
+					if(a.getX() < minX) {
+						minX = (int) a.getX();
+					}
+					if(a.getX() > maxX) {
+						maxX = (int) a.getX();
+					}
+					if(a.getY() < minY) {
+						minY = (int) a.getY();
+					}
+					if(a.getY() > maxY) {
+						maxY = (int) a.getY();
+					}
+				}
+				BufferedImage image = new BufferedImage(1 + (maxX - minX) / SPRITE_WIDTH, 1 + (maxY - minY) / SPRITE_HEIGHT, BufferedImage.TYPE_INT_RGB);
+				for(int i = 0; i < 1 + (maxX - minX) / SPRITE_WIDTH; i++) {
+					for(int j = 0; j < 1 + (maxY - minY) / SPRITE_HEIGHT; j++) {
+						image.setRGB(i, j, (new Color(255, 255, 255)).getRGB());
+					}
+				}
+				for(Thing a: level) {
+					int x = ((int)a.getX() - minX) / SPRITE_WIDTH;
+					int y = ((int)a.getY() - minY) / SPRITE_HEIGHT;
+					switch(a.id) {
+					case "player":
+						image.setRGB(x, y, (new Color(0, 0, 255).getRGB()));
+						existsAPlayer = true;
+						break;
+					case "wall":
+						image.setRGB(x, y, (new Color(0, 0, 0).getRGB()));
+						break;
+					case "next level":
+						image.setRGB(x, y, (new Color(0, 255, 0).getRGB()));
+						break;
+					case "enemy no jump":
+						if(((EnemyNoJump) a).speed == 0.4f) {
+							image.setRGB(x, y, (new Color(255, 255, 2).getRGB()));
+						} else if(((EnemyNoJump) a).speed == 0.25f) {
+							image.setRGB(x, y, (new Color(255, 255, 1).getRGB()));
+						} else if(((EnemyNoJump) a).speed == 0.1f) {
+							image.setRGB(x, y, (new Color(255, 255, 0).getRGB()));
+						}
+						break;
+					case "enemy only jump":
+						image.setRGB(x, y, (new Color(255, 255, 3).getRGB()));
+						break;
+					case "open blue gate":
+					case "wall blue gate":
+						image.setRGB(x, y, (new Color(0, 0, 254).getRGB()));
+						break;
+					case "open blue reverse gate":
+					case "wall blue reverse gate":
+						image.setRGB(x, y, (new Color(0, 0, 253).getRGB()));
+						break;
+					case "blue switch":
+						image.setRGB(x, y, (new Color(0, 0, 252).getRGB()));
+						break;
+					case "open red gate":
+					case "wall red gate":
+						image.setRGB(x, y, (new Color(254, 0, 0).getRGB()));
+						break;
+					case "open red reverse gate":
+					case "wall red reverse gate":
+						image.setRGB(x, y, (new Color(253, 0, 0).getRGB()));
+						break;
+					case "red switch":
+						image.setRGB(x, y, (new Color(252, 0, 0).getRGB()));
+						break;
+					case "enemy dumb":
+						if(((EnemyDumb) a).goLeft) {
+							if(((EnemyDumb) a).speed == 0.4f) {
+								image.setRGB(x, y, (new Color(251, 0, 0).getRGB()));
+								break;
+							} else if(((EnemyDumb) a).speed == 0.25f) {
+								image.setRGB(x, y, (new Color(250, 0, 0).getRGB()));
+								break;
+							} else if(((EnemyDumb) a).speed == 0.1f) {
+								image.setRGB(x, y, (new Color(249, 0, 0).getRGB()));
+								break;
+							}
+						} else {
+							if(((EnemyDumb) a).speed == 0.4f) {
+								image.setRGB(x, y, (new Color(248, 0, 0).getRGB()));
+								break;
+							} else if(((EnemyDumb) a).speed == 0.25f) {
+								image.setRGB(x, y, (new Color(247, 0, 0).getRGB()));
+								break;
+							} else if(((EnemyDumb) a).speed == 0.1f) {
+								image.setRGB(x, y, (new Color(246, 0, 0).getRGB()));
+								break;
+							}
+						}
+					}
+				}
+				if(existsAPlayer) {
+					File outFile = new File("level" + Integer.toString(levelNumber) + ".png");
+					try {
+						ImageIO.write(image, "png", outFile);
+						System.out.println("finished saving");
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		});
+		editButtonPanel.add(SaveEdit);
 		editPanel.add(Box.createVerticalGlue());
 		editPanel.add(ep);
+		highlightButton(wallEdit, editButtonPanel);
 		window.setVisible(true);
-		keyListener = new MKeyListener();
 		while(true) {
 			Thread.sleep(1/30);
 			switch(STATE) {
@@ -132,21 +267,36 @@ public class Main {
 				STATE="edit0";
 				levelNumber=1;
 				loadLevel();
-				System.out.println(cameraX);
 				editButtonPanel.setMaximumSize(new Dimension(500,100));
 				editButtonPanel.setPreferredSize(new Dimension(500,100));
 				editButtonPanel.setMinimumSize(new Dimension(500,100));
 				ep.setMaximumSize(new Dimension(500,500));
 				ep.setPreferredSize(new Dimension(500, 500));
 				ep.setMinimumSize(new Dimension(500,500));
-				window.add(editPanel);
 				BoxLayout bl = new BoxLayout(editPanel, BoxLayout.PAGE_AXIS);
 				editPanel.setLayout(bl);
+				window.add(editPanel);
 				window.setVisible(true);
 				while(STATE.equals("edit0")) {
 					Date before = new Date();
-					
 					window.repaint();
+					window.setVisible(true);
+					if(isWPressed) {
+						cameraY -= SPRITE_HEIGHT / 4;
+					} 
+					if(isSPressed) {
+						cameraY += SPRITE_HEIGHT / 4;
+					}
+					if(isAPressed) {
+						cameraX -= SPRITE_WIDTH / 4;
+					}
+					if(isDPressed) {
+						cameraX += SPRITE_WIDTH / 4;
+					}
+					if(isSpacePressed) {
+						cameraX = startX - (int)(window.getWidth() * 0.5);
+						cameraY = startY - (int)(window.getHeight() * 0.5);
+					}
 					Date after = new Date();
 					while(after.getTime() - before.getTime() <= 3) {
 						Thread.sleep(1);
@@ -160,6 +310,12 @@ public class Main {
 				levelNumber = 1;
 				loadLevel();
 				gp = new GamePanel();
+				isWPressed = false;
+				isAPressed = false;
+				isSPressed = false;
+				isDPressed = false;
+				isSpacePressed = false;
+				isEscapePressed = false;
 				window.addKeyListener(keyListener);
 				window.add(gp);
 				window.setVisible(true);
@@ -179,7 +335,9 @@ public class Main {
 							STATE = "menu";
 							isWPressed = false;
 							isAPressed = false;
+							isSPressed = false;
 							isDPressed = false;
+							isSpacePressed = false;
 							isEscapePressed = false;
 							break;
 						} else if(isEscapePressed) {
@@ -212,6 +370,13 @@ public class Main {
 				}				
 			}
 		}
+	}
+	
+	public static void highlightButton(JButton btn, JPanel p) {
+		for(Component c : p.getComponents()) {
+			c.setBackground(Color.GRAY);
+		}
+		btn.setBackground(Color.green);
 	}
 	
 	public static Thing getFromMap(int x, int y) {
@@ -306,7 +471,9 @@ public class Main {
 				STATE = "menu";
 				isWPressed = false;
 				isAPressed = false;
+				isSPressed = false;
 				isDPressed = false;
+				isSpacePressed = false;
 				isEscapePressed = false;
 				STATE = "menu";
 			}			
@@ -316,7 +483,9 @@ public class Main {
 			STATE = "menu";
 			isWPressed = false;
 			isAPressed = false;
+			isSPressed = false;
 			isDPressed = false;
+			isSpacePressed = false;
 			isEscapePressed = false;
 			STATE = "menu";
 		}
@@ -326,7 +495,9 @@ public class Main {
 class MKeyListener extends KeyAdapter {
 	@Override
 	public void keyPressed(KeyEvent event) {
-		if(event.getKeyCode() == KeyEvent.VK_ESCAPE) {
+		if(event.getKeyCode() == KeyEvent.VK_SPACE) {
+			Main.isSpacePressed = true;
+		} else if(event.getKeyCode() == KeyEvent.VK_ESCAPE) {
 			Main.isEscapePressed = true;
 		} else {
 		    switch(event.getKeyChar()) {
@@ -335,6 +506,9 @@ class MKeyListener extends KeyAdapter {
 		    	break;
 		    case 'a':
 		    	Main.isAPressed = true;
+		    	break;
+		    case 's':
+		    	Main.isSPressed = true;
 		    	break;
 		    case 'd':
 		    	Main.isDPressed = true;
@@ -347,7 +521,10 @@ class MKeyListener extends KeyAdapter {
 	
 	@Override
 	public void keyReleased(KeyEvent event) {
-		if(event.getKeyCode() == KeyEvent.VK_ESCAPE) {
+		System.out.println("key released");
+		if(event.getKeyCode() == KeyEvent.VK_SPACE) {
+			Main.isSpacePressed = false;
+		} else if(event.getKeyCode() == KeyEvent.VK_ESCAPE) {
 			Main.isEscapePressed = false;
 		} else {
 		    switch(event.getKeyChar()) {
@@ -356,6 +533,9 @@ class MKeyListener extends KeyAdapter {
 		    	break;
 		    case 'a':
 		    	Main.isAPressed = false;
+		    	break;
+		    case 's':
+		    	Main.isSPressed = false;
 		    	break;
 		    case 'd':
 		    	Main.isDPressed = false;
