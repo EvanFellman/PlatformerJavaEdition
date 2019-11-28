@@ -1,5 +1,8 @@
 package Game;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -11,6 +14,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
 import javax.imageio.ImageIO;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -36,8 +42,11 @@ public class Main {
 	public static JFrame window;
 	public static boolean isBlueGateOpen = false;
 	public static boolean isRedGateOpen = false;
+	public static float enemySpeed = 0.25f;
 	private static GamePanel gp;
+	private static EditPanel ep = new EditPanel();
 	private static MKeyListener keyListener;
+	private static String paint = "wall";
 	public static void main(String[] args) throws IOException, InterruptedException {
 		window = new JFrame();
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -49,8 +58,17 @@ public class Main {
 	        	STATE="play";
 	        }
 		});
-		menuPanel.add(playLabel);
 		playLabel.setBounds(0, 0, 50,50);
+		menuPanel.add(playLabel);
+		JLabel editLabel = new JLabel("Edit levels");
+		editLabel.addMouseListener(new MouseAdapter() {
+	        public void mouseClicked(MouseEvent e) {
+	        	window.remove(menuPanel);
+	        	STATE="edit";
+	        }
+		});
+		editLabel.setBounds(0,0,50,50);
+		menuPanel.add(editLabel);
 		JLabel quitGameLabel = new JLabel("Quit");
 		quitGameLabel.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
@@ -58,6 +76,46 @@ public class Main {
 			}
 		});
 		menuPanel.add(quitGameLabel);
+		JPanel editPanel = new JPanel();
+		JPanel editButtonPanel = new JPanel();
+		editPanel.add(editButtonPanel);
+		JButton backEdit = new JButton("Back");
+		backEdit.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				window.remove(editPanel);
+				window.remove(ep);
+				STATE="menu";
+			}
+		});
+		editButtonPanel.add(backEdit);
+		JButton enemySpeedEdit = new JButton("medium speed");
+		enemySpeedEdit.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(enemySpeed == 0.4f) {
+					enemySpeed = 0.1f;
+					enemySpeedEdit.setText("slow speed");
+				} else if(enemySpeed == 0.25f) {
+					enemySpeed = 0.4f;
+					enemySpeedEdit.setText("fast speed");
+				} else {
+					enemySpeed = 0.25f;
+					enemySpeedEdit.setText("medium speed");
+				}
+			}
+		});
+		editButtonPanel.add(enemySpeedEdit);
+		JButton wallEdit = new JButton("Wall");
+		wallEdit.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				paint = "wall";
+			}
+		});
+		editButtonPanel.add(wallEdit);
+		editPanel.add(Box.createVerticalGlue());
+		editPanel.add(ep);
 		window.setVisible(true);
 		keyListener = new MKeyListener();
 		while(true) {
@@ -68,10 +126,34 @@ public class Main {
 				window.add(menuPanel);
 				STATE="menu0";
 				break;
-			case "random":
-				window.setSize(500, 500);
-				STATE="random0";
+			case "edit":
+				window.setSize(500, 625);
 				window.addKeyListener(keyListener);
+				STATE="edit0";
+				levelNumber=1;
+				loadLevel();
+				System.out.println(cameraX);
+				editButtonPanel.setMaximumSize(new Dimension(500,100));
+				editButtonPanel.setPreferredSize(new Dimension(500,100));
+				editButtonPanel.setMinimumSize(new Dimension(500,100));
+				ep.setMaximumSize(new Dimension(500,500));
+				ep.setPreferredSize(new Dimension(500, 500));
+				ep.setMinimumSize(new Dimension(500,500));
+				window.add(editPanel);
+				BoxLayout bl = new BoxLayout(editPanel, BoxLayout.PAGE_AXIS);
+				editPanel.setLayout(bl);
+				window.setVisible(true);
+				while(STATE.equals("edit0")) {
+					Date before = new Date();
+					
+					window.repaint();
+					Date after = new Date();
+					while(after.getTime() - before.getTime() <= 3) {
+						Thread.sleep(1);
+						after = new Date();
+					}
+				}
+				break;
 			case "play":
 				window.setSize(500,500);
 				STATE="play0";
@@ -123,7 +205,7 @@ public class Main {
 					}
 					window.repaint();
 					Date after = new Date();
-					while(after.getTime() - before.getTime() <= 5) {
+					while(after.getTime() - before.getTime() <= 3) {
 						Thread.sleep(1);
 						after = new Date();
 					}
@@ -216,8 +298,8 @@ public class Main {
 				for(Thing i: level) {
 					putInMap(i);
 				}
-				cameraX = (int) (player.getX() + (window.getWidth() * 12.5));
-				cameraY = (int) (player.getY() + (window.getHeight() * 12.5));
+				cameraX = (int) (player.getX() - (window.getWidth() * 0.5));
+				cameraY = (int) (player.getY() - (window.getHeight() * 0.5));
 			} catch (IOException e) {
 				window.remove(gp);
 				window.removeKeyListener(keyListener);

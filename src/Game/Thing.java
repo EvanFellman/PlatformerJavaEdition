@@ -54,6 +54,11 @@ public abstract class Thing {
 		}
 	}
 	
+	@Override
+	public String toString() {
+		return this.id + " (" + Float.toString(this.x) + ", " + Float.toString(this.y) + ")";  
+	}
+	
 	void move() {}
 	void die() {}
 }
