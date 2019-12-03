@@ -188,6 +188,28 @@ public class Main {
 			}
 		});
 		editButtonPanel.add(redGateEdit);
+		JButton enemyEdit = new JButton("Enemy (D L)");
+		enemyEdit.setFocusable(false);
+		enemyEdit.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				highlightButton(enemyEdit, editButtonPanel);
+				if(paint.equals("enemy dumb left")) {
+					paint = "enemy dumb right";
+					enemyEdit.setText("Enemy (D R)");
+				} else if(paint.equals("enemy dumb right")) {
+					paint = "enemy no jump";
+					enemyEdit.setText("Enemy (NJ)");
+				} else if(paint.equals("enemy no jump")) {
+					paint = "enemy only jump";
+					enemyEdit.setText("Enemy (OJ)");
+				} else {
+					paint = "enemy dumb left";
+					enemyEdit.setText("Enemy (D L)");
+				}
+			}
+		});
+		editButtonPanel.add(enemyEdit);
 		JButton goalEdit = new JButton("Goal");
 		goalEdit.setFocusable(false);
 		goalEdit.addActionListener(new ActionListener() {
