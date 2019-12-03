@@ -37,6 +37,9 @@ public class Main {
 	public static boolean isDPressed = false;
 	public static boolean isSpacePressed = false;
 	public static boolean isEscapePressed = false;
+	public static boolean isShiftPressed = false;
+	public static boolean isAltPressed = false;
+	public static boolean isCtrlPressed = false;
 	public static final double GRAVITY = 0.02f;
 	public static final int SPRITE_HEIGHT = 25;
 	public static final int SPRITE_WIDTH = 25;
@@ -50,6 +53,14 @@ public class Main {
 	private static EditPanel ep = new EditPanel();
 	private static MKeyListener keyListener = new MKeyListener();
 	public static String paint = "wall";
+	private static JPanel editButtonPanel;
+	private static JButton eraseEdit;
+	private static JButton wallEdit;
+	private static JButton blueGateEdit;
+	private static JButton redGateEdit;
+	private static JButton enemyEdit;
+	private static JButton goalEdit;
+	private static JButton startEdit;
 	public static void main(String[] args) throws IOException, InterruptedException {
 		window = new JFrame();
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -81,7 +92,7 @@ public class Main {
 		});
 		menuPanel.add(quitGameLabel);
 		JPanel editPanel = new JPanel();
-		JPanel editButtonPanel = new JPanel();
+		editButtonPanel = new JPanel();
 		JPanel editNavButtonPanel = new JPanel();
 		editButtonPanel.add(editNavButtonPanel);
 		editPanel.add(editButtonPanel);
@@ -144,93 +155,93 @@ public class Main {
 			}
 		});
 		editButtonPanel.add(enemySpeedEdit);
-		JButton wallEdit = new JButton("Wall");
+		eraseEdit = new JButton("Erase");
+		eraseEdit.setFocusable(false);
+		eraseEdit.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				paint = "erase";
+				updateEditButtons();				
+			}
+		});
+		editButtonPanel.add(eraseEdit);
+		wallEdit = new JButton("Wall");
 		wallEdit.setFocusable(false);
 		wallEdit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				highlightButton(wallEdit, editButtonPanel);
 				paint = "wall";
+				updateEditButtons();
 			}
 		});
 		editButtonPanel.add(wallEdit);
-		JButton blueGateEdit = new JButton("Blue Gate");
+		blueGateEdit = new JButton("Blue Gate");
 		blueGateEdit.setFocusable(false);
 		blueGateEdit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				highlightButton(blueGateEdit, editButtonPanel);
 				if(paint.equals("blue gate")) {
 					paint = "blue reverse gate";
-					blueGateEdit.setText("Blue Gate (R)");
 				} else if(paint.equals("blue reverse gate")) {
 					paint = "blue switch";
-					blueGateEdit.setText("Blue Switch");
 				} else {
 					paint = "blue gate";
-					blueGateEdit.setText("Blue Gate");
 				}
+				updateEditButtons();
 			}
 		});
 		editButtonPanel.add(blueGateEdit);
-		JButton redGateEdit = new JButton("Red Gate");
+		redGateEdit = new JButton("Red Gate");
 		redGateEdit.setFocusable(false);
 		redGateEdit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				highlightButton(redGateEdit, editButtonPanel);
 				if(paint.equals("red gate")) {
 					paint = "red reverse gate";
-					redGateEdit.setText("Red Gate (R)");
 				} else if(paint.equals("red reverse gate")) {
 					paint = "red switch";
-					redGateEdit.setText("Red Switch");
 				} else {
 					paint = "red gate";
-					redGateEdit.setText("Red Gate");
 				}
+				updateEditButtons();
 			}
 		});
 		editButtonPanel.add(redGateEdit);
-		JButton enemyEdit = new JButton("Enemy (D L)");
+		enemyEdit = new JButton("Enemy (D L)");
 		enemyEdit.setFocusable(false);
 		enemyEdit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				highlightButton(enemyEdit, editButtonPanel);
 				if(paint.equals("enemy dumb left")) {
 					paint = "enemy dumb right";
-					enemyEdit.setText("Enemy (D R)");
 				} else if(paint.equals("enemy dumb right")) {
 					paint = "enemy no jump";
-					enemyEdit.setText("Enemy (NJ)");
 				} else if(paint.equals("enemy no jump")) {
 					paint = "enemy only jump";
-					enemyEdit.setText("Enemy (OJ)");
 				} else {
 					paint = "enemy dumb left";
-					enemyEdit.setText("Enemy (D L)");
 				}
+				updateEditButtons();
 			}
 		});
 		editButtonPanel.add(enemyEdit);
-		JButton goalEdit = new JButton("Goal");
+		goalEdit = new JButton("Goal");
 		goalEdit.setFocusable(false);
 		goalEdit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				highlightButton(goalEdit, editButtonPanel);
 				paint = "next level";
+				updateEditButtons();
 			}
 		});
 		editButtonPanel.add(goalEdit);
-		JButton startEdit = new JButton("Start");
+		startEdit = new JButton("Start");
 		startEdit.setFocusable(false);
 		startEdit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				highlightButton(startEdit, editButtonPanel);
 				paint = "player";
+				updateEditButtons();
 			}
 		});
 		editButtonPanel.add(startEdit);
@@ -458,7 +469,7 @@ public class Main {
 		}
 	}
 
-	public static void highlightButton(JButton btn, JPanel p) {
+	private static void highlightButton(JButton btn, JPanel p) {
 		for(Component c : p.getComponents()) {
 			if(c.getClass().getName().equals("javax.swing.JPanel")) {
 				JPanel j = (JPanel) c;
@@ -470,6 +481,62 @@ public class Main {
 			}
 		}
 		btn.setBackground(Color.green);
+	}
+	
+	public static void updateEditButtons() {
+		switch(Main.paint){
+		case "wall":
+			highlightButton(wallEdit, editButtonPanel);
+			break;
+		case "erase":
+			highlightButton(eraseEdit, editButtonPanel);
+			break;
+		case "blue gate":
+		case "blue reverse gate":
+		case "blue switch":
+			highlightButton(blueGateEdit, editButtonPanel);
+			break;
+		case "red gate":
+		case "red reverse gate":
+		case "red switch":
+			highlightButton(redGateEdit, editButtonPanel);
+			break;
+		case "enemy dumb left":
+		case "enemy dumb right":
+		case "enemy no jump":
+		case "enemy only jump":
+			highlightButton(enemyEdit, editButtonPanel);
+			break;
+		case "player":
+			highlightButton(startEdit, editButtonPanel);
+			break;
+		case "next level":
+			highlightButton(goalEdit, editButtonPanel);
+			break;
+		}
+		if(paint.equals("blue reverse gate")) {
+			blueGateEdit.setText("Blue Gate (R)");
+		} else if(paint.equals("blue switch")){
+			blueGateEdit.setText("Blue Switch");
+		} else {
+			blueGateEdit.setText("Blue Gate");
+		} 
+		if(paint.equals("red reverse gate")) {
+			redGateEdit.setText("Red Gate (R)");
+		} else if(paint.equals("red switch")){
+			redGateEdit.setText("Red Switch");
+		} else {
+			redGateEdit.setText("Red Gate");
+		}
+		if (paint.equals("enemy dumb right")) {
+			enemyEdit.setText("Enemy (D R)");
+		} else if (paint.equals("enemy no jump")) {
+			enemyEdit.setText("Enemy (NJ)");
+		} else if(paint.equals("enemy only jump")){
+			enemyEdit.setText("Enemy (OJ)");
+		} else {
+			enemyEdit.setText("Enemy (D L)");
+		}
 	}
 	
 	public static Thing getFromMap(int x, int y) {
@@ -594,53 +661,71 @@ public class Main {
 class MKeyListener extends KeyAdapter {
 	@Override
 	public void keyPressed(KeyEvent event) {
-		if(event.getKeyCode() == KeyEvent.VK_SPACE) {
+		switch(event.getKeyCode()) {
+		case KeyEvent.VK_SPACE:
 			Main.isSpacePressed = true;
-		} else if(event.getKeyCode() == KeyEvent.VK_ESCAPE) {
+			break;
+		case KeyEvent.VK_ESCAPE:
 			Main.isEscapePressed = true;
-		} else {
-		    switch(event.getKeyChar()) {
-		    case 'w':
-		    	Main.isWPressed = true;
-		    	break;
-		    case 'a':
-		    	Main.isAPressed = true;
-		    	break;
-		    case 's':
-		    	Main.isSPressed = true;
-		    	break;
-		    case 'd':
-		    	Main.isDPressed = true;
-		    	break;
-		    default:
-		    	break;
-		    }
-		}
+			break;
+		case KeyEvent.VK_SHIFT:
+			Main.isShiftPressed = true;
+			break;
+		case KeyEvent.VK_ALT:
+			Main.isAltPressed = true;
+			break;
+		case KeyEvent.VK_CONTROL:
+			Main.isCtrlPressed = true;
+			break;
+		case KeyEvent.VK_W:
+	    	Main.isWPressed = true;
+	    	break;
+	    case KeyEvent.VK_A:
+	    	Main.isAPressed = true;
+	    	break;
+	    case KeyEvent.VK_S:
+	    	Main.isSPressed = true;
+	    	break;
+	    case KeyEvent.VK_D:
+	    	Main.isDPressed = true;
+	    	break;
+	    default:
+	    	break;
+	    }
 	}
 	
 	@Override
 	public void keyReleased(KeyEvent event) {
-		if(event.getKeyCode() == KeyEvent.VK_SPACE) {
+		switch(event.getKeyCode()) {
+		case KeyEvent.VK_SPACE:
 			Main.isSpacePressed = false;
-		} else if(event.getKeyCode() == KeyEvent.VK_ESCAPE) {
+			break;
+		case KeyEvent.VK_ESCAPE:
 			Main.isEscapePressed = false;
-		} else {
-		    switch(event.getKeyChar()) {
-		    case 'w':
-		    	Main.isWPressed = false;
-		    	break;
-		    case 'a':
-		    	Main.isAPressed = false;
-		    	break;
-		    case 's':
-		    	Main.isSPressed = false;
-		    	break;
-		    case 'd':
-		    	Main.isDPressed = false;
-		    	break;
-		    default:
-		    	break;
-		    }
-		}
+			break;
+		case KeyEvent.VK_SHIFT:
+			Main.isShiftPressed = false;
+			break;
+		case KeyEvent.VK_ALT:
+			Main.isAltPressed = false;
+			break;
+		case KeyEvent.VK_CONTROL:
+			Main.isCtrlPressed = false;
+			break;
+		case KeyEvent.VK_W:
+	    	Main.isWPressed = false;
+	    	break;
+	    case KeyEvent.VK_A:
+	    	Main.isAPressed = false;
+	    	break;
+	    case KeyEvent.VK_S:
+	    	Main.isSPressed = false;
+	    	break;
+	    case KeyEvent.VK_D:
+	    	Main.isDPressed = false;
+	    	break;
+	    default:
+	    	break;
+	    }
 	}
 }

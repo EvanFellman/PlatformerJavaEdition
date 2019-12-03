@@ -46,8 +46,56 @@ public class EditPanel extends JPanel implements MouseMotionListener, MouseListe
 		} else if(mouseX < 0) {
 			mouseX -= Main.SPRITE_WIDTH;
 		}
+		if(Main.isAltPressed) {
+			Thing a = Main.getFromMap(mouseX, mouseY);
+			if(a != null) {
+				switch(a.id) {
+				case "enemy dumb":
+					if(((EnemyDumb) a).goLeft) {
+						Main.paint = "enemy dumb left";
+					} else {
+						Main.paint = "enemy dumb right";
+					}
+					break;
+				case "open red gate":
+				case "wall red gate":
+					Main.paint = "red gate";
+					break;
+				case "open red reverse gate":
+				case "wall red reverse gate":
+					Main.paint = "red reverse gate";
+					break;
+				case "open blue gate":
+				case "wall blue gate":
+					Main.paint = "blue gate";
+					break;
+				case "open blue reverse gate":
+				case "wall blue reverse gate":
+					Main.paint = "blue reverse gate";
+					break;
+				default:
+					Main.paint = a.id;
+					break;
+				}
+			}
+			Main.updateEditButtons();
+			return;
+		}
 		Thing toInsert = null;
-		switch(Main.paint) {
+		if(Main.getFromMap(mouseX, mouseY) != null && Main.paint != "erase" && !Main.isCtrlPressed) {
+			return;
+		}
+		switch(Main.isCtrlPressed? "erase" : Main.paint) {
+		case "erase":
+			System.out.println("got here");
+			Thing toRemove = Main.getFromMap(mouseX, mouseY);
+			System.out.println(toRemove);
+			if(toRemove != null) {
+				Main.level.remove(toRemove);
+				Main.removeFromMap(toRemove);
+			}
+			toInsert = null;
+			break;
 		case "wall":
 			toInsert = new Wall(mouseX, mouseY);
 			break;
@@ -75,9 +123,6 @@ public class EditPanel extends JPanel implements MouseMotionListener, MouseListe
 		case "next level":
 			toInsert = new NextLevel(mouseX, mouseY);
 			break;
-		case "start":
-			toInsert = new Player(mouseX, mouseY);
-			break;
 		case "red gate":
 			toInsert = new RedGate(mouseX, mouseY);
 			break;
@@ -94,8 +139,11 @@ public class EditPanel extends JPanel implements MouseMotionListener, MouseListe
 			System.out.println("uh oh");
 			System.exit(0);
 		}
-		Main.putInMap(toInsert);
-		Main.level.add(toInsert);
+		if(toInsert != null) {
+			Main.putInMap(toInsert);
+			Main.level.add(toInsert);
+		}
+		repaint();
 	}
 
 	@Override
