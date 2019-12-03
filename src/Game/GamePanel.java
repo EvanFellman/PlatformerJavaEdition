@@ -11,6 +11,9 @@ public class GamePanel extends JPanel {
 			float y = Main.level.get(i).getY() - Main.cameraY;
 			if(x <= Main.window.getWidth() && x >= - 1* Main.window.getWidth() && y <= Main.window.getHeight() && y >= -1 * Main.window.getHeight()) {
 				Main.level.get(i).move();
+				if(Main.level.get(i).id.equals("enemy only jump")) {
+					System.out.println(Main.level.get(i).getY());
+				}
 				try {
 					Main.level.get(i).display(g);
 				} catch(Exception e) {

@@ -79,5 +79,6 @@ public class Player extends Thing {
 	
 	void die() {
 		Main.loadLevel();
+		Main.loadLevel();
 	}
 }

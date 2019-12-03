@@ -53,6 +53,7 @@ public class Main {
 	public static void main(String[] args) throws IOException, InterruptedException {
 		window = new JFrame();
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		window.addKeyListener(keyListener);
 		JPanel menuPanel = new JPanel();
 		JLabel playLabel = new JLabel("Play your levels");
 		playLabel.addMouseListener(new MouseAdapter() {
@@ -83,22 +84,19 @@ public class Main {
 		JPanel editButtonPanel = new JPanel();
 		editPanel.add(editButtonPanel);
 		JButton backEdit = new JButton("Back");
+		backEdit.setFocusable(false);
 		backEdit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				window.removeKeyListener(keyListener);
 				window.remove(editPanel);
-				isWPressed = false;
-				isAPressed = false;
-				isSPressed = false;
-				isDPressed = false;
-				isSpacePressed = false;
-				isEscapePressed = false;
 				STATE="menu";
+				Thread.yield();
+				System.out.println("hi");
 			}
 		});
 		editButtonPanel.add(backEdit);
 		JButton enemySpeedEdit = new JButton("medium speed");
+		enemySpeedEdit.setFocusable(false);
 		enemySpeedEdit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -116,6 +114,7 @@ public class Main {
 		});
 		editButtonPanel.add(enemySpeedEdit);
 		JButton wallEdit = new JButton("Wall");
+		wallEdit.setFocusable(false);
 		wallEdit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -125,16 +124,24 @@ public class Main {
 		});
 		editButtonPanel.add(wallEdit);
 		JButton blueGateEdit = new JButton("Blue Gate");
+		blueGateEdit.setFocusable(false);
 		blueGateEdit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				paint = "blue gate";
+				if(paint.equals("blue gate")) {
+					paint = "blue reverse gate";
+					blueGateEdit.setText("Blue Gate (R)");
+				} else {
+					paint = "blue gate";
+					blueGateEdit.setText("Blue Gate");
+				}
 				highlightButton(blueGateEdit, editButtonPanel);
 			}
 		});
 		editButtonPanel.add(blueGateEdit);
-		JButton SaveEdit = new JButton("Save");
-		SaveEdit.addActionListener(new ActionListener() {
+		JButton saveEdit = new JButton("Save");
+		saveEdit.setFocusable(false);
+		saveEdit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				int minX = Integer.MAX_VALUE;
@@ -248,7 +255,7 @@ public class Main {
 				}
 			}
 		});
-		editButtonPanel.add(SaveEdit);
+		editButtonPanel.add(saveEdit);
 		editPanel.add(Box.createVerticalGlue());
 		editPanel.add(ep);
 		highlightButton(wallEdit, editButtonPanel);
@@ -263,7 +270,6 @@ public class Main {
 				break;
 			case "edit":
 				window.setSize(500, 625);
-				window.addKeyListener(keyListener);
 				STATE="edit0";
 				levelNumber=1;
 				loadLevel();
@@ -299,7 +305,6 @@ public class Main {
 					}
 					Date after = new Date();
 					while(after.getTime() - before.getTime() <= 3) {
-						Thread.sleep(1);
 						after = new Date();
 					}
 				}
@@ -310,19 +315,13 @@ public class Main {
 				levelNumber = 1;
 				loadLevel();
 				gp = new GamePanel();
-				isWPressed = false;
-				isAPressed = false;
-				isSPressed = false;
-				isDPressed = false;
-				isSpacePressed = false;
-				isEscapePressed = false;
-				window.addKeyListener(keyListener);
 				window.add(gp);
 				window.setVisible(true);
 				while(STATE.equals("play0")) {
 					Date before = new Date();
 					if(isEscapePressed) {
 						JLabel quitLabel = new JLabel("paused - Press w to quit or escape to continue");
+						quitLabel.setFocusable(false);
 						window.add(quitLabel);
 						window.remove(gp);
 						window.setVisible(true);
@@ -331,14 +330,7 @@ public class Main {
 						if(isWPressed) {
 							window.remove(quitLabel);
 							window.remove(gp);
-							window.removeKeyListener(keyListener);
 							STATE = "menu";
-							isWPressed = false;
-							isAPressed = false;
-							isSPressed = false;
-							isDPressed = false;
-							isSpacePressed = false;
-							isEscapePressed = false;
 							break;
 						} else if(isEscapePressed) {
 							window.remove(quitLabel);
@@ -364,14 +356,13 @@ public class Main {
 					window.repaint();
 					Date after = new Date();
 					while(after.getTime() - before.getTime() <= 3) {
-						Thread.sleep(1);
 						after = new Date();
 					}
 				}				
 			}
 		}
 	}
-	
+
 	public static void highlightButton(JButton btn, JPanel p) {
 		for(Component c : p.getComponents()) {
 			c.setBackground(Color.GRAY);
@@ -407,8 +398,16 @@ public class Main {
 		isBlueGateOpen = false;
 		isRedGateOpen = false;
 		File imgFile = new File("./level" + Integer.toString(levelNumber) + ".png");
-		level = new ArrayList<Thing>();
-		levelMap = new Hashtable<Integer, Hashtable<Integer, Thing>>();
+		if (level==null) {
+			level = new ArrayList<Thing>();
+		} else {
+			level.clear();
+		}
+		if (levelMap == null) {
+			levelMap = new Hashtable<Integer, Hashtable<Integer, Thing>>();
+		} else {
+			levelMap.clear();
+		}
 		if(imgFile.exists()) {
 			try {
 				BufferedImage img = ImageIO.read(imgFile);
@@ -467,7 +466,6 @@ public class Main {
 				cameraY = (int) (player.getY() - (window.getHeight() * 0.5));
 			} catch (IOException e) {
 				window.remove(gp);
-				window.removeKeyListener(keyListener);
 				STATE = "menu";
 				isWPressed = false;
 				isAPressed = false;
@@ -479,7 +477,6 @@ public class Main {
 			}			
 		} else {
 			window.remove(gp);
-			window.removeKeyListener(keyListener);
 			STATE = "menu";
 			isWPressed = false;
 			isAPressed = false;
@@ -521,7 +518,6 @@ class MKeyListener extends KeyAdapter {
 	
 	@Override
 	public void keyReleased(KeyEvent event) {
-		System.out.println("key released");
 		if(event.getKeyCode() == KeyEvent.VK_SPACE) {
 			Main.isSpacePressed = false;
 		} else if(event.getKeyCode() == KeyEvent.VK_ESCAPE) {
