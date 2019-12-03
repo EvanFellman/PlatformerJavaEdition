@@ -161,6 +161,16 @@ public class Main {
 			}
 		});
 		editButtonPanel.add(redGateEdit);
+		JButton goalEdit = new JButton("Goal");
+		goalEdit.setFocusable(false);
+		goalEdit.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				highlightButton(goalEdit, editButtonPanel);
+				paint = "next level";
+			}
+		});
+		editButtonPanel.add(goalEdit);
 		JButton saveEdit = new JButton("Save");
 		saveEdit.setFocusable(false);
 		saveEdit.addActionListener(new ActionListener() {
