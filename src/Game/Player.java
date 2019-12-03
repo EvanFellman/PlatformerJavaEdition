@@ -22,7 +22,7 @@ public class Player extends Thing {
 		for(int i = -1; i <= 1; i++) {
 			for(int j = -1; j <= 1; j++) {
 				Thing a = Main.getFromMap(this.x + (i * Main.SPRITE_WIDTH), this.y + (j * Main.SPRITE_HEIGHT));
-				if(a != null && a.id.contains("wall") && this.isTouching(a)) {
+				if(a != null && (a.id.contains("wall") || (!this.equals(a) && a.id.equals("player"))) && this.isTouching(a)) {
 					if(this.dx > 0) {
 						this.dx = 0;
 						this.x = a.getX() - Main.SPRITE_WIDTH;
@@ -39,7 +39,7 @@ public class Player extends Thing {
 			for(int j = -1; j <= 1; j++) {
 				Thing a = Main.getFromMap(this.x + (i * Main.SPRITE_WIDTH), this.y + (j * Main.SPRITE_HEIGHT));
 				if(!this.equals(a) && this.isTouching(a)) {
-					if(a.id.contains("wall")) {
+					if(a.id.contains("wall") || (!this.equals(a) && a.id.equals("player"))) {
 						if(this.dy > 0) {
 							if(Main.isWPressed && a.getY() > this.y) {
 								this.dy = -2;

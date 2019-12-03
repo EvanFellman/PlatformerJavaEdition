@@ -224,6 +224,16 @@ public class Main {
 			}
 		});
 		editButtonPanel.add(goalEdit);
+		JButton startEdit = new JButton("Start");
+		startEdit.setFocusable(false);
+		startEdit.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				highlightButton(startEdit, editButtonPanel);
+				paint = "player";
+			}
+		});
+		editButtonPanel.add(startEdit);
 		JButton saveEdit = new JButton("Save");
 		saveEdit.setFocusable(false);
 		saveEdit.addActionListener(new ActionListener() {
