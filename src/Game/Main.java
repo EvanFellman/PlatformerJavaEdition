@@ -82,6 +82,8 @@ public class Main {
 		menuPanel.add(quitGameLabel);
 		JPanel editPanel = new JPanel();
 		JPanel editButtonPanel = new JPanel();
+		JPanel editNavButtonPanel = new JPanel();
+		editButtonPanel.add(editNavButtonPanel);
 		editPanel.add(editButtonPanel);
 		JButton backEdit = new JButton("Back");
 		backEdit.setFocusable(false);
@@ -94,7 +96,8 @@ public class Main {
 				System.out.println("hi");
 			}
 		});
-		editButtonPanel.add(backEdit);
+		editNavButtonPanel.add(backEdit);
+		editNavButtonPanel.add(Box.createRigidArea(new Dimension(100, 10)));
 		JButton levelNumberDisplayEdit = new JButton("level " + Integer.toString(levelNumber));
 		levelNumberDisplayEdit.setFocusable(false);
 		JButton previousLevelEdit = new JButton("<");
@@ -109,8 +112,8 @@ public class Main {
 				}
 			}
 		});
-		editButtonPanel.add(previousLevelEdit);
-		editButtonPanel.add(levelNumberDisplayEdit);
+		editNavButtonPanel.add(previousLevelEdit);
+		editNavButtonPanel.add(levelNumberDisplayEdit);
 		JButton nextLevelEdit = new JButton(">");
 		nextLevelEdit.setFocusable(false);
 		nextLevelEdit.addActionListener(new ActionListener() {
@@ -121,7 +124,8 @@ public class Main {
 				loadLevel();
 			}
 		});
-		editButtonPanel.add(nextLevelEdit);
+		editNavButtonPanel.add(nextLevelEdit);
+		editNavButtonPanel.add(Box.createRigidArea(new Dimension(150, 10)));
 		JButton enemySpeedEdit = new JButton("medium speed");
 		enemySpeedEdit.setFocusable(false);
 		enemySpeedEdit.addActionListener(new ActionListener() {
@@ -336,7 +340,7 @@ public class Main {
 				}
 			}
 		});
-		editButtonPanel.add(saveEdit);
+		editNavButtonPanel.add(saveEdit);
 		editPanel.add(Box.createVerticalGlue());
 		editPanel.add(ep);
 		highlightButton(wallEdit, editButtonPanel);
@@ -350,16 +354,16 @@ public class Main {
 				STATE="menu0";
 				break;
 			case "edit":
-				window.setSize(500, 625);
+				window.setSize(600, 625);
 				STATE="edit0";
 				levelNumber=1;
 				loadLevel();
-				editButtonPanel.setMaximumSize(new Dimension(500,100));
-				editButtonPanel.setPreferredSize(new Dimension(500,100));
-				editButtonPanel.setMinimumSize(new Dimension(500,100));
-				ep.setMaximumSize(new Dimension(500,500));
-				ep.setPreferredSize(new Dimension(500, 500));
-				ep.setMinimumSize(new Dimension(500,500));
+				editButtonPanel.setMaximumSize(new Dimension(600,100));
+				editButtonPanel.setPreferredSize(new Dimension(600,100));
+				editButtonPanel.setMinimumSize(new Dimension(600,100));
+				ep.setMaximumSize(new Dimension(550,500));
+				ep.setPreferredSize(new Dimension(550, 500));
+				ep.setMinimumSize(new Dimension(550,500));
 				BoxLayout bl = new BoxLayout(editPanel, BoxLayout.PAGE_AXIS);
 				editPanel.setLayout(bl);
 				window.add(editPanel);
@@ -446,7 +450,14 @@ public class Main {
 
 	public static void highlightButton(JButton btn, JPanel p) {
 		for(Component c : p.getComponents()) {
-			c.setBackground(Color.GRAY);
+			if(c.getClass().getName().equals("javax.swing.JPanel")) {
+				JPanel j = (JPanel) c;
+				for(Component i: j.getComponents()) {
+					i.setBackground(Color.LIGHT_GRAY);
+				}
+			} else {
+				c.setBackground(Color.GRAY);
+			}
 		}
 		btn.setBackground(Color.green);
 	}

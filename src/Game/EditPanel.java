@@ -17,6 +17,8 @@ public class EditPanel extends JPanel implements MouseMotionListener, MouseListe
 		super.setBackground(Color.BLUE);
 	}
 	public void paint(Graphics g) {
+		g.setColor(Color.CYAN);
+		g.fillRect(0, 0, (int)g.getClipBounds().getWidth(), (int)g.getClipBounds().getHeight());
 		for(int i = 0; i < Main.level.size(); i++) {
 			double x = Main.level.get(i).getX() - Main.cameraX;
 			double y = Main.level.get(i).getY() - Main.cameraY;
