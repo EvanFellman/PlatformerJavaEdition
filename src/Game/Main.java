@@ -50,7 +50,7 @@ public class Main {
 	public static boolean isRedGateOpen = false;
 	public static double enemySpeed = 0.25f;
 	private static GamePanel gp;
-	private static EditPanel ep = new EditPanel();
+	public static EditPanel ep = new EditPanel();
 	private static MKeyListener keyListener = new MKeyListener();
 	public static String paint = "wall";
 	private static JPanel editButtonPanel;
@@ -375,13 +375,13 @@ public class Main {
 				STATE="menu0";
 				break;
 			case "edit":
-				window.setSize(650, 625);
+				window.setSize(550, 645);
 				STATE="edit0";
 				levelNumber=1;
 				loadLevel();
-				editButtonPanel.setMaximumSize(new Dimension(650,100));
-				editButtonPanel.setPreferredSize(new Dimension(650,100));
-				editButtonPanel.setMinimumSize(new Dimension(650,100));
+				editButtonPanel.setMaximumSize(new Dimension(550,120));
+				editButtonPanel.setPreferredSize(new Dimension(550,120));
+				editButtonPanel.setMinimumSize(new Dimension(550,120));
 				ep.setMaximumSize(new Dimension(550,500));
 				ep.setPreferredSize(new Dimension(550, 500));
 				ep.setMinimumSize(new Dimension(550,500));

@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 
 public class EditPanel extends JPanel implements MouseMotionListener, MouseListener {
 	private static final long serialVersionUID = 1L;
+	private boolean isMouseDown = false;
 	public EditPanel() {
 		super();
 		super.addMouseMotionListener(this);
@@ -30,24 +31,48 @@ public class EditPanel extends JPanel implements MouseMotionListener, MouseListe
 				}
 			}
 		}
+		if(isMouseDown) {
+			g.setColor(Color.DARK_GRAY);
+			int mx = 0, my = 0;
+			try {
+				mx = getMousePosition().x;
+				my = getMousePosition().y;
+			} catch(Exception e) {
+				return;
+			}
+			int x = (mx + Main.cameraX) - ((mx + Main.cameraX) % Main.SPRITE_WIDTH);
+			int y = (my + Main.cameraY) - ((my + Main.cameraY) % Main.SPRITE_HEIGHT);
+			x -= Main.cameraX;
+			y -= Main.cameraY;
+			if(mx + Main.cameraX < 0) {
+				x -= Main.SPRITE_WIDTH;
+			} 
+			if(my + Main.cameraY < 0) {
+				y -= Main.SPRITE_HEIGHT;
+			}
+			if(Main.isShiftPressed) {
+				g.drawRect(x - Main.SPRITE_WIDTH, y - Main.SPRITE_HEIGHT, 3 * Main.SPRITE_WIDTH, 3 * Main.SPRITE_HEIGHT);
+			} else {
+				g.drawRect(x, y, Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT);
+			}
+		}
 	}
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		
-		int mouseX = (e.getX() + Main.cameraX) - ((e.getX() + Main.cameraX) % Main.SPRITE_WIDTH);
-		int mouseY = (e.getY() + Main.cameraY) - ((e.getY() + Main.cameraY) % Main.SPRITE_HEIGHT);
+		int mouseXLoc = (e.getX() + Main.cameraX) - ((e.getX() + Main.cameraX) % Main.SPRITE_WIDTH);
+		int mouseYLoc = (e.getY() + Main.cameraY) - ((e.getY() + Main.cameraY) % Main.SPRITE_HEIGHT);
 		if(e.getY() + Main.cameraY > -1 * Main.SPRITE_HEIGHT && e.getY() + Main.cameraY <= 0) {
-			mouseY = -25;
-		} else if(mouseY < 0) {
-			mouseY -= Main.SPRITE_HEIGHT;
+			mouseYLoc = -25;
+		} else if(mouseYLoc < 0) {
+			mouseYLoc -= Main.SPRITE_HEIGHT;
 		}
 		if(e.getX() + Main.cameraX > -1 * Main.SPRITE_WIDTH && e.getX() + Main.cameraX <= 0) {
-			mouseX = -25;
-		} else if(mouseX < 0) {
-			mouseX -= Main.SPRITE_WIDTH;
+			mouseXLoc = -25;
+		} else if(mouseXLoc < 0) {
+			mouseXLoc -= Main.SPRITE_WIDTH;
 		}
 		if(Main.isAltPressed) {
-			Thing a = Main.getFromMap(mouseX, mouseY);
+			Thing a = Main.getFromMap(mouseXLoc, mouseYLoc);
 			if(a != null) {
 				switch(a.id) {
 				case "enemy dumb":
@@ -79,71 +104,74 @@ public class EditPanel extends JPanel implements MouseMotionListener, MouseListe
 				}
 			}
 			Main.updateEditButtons();
-			return;
-		}
-		Thing toInsert = null;
-		if(Main.getFromMap(mouseX, mouseY) != null && Main.paint != "erase" && !Main.isCtrlPressed) {
-			return;
-		}
-		switch(Main.isCtrlPressed? "erase" : Main.paint) {
-		case "erase":
-			System.out.println("got here");
-			Thing toRemove = Main.getFromMap(mouseX, mouseY);
-			System.out.println(toRemove);
-			if(toRemove != null) {
-				Main.level.remove(toRemove);
-				Main.removeFromMap(toRemove);
+		} else {
+			for (int mouseX = mouseXLoc - (Main.isShiftPressed ? Main.SPRITE_WIDTH : 0); mouseX <= mouseXLoc + (Main.isShiftPressed ? Main.SPRITE_WIDTH : 0); mouseX += Main.SPRITE_WIDTH) {
+				for (int mouseY = mouseYLoc - (Main.isShiftPressed ? Main.SPRITE_HEIGHT : 0); mouseY <= mouseYLoc + (Main.isShiftPressed ? Main.SPRITE_HEIGHT : 0); mouseY += Main.SPRITE_HEIGHT) {
+					if (Main.getFromMap(mouseX, mouseY) != null && Main.paint != "erase" && !Main.isCtrlPressed) {
+						continue;
+					}
+					Thing toInsert = null;
+					switch (Main.isCtrlPressed ? "erase" : Main.paint) {
+					case "erase":
+						System.out.println("got here");
+						Thing toRemove = Main.getFromMap(mouseX, mouseY);
+						System.out.println(toRemove);
+						if (toRemove != null) {
+							Main.level.remove(toRemove);
+							Main.removeFromMap(toRemove);
+						}
+						toInsert = null;
+						break;
+					case "wall":
+						toInsert = new Wall(mouseX, mouseY);
+						break;
+					case "blue gate":
+						toInsert = new BlueGate(mouseX, mouseY);
+						break;
+					case "blue reverse gate":
+						toInsert = new BlueReverseGate(mouseX, mouseY);
+						break;
+					case "blue switch":
+						toInsert = new BlueSwitch(mouseX, mouseY);
+						break;
+					case "enemy dumb left":
+						toInsert = new EnemyDumb(mouseX, mouseY, true, Main.enemySpeed);
+						break;
+					case "enemy dumb right":
+						toInsert = new EnemyDumb(mouseX, mouseY, false, Main.enemySpeed);
+						break;
+					case "enemy no jump":
+						toInsert = new EnemyNoJump(mouseX, mouseY, Main.enemySpeed);
+						break;
+					case "enemy only jump":
+						toInsert = new EnemyOnlyJump(mouseX, mouseY);
+						break;
+					case "next level":
+						toInsert = new NextLevel(mouseX, mouseY);
+						break;
+					case "red gate":
+						toInsert = new RedGate(mouseX, mouseY);
+						break;
+					case "red reverse gate":
+						toInsert = new RedReverseGate(mouseX, mouseY);
+						break;
+					case "red switch":
+						toInsert = new RedSwitch(mouseX, mouseY);
+						break;
+					case "player":
+						toInsert = new Player(mouseX, mouseY);
+						break;
+					default:
+						System.out.println("uh oh");
+						System.exit(0);
+					}
+					if (toInsert != null) {
+						Main.putInMap(toInsert);
+						Main.level.add(toInsert);
+					}
+				}
 			}
-			toInsert = null;
-			break;
-		case "wall":
-			toInsert = new Wall(mouseX, mouseY);
-			break;
-		case "blue gate":
-			toInsert = new BlueGate(mouseX, mouseY);
-			break;
-		case "blue reverse gate":
-			toInsert = new BlueReverseGate(mouseX, mouseY);
-			break;
-		case "blue switch":
-			toInsert = new BlueSwitch(mouseX, mouseY);
-			break;
-		case "enemy dumb left":
-			toInsert = new EnemyDumb(mouseX, mouseY, true, Main.enemySpeed);
-			break;
-		case "enemy dumb right":
-			toInsert = new EnemyDumb(mouseX, mouseY, false, Main.enemySpeed);
-			break;
-		case "enemy no jump":
-			toInsert = new EnemyNoJump(mouseX, mouseY, Main.enemySpeed);
-			break;
-		case "enemy only jump":
-			toInsert = new EnemyOnlyJump(mouseX, mouseY);
-			break;
-		case "next level":
-			toInsert = new NextLevel(mouseX, mouseY);
-			break;
-		case "red gate":
-			toInsert = new RedGate(mouseX, mouseY);
-			break;
-		case "red reverse gate":
-			toInsert = new RedReverseGate(mouseX, mouseY);
-			break;
-		case "red switch":
-			toInsert = new RedSwitch(mouseX, mouseY);
-			break;
-		case "player":
-			toInsert = new Player(mouseX, mouseY);
-			break;
-		default:
-			System.out.println("uh oh");
-			System.exit(0);
 		}
-		if(toInsert != null) {
-			Main.putInMap(toInsert);
-			Main.level.add(toInsert);
-		}
-		repaint();
 	}
 
 	@Override
@@ -151,11 +179,15 @@ public class EditPanel extends JPanel implements MouseMotionListener, MouseListe
 		//I want the behavior of dragging and clicking to be the same
 		mouseDragged(e);
 	}
+	@Override public void mouseEntered(MouseEvent e) {
+		isMouseDown = true;
+	}
+	@Override public void mouseExited(MouseEvent e) {
+		isMouseDown = false;
+	}
 	
 	//I don't need it but if I remove it then MouseMotionListener and MouseListener gets sad
 	@Override public void mouseMoved(MouseEvent e) { }
 	@Override public void mousePressed(MouseEvent e) { }
 	@Override public void mouseReleased(MouseEvent e) { }
-	@Override public void mouseEntered(MouseEvent e) { }
-	@Override public void mouseExited(MouseEvent e) { }
 }
