@@ -118,8 +118,8 @@ public class Main {
 		wallEdit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				paint = "wall";
 				highlightButton(wallEdit, editButtonPanel);
+				paint = "wall";
 			}
 		});
 		editButtonPanel.add(wallEdit);
@@ -128,17 +128,39 @@ public class Main {
 		blueGateEdit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				highlightButton(blueGateEdit, editButtonPanel);
 				if(paint.equals("blue gate")) {
 					paint = "blue reverse gate";
 					blueGateEdit.setText("Blue Gate (R)");
+				} else if(paint.equals("blue reverse gate")) {
+					paint = "blue switch";
+					blueGateEdit.setText("Blue Switch");
 				} else {
 					paint = "blue gate";
 					blueGateEdit.setText("Blue Gate");
 				}
-				highlightButton(blueGateEdit, editButtonPanel);
 			}
 		});
 		editButtonPanel.add(blueGateEdit);
+		JButton redGateEdit = new JButton("Red Gate");
+		redGateEdit.setFocusable(false);
+		redGateEdit.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				highlightButton(redGateEdit, editButtonPanel);
+				if(paint.equals("red gate")) {
+					paint = "red reverse gate";
+					redGateEdit.setText("Red Gate (R)");
+				} else if(paint.equals("red reverse gate")) {
+					paint = "red switch";
+					redGateEdit.setText("Red Switch");
+				} else {
+					paint = "red gate";
+					redGateEdit.setText("Red Gate");
+				}
+			}
+		});
+		editButtonPanel.add(redGateEdit);
 		JButton saveEdit = new JButton("Save");
 		saveEdit.setFocusable(false);
 		saveEdit.addActionListener(new ActionListener() {
