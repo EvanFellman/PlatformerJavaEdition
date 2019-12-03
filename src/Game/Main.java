@@ -364,13 +364,13 @@ public class Main {
 				STATE="menu0";
 				break;
 			case "edit":
-				window.setSize(600, 625);
+				window.setSize(650, 625);
 				STATE="edit0";
 				levelNumber=1;
 				loadLevel();
-				editButtonPanel.setMaximumSize(new Dimension(600,100));
-				editButtonPanel.setPreferredSize(new Dimension(600,100));
-				editButtonPanel.setMinimumSize(new Dimension(600,100));
+				editButtonPanel.setMaximumSize(new Dimension(650,100));
+				editButtonPanel.setPreferredSize(new Dimension(650,100));
+				editButtonPanel.setMinimumSize(new Dimension(650,100));
 				ep.setMaximumSize(new Dimension(550,500));
 				ep.setPreferredSize(new Dimension(550, 500));
 				ep.setMinimumSize(new Dimension(550,500));
