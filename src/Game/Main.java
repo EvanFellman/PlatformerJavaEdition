@@ -27,7 +27,7 @@ public class Main {
 	public static Hashtable<Integer, Hashtable<Integer, Thing>> levelMap; 
 	public static int startX;
 	public static int startY;
-	public static int levelNumber;
+	public static int levelNumber = 1;
 	public static int cameraX = 0;
 	public static int cameraY = 0;
 	public static int DEATH_BELOW;
@@ -95,6 +95,33 @@ public class Main {
 			}
 		});
 		editButtonPanel.add(backEdit);
+		JButton levelNumberDisplayEdit = new JButton("level " + Integer.toString(levelNumber));
+		levelNumberDisplayEdit.setFocusable(false);
+		JButton previousLevelEdit = new JButton("<");
+		previousLevelEdit.setFocusable(false);
+		previousLevelEdit.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(levelNumber > 0) {
+					levelNumber --;
+					levelNumberDisplayEdit.setText("level " + Integer.toString(levelNumber));
+					loadLevel();
+				}
+			}
+		});
+		editButtonPanel.add(previousLevelEdit);
+		editButtonPanel.add(levelNumberDisplayEdit);
+		JButton nextLevelEdit = new JButton(">");
+		nextLevelEdit.setFocusable(false);
+		nextLevelEdit.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				levelNumber++;
+				levelNumberDisplayEdit.setText("level " + Integer.toString(levelNumber));
+				loadLevel();
+			}
+		});
+		editButtonPanel.add(nextLevelEdit);
 		JButton enemySpeedEdit = new JButton("medium speed");
 		enemySpeedEdit.setFocusable(false);
 		enemySpeedEdit.addActionListener(new ActionListener() {
