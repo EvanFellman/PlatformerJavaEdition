@@ -6,13 +6,13 @@ public class GamePanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	public void paint(Graphics g) {
+		boolean playerDied = false;
 		for(int i = 0; i < Main.level.size(); i++) {
-			float x = Main.level.get(i).getX() - Main.cameraX;
-			float y = Main.level.get(i).getY() - Main.cameraY;
+			double x = Main.level.get(i).getX() - Main.cameraX;
+			double y = Main.level.get(i).getY() - Main.cameraY;
 			if(x <= Main.window.getWidth() && x >= - 1* Main.window.getWidth() && y <= Main.window.getHeight() && y >= -1 * Main.window.getHeight()) {
-				Main.level.get(i).move();
-				if(Main.level.get(i).id.equals("enemy only jump")) {
-					System.out.println(Main.level.get(i).getY());
+				if(!playerDied) {
+					playerDied = Main.level.get(i).move();
 				}
 				try {
 					Main.level.get(i).display(g);

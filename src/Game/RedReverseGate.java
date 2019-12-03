@@ -10,7 +10,7 @@ public class RedReverseGate extends Thing {
 		super(x, y, Main.isRedGateOpen ? "wall red reverse gate" : "open red reverse gate", 3, Main.isRedGateOpen ? 1 : 2);
 	}
 	
-	public void move() {
+	public boolean move() {
 		Main.removeFromMap(this);
 		if(Main.isRedGateOpen && this.id.equals("open red reverse gate")) {
 			this.id = "wall red reverse gate";
@@ -28,5 +28,6 @@ public class RedReverseGate extends Thing {
 			}
 		}
 		Main.putInMap(this);
+		return false;
 	}
 }

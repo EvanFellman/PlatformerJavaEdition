@@ -18,8 +18,8 @@ public class EditPanel extends JPanel implements MouseMotionListener, MouseListe
 	}
 	public void paint(Graphics g) {
 		for(int i = 0; i < Main.level.size(); i++) {
-			float x = Main.level.get(i).getX() - Main.cameraX;
-			float y = Main.level.get(i).getY() - Main.cameraY;
+			double x = Main.level.get(i).getX() - Main.cameraX;
+			double y = Main.level.get(i).getY() - Main.cameraY;
 			if(x <= Main.window.getWidth() && x >= - 1* Main.window.getWidth() && y <= Main.window.getHeight() && y >= -1 * Main.window.getHeight()) {
 				try {
 					Main.level.get(i).display(g);

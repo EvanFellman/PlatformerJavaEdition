@@ -7,7 +7,7 @@ public class RedSwitch extends Thing {
 		this.touchedLast = 0;
 	}
 	
-	public void move() {
+	public boolean move() {
 		boolean wasTouched = false;
 		for(int i = -1; i <= 1; i++) {
 			for(int j = -1; j <= 1; j++) {
@@ -24,5 +24,6 @@ public class RedSwitch extends Thing {
 		if(!wasTouched) {
 			this.touchedLast -= 1;
 		}
+		return false;
 	}
 }

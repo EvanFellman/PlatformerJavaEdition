@@ -6,7 +6,7 @@ public class Player extends Thing {
 	}
 
 	@Override
-	void move() {
+	public boolean move() {
 		Main.removeFromMap(this);
 		if(this.dy > 5) {
 			this.dy = 5;
@@ -66,6 +66,7 @@ public class Player extends Thing {
 							a.die();
 						} else {
 							this.die();
+							return true;
 						}
 					}
 				}
@@ -73,11 +74,13 @@ public class Player extends Thing {
 		}
 		if(this.y > Main.DEATH_BELOW) {
 			this.die();
+			return true;
 		}
 		Main.putInMap(this);
+		return false;
 	}
 	
-	void die() {
+	public void die() {
 		Main.loadLevel();
 		Main.loadLevel();
 	}

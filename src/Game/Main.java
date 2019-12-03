@@ -37,7 +37,7 @@ public class Main {
 	public static boolean isDPressed = false;
 	public static boolean isSpacePressed = false;
 	public static boolean isEscapePressed = false;
-	public static final float GRAVITY = 0.02f;
+	public static final double GRAVITY = 0.02f;
 	public static final int SPRITE_HEIGHT = 25;
 	public static final int SPRITE_WIDTH = 25;
 	public static Player player;
@@ -45,7 +45,7 @@ public class Main {
 	public static JFrame window;
 	public static boolean isBlueGateOpen = false;
 	public static boolean isRedGateOpen = false;
-	public static float enemySpeed = 0.25f;
+	public static double enemySpeed = 0.25f;
 	private static GamePanel gp;
 	private static EditPanel ep = new EditPanel();
 	private static MKeyListener keyListener = new MKeyListener();
@@ -378,7 +378,7 @@ public class Main {
 		}
 	}
 	
-	public static Thing getFromMap(float x, float y) {
+	public static Thing getFromMap(double x, double y) {
 		return getFromMap((int) x, (int) y);
 	}
 	
@@ -394,7 +394,7 @@ public class Main {
 	}
 	
 	//resets level
-	public static void loadLevel() {
+	synchronized public static void loadLevel() {
 		isBlueGateOpen = false;
 		isRedGateOpen = false;
 		File imgFile = new File("./level" + Integer.toString(levelNumber) + ".png");

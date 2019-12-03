@@ -1,11 +1,11 @@
 package Game;
 
 public abstract class Enemy extends Thing {
-	public Enemy(float x, float y, String id, int picX, int picY) {
+	public Enemy(double x, double y, String id, int picX, int picY) {
 		super(x, y, id, picX, picY);
 	}
 	
-	void move() {
+	public boolean move() {
 		Main.removeFromMap(this);
 		if(this.dy > 5) {
 			this.dy = 5;
@@ -34,6 +34,7 @@ public abstract class Enemy extends Thing {
 						this.die();
 					} else {
 						a.die();
+						return true;
 					}
 				}
 			}
@@ -50,15 +51,17 @@ public abstract class Enemy extends Thing {
 						}
 						if(a.getY() > this.y) {
 							this.y = a.y - Main.SPRITE_HEIGHT;
-							System.out.print(a.id);
-							System.out.println(" - stop on top");
+//							System.out.print(a.getUniqueID());
+//							System.out.print(" - ");
+//							System.out.print(this.getUniqueID());
+//							System.out.println(" - stop on top");
 						}
 						break;
 					} else if(this.dy < 0) {
 						this.dy = 0;
 						this.y = a.y + Main.SPRITE_HEIGHT;
-						System.out.print(a.id);
-						System.out.println(" - stop on bottom");
+//						System.out.print(a.id);
+//						System.out.println(" - stop on bottom");
 						break;
 					}
 				} else if(a != null && this.isTouching(a) && a.id.equals("player")) {
@@ -71,6 +74,7 @@ public abstract class Enemy extends Thing {
 						this.die();
 					} else {
 						a.die();
+						return true;
 					}
 				}
 			}
@@ -79,9 +83,10 @@ public abstract class Enemy extends Thing {
 			this.die();
 		}
 		Main.putInMap(this);
+		return false;
 	}
 	
-	void die() {
+	public void die() {
 		Main.removeFromMap(this);
 		Main.level.remove(this);
 	}

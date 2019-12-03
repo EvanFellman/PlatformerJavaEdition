@@ -2,11 +2,11 @@ package Game;
 
 public class EnemyOnlyJump extends Enemy {
 
-	public EnemyOnlyJump(float x, float y) {
+	public EnemyOnlyJump(double x, double y) {
 		super(x, y, "enemy only jump", 0, 2);
 	}
 	
-	public void move() {
+	public boolean move() {
 		if(Main.isWPressed) {
 			for(int i = -1; i <= 1; i++) {
 				for(int j = -1; j <= 1; j++) {
@@ -18,6 +18,6 @@ public class EnemyOnlyJump extends Enemy {
 				}
 			}
 		}
-		super.move();
+		return super.move();
 	}
 }

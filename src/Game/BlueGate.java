@@ -10,7 +10,7 @@ public class BlueGate extends Thing {
 		super(x, y, Main.isBlueGateOpen ? "open blue gate" : "wall blue gate", 2, Main.isBlueGateOpen ? 2 : 1);
 	}
 	
-	public void move() {
+	public boolean move() {
 		Main.removeFromMap(this);
 		if(Main.isBlueGateOpen && this.id.equals("wall blue gate")) {
 			this.id = "open blue gate";
@@ -28,5 +28,6 @@ public class BlueGate extends Thing {
 			}
 		}
 		Main.putInMap(this);
+		return false;
 	}
 }

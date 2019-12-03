@@ -6,12 +6,19 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public abstract class Thing {
-	public Thing(float x, float y, String id, int picX, int picY) {
+	private static int nextID = 0;
+	private int uniqueID;
+	protected double x, y, dx, dy;
+	public String id;
+	protected Image pic;
+	
+	public Thing(double x, double y, String id, int picX, int picY) {
 		this.x = x;
 		this.y = y;
 		this.dx = 0;
 		this.dy = 0;
 		this.id = id;
+		this.uniqueID = nextID++;
 		try {
 			this.pic = ImageIO.read(new File("textures.png")).getSubimage(picX * Main.SPRITE_WIDTH, picY * Main.SPRITE_HEIGHT, Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT);
 		} catch (IOException e) {
@@ -20,27 +27,27 @@ public abstract class Thing {
 		Main.putInMap(this);
 	}
 	
-	protected float x, y, dx, dy;
-	String id;
-	Image pic;
+	public double getX() { return this.x; }
+	public double getY() { return this.y; }
+	public double getDx() {	return this.dx; }
+	public double getDy() {	return this.dy;	}
+	public void setDx(double dx) { this.dx = dx; }
+	public void setDy(double dy) { this.dy = dy; }
 	
-	public float getX() { return this.x; }
-	public float getY() { return this.y; }
-	public float getDx() {	return this.dx; }
-	public float getDy() {	return this.dy;	}	
-	public void setDx(float dx) { this.dx = dx; }
-	public void setDy(float dy) { this.dy = dy; }
+	public int getUniqueID() {
+		return this.uniqueID;
+	}
 	
-	boolean isTouching(Thing other) {
+	public boolean isTouching(Thing other) {
 		if(other == null) {
 			return false;
 		}
-		float x = this.x - other.getX();
-		float y = this.y - other.getY();
+		double x = this.x - other.getX();
+		double y = this.y - other.getY();
 		return x < Main.SPRITE_WIDTH && x > -1 * Main.SPRITE_WIDTH && y < Main.SPRITE_HEIGHT && y > -1 * Main.SPRITE_HEIGHT; 
 	}
 	
-	void display(Graphics g) {
+	public void display(Graphics g) {
 		g.drawImage(this.pic, ((int)this.x) - Main.cameraX, ((int)this.y) - Main.cameraY, null);
 	}
 	
@@ -48,7 +55,7 @@ public abstract class Thing {
 	public boolean equals(Object o) {
 		if(o instanceof Thing) {
 			Thing other = (Thing) o;
-			return other.id.equals(this.id) && (other.getX() == this.getX()) && (other.getDx() == this.getDx()) && (this.getY() == other.getY()) && (this.getDy() == other.getDy());
+			return other.uniqueID == this.uniqueID;
 		} else {
 			return false;
 		}
@@ -56,9 +63,9 @@ public abstract class Thing {
 	
 	@Override
 	public String toString() {
-		return this.id + " (" + Float.toString(this.x) + ", " + Float.toString(this.y) + ")";  
+		return this.id + " (" + Double.toString(this.x) + ", " + Double.toString(this.y) + ")";  
 	}
 	
-	void move() {}
-	void die() {}
+	public boolean move() { return false; }
+	public void die() {}
 }
