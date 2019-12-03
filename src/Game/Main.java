@@ -105,7 +105,7 @@ public class Main {
 		previousLevelEdit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if(levelNumber > 0) {
+				if(levelNumber > 1) {
 					levelNumber --;
 					levelNumberDisplayEdit.setText("level " + Integer.toString(levelNumber));
 					loadLevel();
