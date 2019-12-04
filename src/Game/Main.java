@@ -64,6 +64,7 @@ public class Main {
 	private static JButton startEdit;
 	public static void main(String[] args) throws IOException, InterruptedException {
 		window = new JFrame();
+		window.setResizable(false);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.addKeyListener(keyListener);
 		final JPanel menuPanel = new JPanel();
