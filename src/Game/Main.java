@@ -104,7 +104,6 @@ public class Main {
 				window.remove(editPanel);
 				STATE="menu";
 				Thread.yield();
-				System.out.println("hi");
 			}
 		});
 		editNavButtonPanel.add(backEdit);
@@ -360,7 +359,6 @@ public class Main {
 					File outFile = new File("level" + Integer.toString(levelNumber) + ".png");
 					try {
 						ImageIO.write(image, "png", outFile);
-						System.out.println("finished saving");
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -659,7 +657,7 @@ public class Main {
 				isEscapePressed = false;
 				STATE = "menu";
 			}			
-		} else {
+		} else if(STATE.equals("play0")){
 			window.remove(gp);
 			STATE = "menu";
 			isWPressed = false;
@@ -669,6 +667,8 @@ public class Main {
 			isSpacePressed = false;
 			isEscapePressed = false;
 			STATE = "menu";
+		} else if(STATE.equals("edit0")){
+			
 		}
 	}
 }
