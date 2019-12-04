@@ -466,7 +466,8 @@ public class Main {
 					}
 					window.repaint();
 					Date after = new Date();
-					while(after.getTime() - before.getTime() <= 3) {
+					while(after.getTime() - before.getTime() < 3) {
+						Thread.sleep(1);
 						after = new Date();
 					}
 				}				
@@ -691,6 +692,10 @@ class MKeyListener extends KeyAdapter {
 			break;
 		case KeyEvent.VK_CONTROL:
 			Main.isCtrlPressed = true;
+			String tempPaint = Main.paint;
+			Main.paint = "erase";
+			Main.updateEditButtons();
+			Main.paint = tempPaint;
 			break;
 		case KeyEvent.VK_W:
 	    	Main.isWPressed = true;
@@ -726,6 +731,7 @@ class MKeyListener extends KeyAdapter {
 			break;
 		case KeyEvent.VK_CONTROL:
 			Main.isCtrlPressed = false;
+			Main.updateEditButtons();
 			break;
 		case KeyEvent.VK_W:
 	    	Main.isWPressed = false;

@@ -113,9 +113,7 @@ public class EditPanel extends JPanel implements MouseMotionListener, MouseListe
 					Thing toInsert = null;
 					switch (Main.isCtrlPressed ? "erase" : Main.paint) {
 					case "erase":
-						System.out.println("got here");
 						Thing toRemove = Main.getFromMap(mouseX, mouseY);
-						System.out.println(toRemove);
 						if (toRemove != null) {
 							Main.level.remove(toRemove);
 							Main.removeFromMap(toRemove);
