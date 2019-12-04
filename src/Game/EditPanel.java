@@ -120,6 +120,9 @@ public class EditPanel extends JPanel implements MouseMotionListener, MouseListe
 						}
 						toInsert = null;
 						break;
+					case "spike":
+						toInsert = new Spike(mouseX, mouseY);
+						break;
 					case "wall":
 						toInsert = new Wall(mouseX, mouseY);
 						break;

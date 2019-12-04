@@ -58,6 +58,7 @@ public class Main {
 	private static JButton wallEdit;
 	private static JButton blueGateEdit;
 	private static JButton redGateEdit;
+	private static JButton spikeEdit;
 	private static JButton enemyEdit;
 	private static JButton goalEdit;
 	private static JButton startEdit;
@@ -228,6 +229,16 @@ public class Main {
 			}
 		});
 		editButtonPanel.add(enemyEdit);
+		spikeEdit = new JButton("Spike");
+		spikeEdit.setFocusable(false);
+		spikeEdit.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0){
+				paint = "spike";
+				updateEditButtons();
+			}
+		});
+		editButtonPanel.add(spikeEdit);
 		goalEdit = new JButton("Goal");
 		goalEdit.setFocusable(false);
 		goalEdit.addActionListener(new ActionListener() {
@@ -300,6 +311,9 @@ public class Main {
 						} else if(((EnemyNoJump) a).speed == 0.1f) {
 							image.setRGB(x, y, (new Color(255, 255, 0).getRGB()));
 						}
+						break;
+					case "spike":
+						image.setRGB(x, y, (new Color(245, 0, 0)).getRGB());
 						break;
 					case "enemy only jump":
 						image.setRGB(x, y, (new Color(255, 255, 3).getRGB()));
@@ -491,6 +505,9 @@ public class Main {
 	
 	public static void updateEditButtons() {
 		switch(Main.paint){
+		case "spike":
+			highlightButton(spikeEdit, editButtonPanel);
+			break;
 		case "disappearing wall":
 		case "wall":
 			highlightButton(wallEdit, editButtonPanel);
@@ -639,6 +656,8 @@ public class Main {
 							level.add(new EnemyDumb(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, false, 0.1f));
 						} else if(pixel.getRed() == 0 && pixel.getGreen() == 254 && pixel.getBlue() == 0) {
 							level.add(new DisappearingWall(SPRITE_WIDTH * x, SPRITE_HEIGHT * y));
+						} else if(pixel.getRed() == 245 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
+							level.add(new Spike(SPRITE_WIDTH * x, SPRITE_HEIGHT * y));
 						}
 					}
 				}
