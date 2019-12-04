@@ -51,17 +51,11 @@ public abstract class Enemy extends Thing {
 						}
 						if(a.getY() > this.y) {
 							this.y = a.y - Main.SPRITE_HEIGHT;
-//							System.out.print(a.getUniqueID());
-//							System.out.print(" - ");
-//							System.out.print(this.getUniqueID());
-//							System.out.println(" - stop on top");
 						}
 						break;
 					} else if(this.dy < 0) {
 						this.dy = 0;
 						this.y = a.y + Main.SPRITE_HEIGHT;
-//						System.out.print(a.id);
-//						System.out.println(" - stop on bottom");
 						break;
 					}
 				} else if(a != null && this.isTouching(a) && a.id.equals("player")) {

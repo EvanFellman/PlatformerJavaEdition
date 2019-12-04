@@ -170,7 +170,11 @@ public class Main {
 		wallEdit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				paint = "wall";
+				if(paint.equals("wall")){
+					paint = "disappearing wall";
+				} else {
+					paint = "wall";
+				}
 				updateEditButtons();
 			}
 		});
@@ -322,6 +326,9 @@ public class Main {
 						break;
 					case "red switch":
 						image.setRGB(x, y, (new Color(252, 0, 0).getRGB()));
+						break;
+					case "wall disappearing":
+						image.setRGB(x, y, (new Color(0, 254, 0).getRGB()));
 						break;
 					case "enemy dumb":
 						if(((EnemyDumb) a).goLeft) {
@@ -485,6 +492,7 @@ public class Main {
 	
 	public static void updateEditButtons() {
 		switch(Main.paint){
+		case "disappearing wall":
 		case "wall":
 			highlightButton(wallEdit, editButtonPanel);
 			break;
@@ -513,6 +521,11 @@ public class Main {
 		case "next level":
 			highlightButton(goalEdit, editButtonPanel);
 			break;
+		}
+		if(paint.equals("disappearing wall")){
+			wallEdit.setText("disappearing wall");
+		} else {
+			wallEdit.setText("Wall");
 		}
 		if(paint.equals("blue reverse gate")) {
 			blueGateEdit.setText("Blue Gate (R)");
@@ -625,6 +638,8 @@ public class Main {
 							level.add(new EnemyDumb(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, false, 0.25f));
 						} else if(pixel.getRed() == 246 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
 							level.add(new EnemyDumb(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, false, 0.1f));
+						} else if(pixel.getRed() == 0 && pixel.getGreen() == 254 && pixel.getBlue() == 0) {
+							level.add(new DisappearingWall(SPRITE_WIDTH * x, SPRITE_HEIGHT * y));
 						}
 					}
 				}
