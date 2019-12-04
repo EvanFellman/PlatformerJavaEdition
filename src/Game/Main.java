@@ -466,16 +466,16 @@ public class Main {
 							continue;
 						}
 					}
-					while(player.getX() - cameraX < 100) {
+					while(player.getX() - cameraX < 150) {
 						cameraX --;
 					}
-					while(player.getX() - cameraX > 400) {
+					while(player.getX() - cameraX > 350) {
 						cameraX ++;
 					}
-					while(player.getY() - cameraY < 100) {
+					while(player.getY() - cameraY < 150) {
 						cameraY --;
 					}
-					while(player.getY() - cameraY > 400) {
+					while(player.getY() - cameraY > 350) {
 						cameraY ++;
 					}
 					window.repaint();
