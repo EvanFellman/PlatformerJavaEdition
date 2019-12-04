@@ -65,7 +65,7 @@ public class Main {
 		window = new JFrame();
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.addKeyListener(keyListener);
-		JPanel menuPanel = new JPanel();
+		final JPanel menuPanel = new JPanel();
 		JLabel playLabel = new JLabel("Play your levels");
 		playLabel.addMouseListener(new MouseAdapter() {
 	        public void mouseClicked(MouseEvent e) {
@@ -91,7 +91,7 @@ public class Main {
 			}
 		});
 		menuPanel.add(quitGameLabel);
-		JPanel editPanel = new JPanel();
+		final JPanel editPanel = new JPanel();
 		editButtonPanel = new JPanel();
 		JPanel editNavButtonPanel = new JPanel();
 		editButtonPanel.add(editNavButtonPanel);
@@ -108,7 +108,7 @@ public class Main {
 		});
 		editNavButtonPanel.add(backEdit);
 		editNavButtonPanel.add(Box.createRigidArea(new Dimension(100, 10)));
-		JButton levelNumberDisplayEdit = new JButton("level " + Integer.toString(levelNumber));
+		final JButton levelNumberDisplayEdit = new JButton("level " + Integer.toString(levelNumber));
 		levelNumberDisplayEdit.setFocusable(false);
 		JButton previousLevelEdit = new JButton("<");
 		previousLevelEdit.setFocusable(false);
@@ -136,7 +136,7 @@ public class Main {
 		});
 		editNavButtonPanel.add(nextLevelEdit);
 		editNavButtonPanel.add(Box.createRigidArea(new Dimension(150, 10)));
-		JButton enemySpeedEdit = new JButton("medium speed");
+		final JButton enemySpeedEdit = new JButton("medium speed");
 		enemySpeedEdit.setFocusable(false);
 		enemySpeedEdit.addActionListener(new ActionListener() {
 			@Override
