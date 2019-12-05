@@ -25,7 +25,7 @@ public abstract class Enemy extends Thing {
 						break;
 					}
 				} else if(a != null && this.isTouching(a) && a.id.equals("player")) {
-					if(a.dy > 0 && a.y + 1 < this.y) {
+					if(a.dy > this.dy && a.y + 1 < this.y) {
 						if(Main.isWPressed) {
 							a.dy = -2.5f;
 						} else {
@@ -45,21 +45,21 @@ public abstract class Enemy extends Thing {
 			for(int j = -1; j <= 1; j++) {
 				Thing a = Main.getFromMap(this.x + (i * Main.SPRITE_WIDTH), this.y + (j * Main.SPRITE_HEIGHT));
 				if(a != null && !this.equals(a) && this.isTouching(a) && (a.id.contains("wall") || a.id.contains("enemy"))) {
-					if(this.dy > 0) {
-						if(a.getDy() < 0){
+					if(this.dy > a.dy) {
+						if(a.dy < 0){
 							this.dy = 0;
 						}
 						if(a.getY() > this.y) {
 							this.y = a.y - Main.SPRITE_HEIGHT;
 						}
 						break;
-					} else if(this.dy < 0) {
+					} else if(this.dy < a.dy) {
 						this.dy = 0;
 						this.y = a.y + Main.SPRITE_HEIGHT;
 						break;
 					}
 				} else if(a != null && this.isTouching(a) && a.id.equals("player")) {
-					if(a.dy > 0 && a.y + 1 < this.y) {
+					if(a.dy > this.dy && a.y + 1 < this.y) {
 						if(Main.isWPressed) {
 							a.dy = -2.5f;
 						} else {
@@ -73,7 +73,7 @@ public abstract class Enemy extends Thing {
 				}
 			}
 		}
-		if(this.y > Main.DEATH_BELOW) {
+		if(this.y + Main.SPRITE_HEIGHT > Main.DEATH_BELOW) {
 			this.die();
 		}
 		Main.putInMap(this);

@@ -8,10 +8,10 @@ public class EnemyNoJump extends Enemy {
 	}
 	
 	public boolean move() {
-		if(Main.player.getX() + 50 < this.x) {
+		if(Main.player.getX() + (Main.SPRITE_WIDTH * 2) < this.x) {
 			this.dx = -1 * this.speed;
 		}
-		if(Main.player.getX() - 50 > this.x) {
+		if(Main.player.getX() - (Main.SPRITE_WIDTH * 2) > this.x) {
 			this.dx = this.speed;
 		}
 		if(this.dx == 0) {

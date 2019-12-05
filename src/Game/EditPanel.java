@@ -135,6 +135,9 @@ public class EditPanel extends JPanel implements MouseMotionListener, MouseListe
 					case "blue switch":
 						toInsert = new BlueSwitch(mouseX, mouseY);
 						break;
+					case "enemy smart":
+						toInsert = new EnemySmart(mouseX, mouseY, Main.enemySpeed);
+						break;
 					case "enemy dumb left":
 						toInsert = new EnemyDumb(mouseX, mouseY, true, Main.enemySpeed);
 						break;

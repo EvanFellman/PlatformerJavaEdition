@@ -47,6 +47,15 @@ public abstract class Thing {
 		return x < Main.SPRITE_WIDTH && x > -1 * Main.SPRITE_WIDTH && y < Main.SPRITE_HEIGHT && y > -1 * Main.SPRITE_HEIGHT; 
 	}
 	
+	public boolean isNextTo(Thing other) {
+		if(other == null) {
+			return false;
+		}
+		double x = this.x - other.getX();
+		double y = this.y - other.getY();
+		return x <= Main.SPRITE_WIDTH && x >= -1 * Main.SPRITE_WIDTH && y <= Main.SPRITE_HEIGHT && y >= -1 * Main.SPRITE_HEIGHT; 
+	}
+	
 	public void display(Graphics g) {
 		g.drawImage(this.pic, ((int)this.x) - Main.cameraX, ((int)this.y) - Main.cameraY, null);
 	}

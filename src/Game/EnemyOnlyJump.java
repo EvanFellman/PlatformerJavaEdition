@@ -9,9 +9,9 @@ public class EnemyOnlyJump extends Enemy {
 	public boolean move() {
 		if(Main.isWPressed) {
 			for(int i = -1; i <= 1; i++) {
-				for(int j = -1; j <= 1; j++) {
+				for(int j = 0; j <= 1; j++) {
 					Thing a = Main.getFromMap(this.x + (i * Main.SPRITE_WIDTH), this.y + (j * Main.SPRITE_HEIGHT));
-					if(a != null && !a.equals(this) && (a.id.equals("wall") || a.id.contains("enemy")) && this.dy > 0) {
+					if(a != null && !a.equals(this) && (a.id.equals("wall") || a.id.contains("enemy")) && this.dy > 0 && this.y < a.y && this.x - a.x < Main.SPRITE_WIDTH && a.x - this.x < Main.SPRITE_WIDTH) {
 						this.dy = -2;
 						break;
 					}

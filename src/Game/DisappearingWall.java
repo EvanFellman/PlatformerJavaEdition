@@ -14,14 +14,7 @@ public class DisappearingWall extends Thing {
 				if(a == null) {
 					continue;
 				}
-				boolean isTouch = true;
-				if(abs(a.getX() - this.x) > Main.SPRITE_WIDTH) {
-					isTouch = false;
-				}
-				if(abs(a.getY() - this.y) > Main.SPRITE_HEIGHT) {
-					isTouch = false;
-				}
-				if(isTouch && (a.id.equals("player") || a.id.contains("enemy"))) {
+				if(this.isNextTo(a) && (a.id.equals("player") || a.id.contains("enemy"))) {
 					disappearCount--;
 					if(disappearCount <= 0) {
 						this.die();
@@ -30,14 +23,6 @@ public class DisappearingWall extends Thing {
 			}
 		}
 		return false;
-	}
-	
-	private double abs(double d) {
-		if(d < 0) {
-			return d * -1;
-		} else {
-			return d;
-		}
 	}
 
 	public void die() {

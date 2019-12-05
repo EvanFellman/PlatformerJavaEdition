@@ -43,12 +43,14 @@ public class Main {
 	public static final double GRAVITY = 0.02f;
 	public static final int SPRITE_HEIGHT = 25;
 	public static final int SPRITE_WIDTH = 25;
+	public static final double SLOW_SPEED = 0.25;
+	public static final double FAST_SPEED = 0.4;
 	public static Player player;
 	public static String STATE = "menu";
 	public static JFrame window;
 	public static boolean isBlueGateOpen = false;
 	public static boolean isRedGateOpen = false;
-	public static double enemySpeed = 0.25f;
+	public static double enemySpeed = SLOW_SPEED;
 	private static GamePanel gp;
 	public static EditPanel ep = new EditPanel();
 	private static MKeyListener keyListener = new MKeyListener();
@@ -138,20 +140,17 @@ public class Main {
 		});
 		editNavButtonPanel.add(nextLevelEdit);
 		editNavButtonPanel.add(Box.createRigidArea(new Dimension(150, 10)));
-		final JButton enemySpeedEdit = new JButton("medium speed");
+		final JButton enemySpeedEdit = new JButton("slow speed");
 		enemySpeedEdit.setFocusable(false);
 		enemySpeedEdit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if(enemySpeed == 0.4f) {
-					enemySpeed = 0.1f;
+				if(enemySpeed == FAST_SPEED) {
+					enemySpeed = SLOW_SPEED;
 					enemySpeedEdit.setText("slow speed");
-				} else if(enemySpeed == 0.25f) {
-					enemySpeed = 0.4f;
+				} else if(enemySpeed == SLOW_SPEED) {
+					enemySpeed = FAST_SPEED;
 					enemySpeedEdit.setText("fast speed");
-				} else {
-					enemySpeed = 0.25f;
-					enemySpeedEdit.setText("medium speed");
 				}
 			}
 		});
@@ -223,6 +222,8 @@ public class Main {
 					paint = "enemy no jump";
 				} else if(paint.equals("enemy no jump")) {
 					paint = "enemy only jump";
+				} else if(paint.equals("enemy only jump")){
+					paint = "enemy smart";
 				} else {
 					paint = "enemy dumb left";
 				}
@@ -305,12 +306,17 @@ public class Main {
 						image.setRGB(x, y, (new Color(0, 255, 0).getRGB()));
 						break;
 					case "enemy no jump":
-						if(((EnemyNoJump) a).speed == 0.4f) {
+						if(((EnemyNoJump) a).speed == FAST_SPEED) {
 							image.setRGB(x, y, (new Color(255, 255, 2).getRGB()));
-						} else if(((EnemyNoJump) a).speed == 0.25f) {
+						} else if(((EnemyNoJump) a).speed == SLOW_SPEED) {
 							image.setRGB(x, y, (new Color(255, 255, 1).getRGB()));
-						} else if(((EnemyNoJump) a).speed == 0.1f) {
-							image.setRGB(x, y, (new Color(255, 255, 0).getRGB()));
+						}
+						break;
+					case "enemy smart":
+						if(((EnemySmart) a).speed == FAST_SPEED) {
+							image.setRGB(x, y, (new Color(244, 0, 0).getRGB()));
+						} else if(((EnemySmart) a).speed == SLOW_SPEED) {
+							image.setRGB(x, y, (new Color(243, 0, 0).getRGB()));
 						}
 						break;
 					case "spike":
@@ -346,25 +352,19 @@ public class Main {
 						break;
 					case "enemy dumb":
 						if(((EnemyDumb) a).goLeft) {
-							if(((EnemyDumb) a).speed == 0.4f) {
+							if(((EnemyDumb) a).speed == FAST_SPEED) {
 								image.setRGB(x, y, (new Color(251, 0, 0).getRGB()));
 								break;
-							} else if(((EnemyDumb) a).speed == 0.25f) {
+							} else if(((EnemyDumb) a).speed == SLOW_SPEED) {
 								image.setRGB(x, y, (new Color(250, 0, 0).getRGB()));
-								break;
-							} else if(((EnemyDumb) a).speed == 0.1f) {
-								image.setRGB(x, y, (new Color(249, 0, 0).getRGB()));
 								break;
 							}
 						} else {
-							if(((EnemyDumb) a).speed == 0.4f) {
+							if(((EnemyDumb) a).speed == FAST_SPEED) {
 								image.setRGB(x, y, (new Color(248, 0, 0).getRGB()));
 								break;
-							} else if(((EnemyDumb) a).speed == 0.25f) {
+							} else if(((EnemyDumb) a).speed == SLOW_SPEED) {
 								image.setRGB(x, y, (new Color(247, 0, 0).getRGB()));
-								break;
-							} else if(((EnemyDumb) a).speed == 0.1f) {
-								image.setRGB(x, y, (new Color(246, 0, 0).getRGB()));
 								break;
 							}
 						}
@@ -375,7 +375,6 @@ public class Main {
 					try {
 						ImageIO.write(image, "png", outFile);
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -530,6 +529,7 @@ public class Main {
 		case "enemy dumb right":
 		case "enemy no jump":
 		case "enemy only jump":
+		case "enemy smart":
 			highlightButton(enemyEdit, editButtonPanel);
 			break;
 		case "player":
@@ -558,7 +558,9 @@ public class Main {
 		} else {
 			redGateEdit.setText("Red Gate");
 		}
-		if (paint.equals("enemy dumb right")) {
+		if(paint.equals("enemy smart")){
+			enemyEdit.setText("Enemy (S)");
+		} else if (paint.equals("enemy dumb right")) {
 			enemyEdit.setText("Enemy (D R)");
 		} else if (paint.equals("enemy no jump")) {
 			enemyEdit.setText("Enemy (NJ)");
@@ -624,11 +626,9 @@ public class Main {
 							player = new Player(SPRITE_WIDTH * x, SPRITE_HEIGHT * y);
 							level.add(player);
 						} else if(pixel.getRed() == 255 && pixel.getGreen() == 255 && pixel.getBlue() == 2) {
-							level.add(new EnemyNoJump(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, 0.4f));
+							level.add(new EnemyNoJump(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, FAST_SPEED));
 						} else if(pixel.getRed() == 255 && pixel.getGreen() == 255 && pixel.getBlue() == 1) {
-							level.add(new EnemyNoJump(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, 0.25f));
-						} else if(pixel.getRed() == 255 && pixel.getGreen() == 255 && pixel.getBlue() == 0) {
-							level.add(new EnemyNoJump(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, 0.1f));
+							level.add(new EnemyNoJump(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, SLOW_SPEED));
 						} else if(pixel.getRed() == 255 && pixel.getGreen() == 255 && pixel.getBlue() == 3) {
 							level.add(new EnemyOnlyJump(SPRITE_WIDTH * x, SPRITE_HEIGHT * y));
 						} else if(pixel.getRed() == 0 && pixel.getGreen() == 0 && pixel.getBlue() == 254) {
@@ -644,22 +644,22 @@ public class Main {
 						} else if(pixel.getRed() == 252 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
 							level.add(new RedSwitch(SPRITE_WIDTH * x, SPRITE_HEIGHT * y));
 						} else if(pixel.getRed() == 251 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
-							level.add(new EnemyDumb(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, true, 0.4f));
+							level.add(new EnemyDumb(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, true, FAST_SPEED));
 						} else if(pixel.getRed() == 250 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
-							level.add(new EnemyDumb(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, true, 0.25f));
-						} else if(pixel.getRed() == 249 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
-							level.add(new EnemyDumb(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, true, 0.1f));
+							level.add(new EnemyDumb(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, true, SLOW_SPEED));
 						} else if(pixel.getRed() == 248 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
-							level.add(new EnemyDumb(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, false, 0.4f));
+							level.add(new EnemyDumb(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, false, FAST_SPEED));
 						} else if(pixel.getRed() == 247 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
-							level.add(new EnemyDumb(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, false, 0.25f));
-						} else if(pixel.getRed() == 246 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
-							level.add(new EnemyDumb(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, false, 0.1f));
+							level.add(new EnemyDumb(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, false, SLOW_SPEED));
 						} else if(pixel.getRed() == 0 && pixel.getGreen() == 254 && pixel.getBlue() == 0) {
 							level.add(new DisappearingWall(SPRITE_WIDTH * x, SPRITE_HEIGHT * y));
 						} else if(pixel.getRed() == 245 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
 							level.add(new Spike(SPRITE_WIDTH * x, SPRITE_HEIGHT * y));
-						}
+						} else if(pixel.getRed() == 244 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
+							level.add(new EnemySmart(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, FAST_SPEED));
+						} else if(pixel.getRed() == 243 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
+							level.add(new EnemySmart(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, SLOW_SPEED));
+						} 
 					}
 				}
 				for(Thing i: level) {
