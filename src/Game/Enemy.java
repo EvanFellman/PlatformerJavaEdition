@@ -58,19 +58,20 @@ public abstract class Enemy extends Thing {
 						this.y = a.y + Main.SPRITE_HEIGHT;
 						break;
 					}
-				} else if(a != null && this.isTouching(a) && a.id.equals("player")) {
-					if(a.dy > 0 && a.y + 1 < this.y) {
-						if(Main.isWPressed) {
-							a.dy = -2.5f;
-						} else {
-							a.dy = 0;
-						}
-						this.die();
-					} else {
-						a.die();
-						return true;
-					}
-				}
+				} 
+//				else if(a != null && this.isTouching(a) && a.id.equals("player")) {
+//					if(a.y > this.y && a.dy >= 0) {
+//						if(Main.isWPressed) {
+//							a.dy = -2.5f;
+//						} else {
+//							a.dy = 0;
+//						}
+//						this.die();
+//					} else {
+//						a.die();
+//						return true;
+//					}
+//				}
 			}
 		}
 		if(this.y + Main.SPRITE_HEIGHT > Main.DEATH_BELOW) {

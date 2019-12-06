@@ -57,7 +57,7 @@ public class Player extends Thing {
 						Main.levelNumber += 1;
 						Main.loadLevel();
 					} else if(a.id.contains("enemy")) {
-						if(this.dy > 0 && this.y + 1 < a.getY()) {
+						if(this.y < a.y && this.dy >= 0) {
 							if(Main.isWPressed) {
 								this.dy = -2.5f;
 							} else {

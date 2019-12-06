@@ -2,12 +2,11 @@ package Game;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -70,32 +69,60 @@ public class Main {
 		window.setResizable(false);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.addKeyListener(keyListener);
+		window.setTitle("Platformer");
+		window.setIconImage(ImageIO.read(new File("textures.png")).getSubimage(Main.SPRITE_WIDTH, 0, Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT));
 		final JPanel menuPanel = new JPanel();
-		JLabel playLabel = new JLabel("Play your levels");
-		playLabel.addMouseListener(new MouseAdapter() {
-	        public void mouseClicked(MouseEvent e) {
-	        	window.remove(menuPanel);
-	        	STATE="play";
-	        }
+		menuPanel.setBackground(Color.LIGHT_GRAY);
+		menuPanel.setLayout(new BoxLayout(menuPanel, 1));
+		JLabel menuTitle = new JLabel("Platformer");
+		menuTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+		menuTitle.setFont(new Font("TimesRoman", Font.BOLD, 23));
+		menuTitle.setForeground(Color.WHITE);
+		menuPanel.add(menuTitle);
+		menuPanel.add(Box.createRigidArea(new Dimension(1,50)));
+		JButton playMenu = new JButton("Play your levels");
+		playMenu.setBackground(Color.GRAY);
+		playMenu.setForeground(Color.WHITE);
+		playMenu.setFocusable(false);
+		playMenu.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0){
+				window.remove(menuPanel);
+				STATE="play";
+			}
 		});
-		playLabel.setBounds(0, 0, 50,50);
-		menuPanel.add(playLabel);
-		JLabel editLabel = new JLabel("Edit levels");
-		editLabel.addMouseListener(new MouseAdapter() {
-	        public void mouseClicked(MouseEvent e) {
-	        	window.remove(menuPanel);
-	        	STATE="edit";
-	        }
+		playMenu.setAlignmentX(Component.CENTER_ALIGNMENT);
+		playMenu.setBounds(0, 0, 50,50);
+		menuPanel.add(playMenu);
+		menuPanel.add(Box.createRigidArea(new Dimension(1,25)));
+		JButton editMenu = new JButton("Edit levels");
+		editMenu.setBackground(Color.GRAY);
+		editMenu.setForeground(Color.WHITE);
+		editMenu.setFocusable(false);
+		editMenu.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0){
+				window.remove(menuPanel);
+				STATE="edit";
+			}
 		});
-		editLabel.setBounds(0,0,50,50);
-		menuPanel.add(editLabel);
-		JLabel quitGameLabel = new JLabel("Quit");
-		quitGameLabel.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
+		editMenu.setAlignmentX(Component.CENTER_ALIGNMENT);
+		editMenu.setBounds(0,0,50,50);
+		menuPanel.add(editMenu);
+		menuPanel.add(Box.createRigidArea(new Dimension(1,25)));
+		JButton quitMenu = new JButton("Quit");
+		quitMenu.setBackground(Color.GRAY);
+		quitMenu.setForeground(Color.WHITE);
+		quitMenu.setFocusable(false);
+		quitMenu.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0){
 				System.exit(0);
 			}
 		});
-		menuPanel.add(quitGameLabel);
+		quitMenu.setBounds(0,0,50,50);
+		quitMenu.setAlignmentX(Component.CENTER_ALIGNMENT);
+		menuPanel.add(quitMenu);
 		final JPanel editPanel = new JPanel();
 		editButtonPanel = new JPanel();
 		JPanel editNavButtonPanel = new JPanel();
@@ -390,7 +417,7 @@ public class Main {
 			Thread.sleep(1/30);
 			switch(STATE) {
 			case "menu":
-				window.setSize(200,100);
+				window.setSize(200,300);
 				window.add(menuPanel);
 				STATE="menu0";
 				break;
