@@ -35,6 +35,7 @@ public class Main {
 	public static boolean isAPressed = false;
 	public static boolean isSPressed = false;
 	public static boolean isDPressed = false;
+	public static boolean isZPressed = false;
 	public static boolean isSpacePressed = false;
 	public static boolean isEscapePressed = false;
 	public static boolean isShiftPressed = false;
@@ -424,7 +425,7 @@ public class Main {
 					if(isDPressed) {
 						cameraX += SPRITE_WIDTH / 4;
 					}
-					if(isSpacePressed) {
+					if(isEscapePressed) {
 						cameraX = startX - (int)(window.getWidth() * 0.5);
 						cameraY = startY - (int)(window.getHeight() * 0.5);
 					}
@@ -698,6 +699,9 @@ class MKeyListener extends KeyAdapter {
 	@Override
 	public void keyPressed(KeyEvent event) {
 		switch(event.getKeyCode()) {
+		case KeyEvent.VK_Z:
+			Main.isZPressed = true;
+			break;
 		case KeyEvent.VK_SPACE:
 			Main.isSpacePressed = true;
 			break;
@@ -737,6 +741,9 @@ class MKeyListener extends KeyAdapter {
 	@Override
 	public void keyReleased(KeyEvent event) {
 		switch(event.getKeyCode()) {
+		case KeyEvent.VK_Z:
+			Main.isZPressed = false;
+			break;
 		case KeyEvent.VK_SPACE:
 			Main.isSpacePressed = false;
 			break;

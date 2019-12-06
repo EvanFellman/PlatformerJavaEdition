@@ -10,12 +10,17 @@ import javax.swing.JPanel;
 public class EditPanel extends JPanel implements MouseMotionListener, MouseListener {
 	private static final long serialVersionUID = 1L;
 	private boolean isMouseDown = false;
+	private boolean isMousePressed = false;
+	private int moveX;
+	private int moveY;
 	public EditPanel() {
 		super();
 		super.addMouseMotionListener(this);
 		super.addMouseListener(this);
 		super.setOpaque(true);
 		super.setBackground(Color.BLUE);
+		moveX = -1;
+		moveY = -1;
 	}
 	public void paint(Graphics g) {
 		g.setColor(Color.CYAN);
@@ -61,120 +66,129 @@ public class EditPanel extends JPanel implements MouseMotionListener, MouseListe
 	public void mouseDragged(MouseEvent e) {
 		int mouseXLoc = (e.getX() + Main.cameraX) - ((e.getX() + Main.cameraX) % Main.SPRITE_WIDTH);
 		int mouseYLoc = (e.getY() + Main.cameraY) - ((e.getY() + Main.cameraY) % Main.SPRITE_HEIGHT);
-		if(e.getY() + Main.cameraY > -1 * Main.SPRITE_HEIGHT && e.getY() + Main.cameraY <= 0) {
-			mouseYLoc = -25;
-		} else if(mouseYLoc < 0) {
+		if(e.getX() + Main.cameraX < 0) {
+			mouseXLoc -= Main.SPRITE_WIDTH;
+		} 
+		if(e.getY() + Main.cameraY < 0) {
 			mouseYLoc -= Main.SPRITE_HEIGHT;
 		}
-		if(e.getX() + Main.cameraX > -1 * Main.SPRITE_WIDTH && e.getX() + Main.cameraX <= 0) {
-			mouseXLoc = -25;
-		} else if(mouseXLoc < 0) {
-			mouseXLoc -= Main.SPRITE_WIDTH;
-		}
-		if(Main.isAltPressed) {
-			Thing a = Main.getFromMap(mouseXLoc, mouseYLoc);
-			if(a != null) {
-				switch(a.id) {
-				case "enemy dumb":
-					if(((EnemyDumb) a).goLeft) {
-						Main.paint = "enemy dumb left";
-					} else {
-						Main.paint = "enemy dumb right";
-					}
-					break;
-				case "open red gate":
-				case "wall red gate":
-					Main.paint = "red gate";
-					break;
-				case "open red reverse gate":
-				case "wall red reverse gate":
-					Main.paint = "red reverse gate";
-					break;
-				case "open blue gate":
-				case "wall blue gate":
-					Main.paint = "blue gate";
-					break;
-				case "open blue reverse gate":
-				case "wall blue reverse gate":
-					Main.paint = "blue reverse gate";
-					break;
-				default:
-					Main.paint = a.id;
-					break;
-				}
+		if(Main.isSpacePressed && isMouseDown) {
+			if(moveX == -1) {
+				moveX = e.getX();
+				moveY = e.getY();
 			}
-			Main.updateEditButtons();
+			Main.cameraX += moveX - e.getX();
+			Main.cameraY += moveY - e.getY();
+			moveX = e.getX();
+			moveY = e.getY();
 		} else {
-			for (int mouseX = mouseXLoc - (Main.isShiftPressed ? Main.SPRITE_WIDTH : 0); mouseX <= mouseXLoc + (Main.isShiftPressed ? Main.SPRITE_WIDTH : 0); mouseX += Main.SPRITE_WIDTH) {
-				for (int mouseY = mouseYLoc - (Main.isShiftPressed ? Main.SPRITE_HEIGHT : 0); mouseY <= mouseYLoc + (Main.isShiftPressed ? Main.SPRITE_HEIGHT : 0); mouseY += Main.SPRITE_HEIGHT) {
-					if (Main.getFromMap(mouseX, mouseY) != null && Main.paint != "erase" && !Main.isCtrlPressed) {
-						continue;
-					}
-					Thing toInsert = null;
-					switch (Main.isCtrlPressed ? "erase" : Main.paint) {
-					case "erase":
-						Thing toRemove = Main.getFromMap(mouseX, mouseY);
-						if (toRemove != null) {
-							Main.level.remove(toRemove);
-							Main.removeFromMap(toRemove);
+			moveX = -1;
+			moveY = -1;
+			if(Main.isAltPressed) {
+				Thing a = Main.getFromMap(mouseXLoc, mouseYLoc);
+				if(a != null) {
+					switch(a.id) {
+					case "enemy dumb":
+						if(((EnemyDumb) a).goLeft) {
+							Main.paint = "enemy dumb left";
+						} else {
+							Main.paint = "enemy dumb right";
 						}
-						toInsert = null;
 						break;
-					case "spike":
-						toInsert = new Spike(mouseX, mouseY);
+					case "open red gate":
+					case "wall red gate":
+						Main.paint = "red gate";
 						break;
-					case "wall":
-						toInsert = new Wall(mouseX, mouseY);
+					case "open red reverse gate":
+					case "wall red reverse gate":
+						Main.paint = "red reverse gate";
 						break;
-					case "blue gate":
-						toInsert = new BlueGate(mouseX, mouseY);
+					case "open blue gate":
+					case "wall blue gate":
+						Main.paint = "blue gate";
 						break;
-					case "blue reverse gate":
-						toInsert = new BlueReverseGate(mouseX, mouseY);
-						break;
-					case "blue switch":
-						toInsert = new BlueSwitch(mouseX, mouseY);
-						break;
-					case "enemy smart":
-						toInsert = new EnemySmart(mouseX, mouseY, Main.enemySpeed);
-						break;
-					case "enemy dumb left":
-						toInsert = new EnemyDumb(mouseX, mouseY, true, Main.enemySpeed);
-						break;
-					case "enemy dumb right":
-						toInsert = new EnemyDumb(mouseX, mouseY, false, Main.enemySpeed);
-						break;
-					case "enemy no jump":
-						toInsert = new EnemyNoJump(mouseX, mouseY, Main.enemySpeed);
-						break;
-					case "enemy only jump":
-						toInsert = new EnemyOnlyJump(mouseX, mouseY);
-						break;
-					case "next level":
-						toInsert = new NextLevel(mouseX, mouseY);
-						break;
-					case "red gate":
-						toInsert = new RedGate(mouseX, mouseY);
-						break;
-					case "red reverse gate":
-						toInsert = new RedReverseGate(mouseX, mouseY);
-						break;
-					case "red switch":
-						toInsert = new RedSwitch(mouseX, mouseY);
-						break;
-					case "player":
-						toInsert = new Player(mouseX, mouseY);
-						break;
-					case "disappearing wall":
-						toInsert = new DisappearingWall(mouseX, mouseY);
+					case "open blue reverse gate":
+					case "wall blue reverse gate":
+						Main.paint = "blue reverse gate";
 						break;
 					default:
-						System.out.println("uh oh");
-						System.exit(0);
+						Main.paint = a.id;
+						break;
 					}
-					if (toInsert != null) {
-						Main.putInMap(toInsert);
-						Main.level.add(toInsert);
+				}
+				Main.updateEditButtons();
+			} else {
+				for (int mouseX = mouseXLoc - (Main.isShiftPressed ? Main.SPRITE_WIDTH : 0); mouseX <= mouseXLoc + (Main.isShiftPressed ? Main.SPRITE_WIDTH : 0); mouseX += Main.SPRITE_WIDTH) {
+					for (int mouseY = mouseYLoc - (Main.isShiftPressed ? Main.SPRITE_HEIGHT : 0); mouseY <= mouseYLoc + (Main.isShiftPressed ? Main.SPRITE_HEIGHT : 0); mouseY += Main.SPRITE_HEIGHT) {
+						if (Main.getFromMap(mouseX, mouseY) != null && Main.paint != "erase" && !Main.isCtrlPressed) {
+							continue;
+						}
+						Thing toInsert = null;
+						switch (Main.isCtrlPressed ? "erase" : Main.paint) {
+						case "erase":
+							Thing toRemove = Main.getFromMap(mouseX, mouseY);
+							if (toRemove != null) {
+								Main.level.remove(toRemove);
+								Main.removeFromMap(toRemove);
+							}
+							toInsert = null;
+							break;
+						case "spike":
+							toInsert = new Spike(mouseX, mouseY);
+							break;
+						case "wall":
+							toInsert = new Wall(mouseX, mouseY);
+							break;
+						case "blue gate":
+							toInsert = new BlueGate(mouseX, mouseY);
+							break;
+						case "blue reverse gate":
+							toInsert = new BlueReverseGate(mouseX, mouseY);
+							break;
+						case "blue switch":
+							toInsert = new BlueSwitch(mouseX, mouseY);
+							break;
+						case "enemy smart":
+							toInsert = new EnemySmart(mouseX, mouseY, Main.enemySpeed);
+							break;
+						case "enemy dumb left":
+							toInsert = new EnemyDumb(mouseX, mouseY, true, Main.enemySpeed);
+							break;
+						case "enemy dumb right":
+							toInsert = new EnemyDumb(mouseX, mouseY, false, Main.enemySpeed);
+							break;
+						case "enemy no jump":
+							toInsert = new EnemyNoJump(mouseX, mouseY, Main.enemySpeed);
+							break;
+						case "enemy only jump":
+							toInsert = new EnemyOnlyJump(mouseX, mouseY);
+							break;
+						case "next level":
+							toInsert = new NextLevel(mouseX, mouseY);
+							break;
+						case "red gate":
+							toInsert = new RedGate(mouseX, mouseY);
+							break;
+						case "red reverse gate":
+							toInsert = new RedReverseGate(mouseX, mouseY);
+							break;
+						case "red switch":
+							toInsert = new RedSwitch(mouseX, mouseY);
+							break;
+						case "player":
+							toInsert = new Player(mouseX, mouseY);
+							break;
+						case "disappearing wall":
+							toInsert = new DisappearingWall(mouseX, mouseY);
+							break;
+						default:
+							System.out.println("uh oh");
+							System.exit(0);
+						}
+						if (toInsert != null) {
+							Main.putInMap(toInsert);
+							Main.level.add(toInsert);
+						}
 					}
 				}
 			}
@@ -193,8 +207,16 @@ public class EditPanel extends JPanel implements MouseMotionListener, MouseListe
 		isMouseDown = false;
 	}
 	
-	//I don't need it but if I remove it then MouseMotionListener and MouseListener gets sad
-	@Override public void mouseMoved(MouseEvent e) { }
-	@Override public void mousePressed(MouseEvent e) { }
-	@Override public void mouseReleased(MouseEvent e) { }
+	@Override public void mouseMoved(MouseEvent e) {
+		if(!(Main.isSpacePressed && isMousePressed)) {
+			moveX = -1;
+			moveY = -1;
+		}
+	}
+	@Override public void mousePressed(MouseEvent e) {
+		isMousePressed = true;
+	}
+	@Override public void mouseReleased(MouseEvent e) { 
+		isMousePressed = false;
+	}
 }
