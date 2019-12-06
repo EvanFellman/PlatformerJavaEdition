@@ -45,7 +45,7 @@ public abstract class Enemy extends Thing {
 			for(int j = -1; j <= 1; j++) {
 				Thing a = Main.getFromMap(this.x + (i * Main.SPRITE_WIDTH), this.y + (j * Main.SPRITE_HEIGHT));
 				if(a != null && !this.equals(a) && this.isTouching(a) && (a.id.contains("wall") || a.id.contains("enemy"))) {
-					if(this.dy > a.dy) {
+					if(this.dy > 0) {
 						if(a.dy < 0){
 							this.dy = 0;
 						}
@@ -59,7 +59,7 @@ public abstract class Enemy extends Thing {
 						break;
 					}
 				} else if(a != null && this.isTouching(a) && a.id.equals("player")) {
-					if(a.dy > this.dy && a.y + 1 < this.y) {
+					if(a.dy > 0 && a.y + 1 < this.y) {
 						if(Main.isWPressed) {
 							a.dy = -2.5f;
 						} else {

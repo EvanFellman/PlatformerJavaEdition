@@ -8,7 +8,6 @@ public class EnemySmart extends Enemy {
 	}
 	
 	public boolean move() {
-		String printMe = Double.toString(this.y) + " - ";
 		//set dx
 		if(this.dx == 0) {
 			this.dx = Main.player.getX() < this.x ? this.speed * -1 : this.speed;
@@ -22,13 +21,11 @@ public class EnemySmart extends Enemy {
 		for(int i = -1; i <= 1; i++) {
 			for(int j = 0; j <= 1; j++) {
 				Thing a = Main.getFromMap(this.x + (i * Main.SPRITE_WIDTH), this.y + (j * Main.SPRITE_HEIGHT));
-				if(a != null && this.isNextTo(a) && !this.equals(a) && a.getY() > this.y && this.dy > a.dy && (a.id.contains("wall") || a.id.contains("enemy")) && this.y < a.y && this.x - a.x < Main.SPRITE_WIDTH && a.x - this.x < Main.SPRITE_WIDTH) {
-					printMe += a.toString() + " - ";
+				if(a != null && this.isNextTo(a) && !this.equals(a) && (a.id.contains("wall") || a.id.contains("enemy")) && this.y < a.y && this.x - a.x < Main.SPRITE_WIDTH && a.x - this.x < Main.SPRITE_WIDTH) {
 					wallDirectlyBelow = true;
 				}
 			}
 		}
-		printMe += Boolean.toString(wallDirectlyBelow) + " - ";
 		if(wallDirectlyBelow) {
 			//Can jump
 			boolean wallNextToMe = false;
@@ -55,8 +52,7 @@ public class EnemySmart extends Enemy {
 				for(int i = -1; i <= 0; i++) {
 					for(int j = 0; j <= 1; j++) {
 						Thing a = Main.getFromMap(this.x + (i * Main.SPRITE_WIDTH), this.y + (j * Main.SPRITE_HEIGHT));
-						if (a != null && this.isNextTo(a) && !this.equals(a) && this.y < a.getY() && (a.id.contains("wall") || a.id.contains("enemy")) && this.y < a.y) {
-							printMe += a.toString() + " - ";
+						if (a != null && this.isNextTo(a) && !this.equals(a) && (a.id.contains("wall") || a.id.contains("enemy")) && this.y < a.y) {
 							floorLeft = true;
 							break;
 						}
@@ -65,8 +61,7 @@ public class EnemySmart extends Enemy {
 			} else if(this.dx > 0) {
 				for(int j = 0; j <= 1; j++) {
 					Thing a = Main.getFromMap(this.x + Main.SPRITE_WIDTH, this.y + (j * Main.SPRITE_HEIGHT));
-					if (a != null && this.isNextTo(a) && !this.equals(a) && this.y < a.getY() && (a.id.contains("wall") || a.id.contains("enemy")) && this.y < a.y) {
-						printMe += a.toString() + " - ";
+					if (a != null && this.isNextTo(a) && !this.equals(a) && (a.id.contains("wall") || a.id.contains("enemy")) && this.y < a.y) {
 						floorLeft = true;
 						break;
 					}
@@ -117,17 +112,13 @@ public class EnemySmart extends Enemy {
 				}
 				if(!somethingToFallTo && somethingToJumpTo) {
 					this.dy = -2;
-				} else if(somethingToFallTo && somethingToJumpTo && this.dy >= Main.player.getY()) {
+				} else if(somethingToFallTo && somethingToJumpTo && (wallNextToMe || this.y >= Main.player.getY())) {
 					this.dy = -2;
 				} else if(!somethingToFallTo && !somethingToJumpTo) {
 					this.dx = 0;
 				}
-				printMe += Boolean.toString(somethingToFallTo) + " - " + Boolean.toString(somethingToJumpTo) + " - ";
 			}
 		}
-		System.out.println(printMe);
-		if (this.dy < 0)
-			System.exit(0);
 		return super.move();
 	}
 
