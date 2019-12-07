@@ -10,8 +10,8 @@ public class EditPanel extends JPanel implements MouseMotionListener, MouseListe
 	private static final long serialVersionUID = 1L;
 	private boolean isMouseDown = false;
 	private boolean isMousePressed = false;
-	private int moveX;
-	private int moveY;
+	public int moveX;
+	public int moveY;
 	public EditPanel() {
 		super();
 		super.addMouseMotionListener(this);

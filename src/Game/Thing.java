@@ -8,7 +8,7 @@ import javax.imageio.ImageIO;
 public abstract class Thing {
 	private static int nextID = 0;
 	private int uniqueID;
-	protected double x, y, dx, dy;
+	public double x, y, dx, dy;
 	public String id;
 	protected Image pic;
 	

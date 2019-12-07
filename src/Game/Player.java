@@ -81,7 +81,11 @@ public class Player extends Thing {
 	}
 	
 	public void die() {
-		Main.loadLevel();
-		Main.loadLevel();
+		if(Main.STATE.equals("play0")) {
+			Main.loadLevel();
+		} else {
+			Main.STATE = "menu";
+			Main.window.remove(Main.rp);
+		}
 	}
 }

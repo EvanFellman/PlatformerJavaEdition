@@ -52,6 +52,7 @@ public class Main {
 	public static boolean isRedGateOpen = false;
 	public static double enemySpeed = SLOW_SPEED;
 	private static GamePanel gp;
+	public static RandomPanel rp;
 	public static EditPanel ep = new EditPanel();
 	private static MKeyListener keyListener = new MKeyListener();
 	public static String paint = "wall";
@@ -94,6 +95,21 @@ public class Main {
 		playMenu.setAlignmentX(Component.CENTER_ALIGNMENT);
 		playMenu.setBounds(0, 0, 50,50);
 		menuPanel.add(playMenu);
+		menuPanel.add(Box.createRigidArea(new Dimension(1,25)));
+		JButton randomMenu = new JButton("Play a random level");
+		randomMenu.setBackground(Color.GRAY);
+		randomMenu.setForeground(Color.WHITE);
+		randomMenu.setFocusable(false);
+		randomMenu.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0){
+				window.remove(menuPanel);
+				STATE="random";
+			}
+		});
+		randomMenu.setAlignmentX(Component.CENTER_ALIGNMENT);
+		randomMenu.setBounds(0,0,50,50);
+		menuPanel.add(randomMenu);
 		menuPanel.add(Box.createRigidArea(new Dimension(1,25)));
 		JButton editMenu = new JButton("Edit levels");
 		editMenu.setBackground(Color.GRAY);
@@ -421,6 +437,79 @@ public class Main {
 				window.add(menuPanel);
 				STATE="menu0";
 				break;
+			case "random":
+				STATE="random0";
+				isBlueGateOpen = false;
+				isRedGateOpen = false;
+				if (level==null) {
+					level = new ArrayList<Thing>();
+				} else {
+					level.clear();
+				}
+				if (levelMap == null) {
+					levelMap = new Hashtable<Integer, Hashtable<Integer, Thing>>();
+				} else {
+					levelMap.clear();
+				}
+				window.setSize(500, 500);
+				rp = new RandomPanel();
+				DEATH_BELOW = 100;
+				player = new Player(0,-25);
+				putInMap(player);
+				level.add(player);
+				for(int i = 0; i < 1; i++){
+					Wall w = new Wall(i * SPRITE_WIDTH, 25);
+					putInMap(w);
+					level.add(w);
+				}
+				rp.nextX = 0;
+				rp.nextY = 0;
+				window.add(rp);
+				window.setVisible(true);
+				while(STATE.equals("random0")) {
+					Date before = new Date();
+					if(isEscapePressed) {
+						JLabel quitLabel = new JLabel("paused - Press w to quit or escape to continue");
+						quitLabel.setFocusable(false);
+						window.add(quitLabel);
+						window.remove(rp);
+						window.setVisible(true);
+						while(isEscapePressed) { Thread.sleep(50); }
+						while(!isEscapePressed && !isWPressed) { Thread.sleep(50); }
+						if(isWPressed) {
+							window.remove(quitLabel);
+							window.remove(rp);
+							STATE = "menu";
+							break;
+						} else if(isEscapePressed) {
+							window.remove(quitLabel);
+							window.add(rp);
+							window.repaint();
+							window.setVisible(true);
+							isEscapePressed = false;
+							continue;
+						}
+					}
+					while(player.getX() - cameraX < 150) {
+						cameraX --;
+					}
+					while(player.getX() - cameraX > 350) {
+						cameraX ++;
+					}
+					while(player.getY() - cameraY < 150) {
+						cameraY --;
+					}
+					while(player.getY() - cameraY > 350) {
+						cameraY ++;
+					}
+					window.repaint();
+					Date after = new Date();
+					while(after.getTime() - before.getTime() < 3) {
+						Thread.sleep(1);
+						after = new Date();
+					}
+				}
+				break;
 			case "edit":
 				window.setSize(550, 645);
 				STATE="edit0";
@@ -512,7 +601,7 @@ public class Main {
 						Thread.sleep(1);
 						after = new Date();
 					}
-				}				
+				}
 			}
 		}
 	}
@@ -748,15 +837,19 @@ class MKeyListener extends KeyAdapter {
 			Main.updateEditButtons();
 			Main.paint = tempPaint;
 			break;
+		case KeyEvent.VK_UP:
 		case KeyEvent.VK_W:
 	    	Main.isWPressed = true;
 	    	break;
+	    case KeyEvent.VK_LEFT:
 	    case KeyEvent.VK_A:
 	    	Main.isAPressed = true;
 	    	break;
+	    case KeyEvent.VK_DOWN:
 	    case KeyEvent.VK_S:
 	    	Main.isSPressed = true;
 	    	break;
+	    case KeyEvent.VK_RIGHT:
 	    case KeyEvent.VK_D:
 	    	Main.isDPressed = true;
 	    	break;
@@ -787,15 +880,19 @@ class MKeyListener extends KeyAdapter {
 			Main.isCtrlPressed = false;
 			Main.updateEditButtons();
 			break;
+		case KeyEvent.VK_UP:
 		case KeyEvent.VK_W:
 	    	Main.isWPressed = false;
 	    	break;
+	    case KeyEvent.VK_LEFT:
 	    case KeyEvent.VK_A:
 	    	Main.isAPressed = false;
 	    	break;
+	    case KeyEvent.VK_DOWN:
 	    case KeyEvent.VK_S:
 	    	Main.isSPressed = false;
 	    	break;
+	    case KeyEvent.VK_RIGHT:
 	    case KeyEvent.VK_D:
 	    	Main.isDPressed = false;
 	    	break;
