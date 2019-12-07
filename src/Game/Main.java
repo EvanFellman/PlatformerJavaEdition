@@ -24,6 +24,7 @@ import javax.swing.JPanel;
 public class Main {
 	public static ArrayList<Thing> level = new ArrayList<Thing>();
 	public static Hashtable<Integer, Hashtable<Integer, Thing>> levelMap; 
+	public static final boolean makeTemplates = false;
 	public static int startX;
 	public static int startY;
 	public static int levelNumber = 1;
@@ -415,7 +416,12 @@ public class Main {
 					}
 				}
 				if(existsAPlayer) {
-					File outFile = new File("level" + Integer.toString(levelNumber) + ".png");
+					File outFile;
+					if(!makeTemplates){
+						outFile = new File("level" + Integer.toString(levelNumber) + ".png");
+					} else {
+						outFile = new File("templates/" + Integer.toString(levelNumber) + ".png");
+					}
 					try {
 						ImageIO.write(image, "png", outFile);
 					} catch (IOException e) {
@@ -715,7 +721,12 @@ public class Main {
 	synchronized public static void loadLevel() {
 		isBlueGateOpen = false;
 		isRedGateOpen = false;
-		File imgFile = new File("./level" + Integer.toString(levelNumber) + ".png");
+		File imgFile;
+		if(!makeTemplates){
+			imgFile = new File("./level" + Integer.toString(levelNumber) + ".png");
+		} else {
+			imgFile = new File("templates/" + Integer.toString(levelNumber) + ".png");
+		}
 		if (level==null) {
 			level = new ArrayList<Thing>();
 		} else {
