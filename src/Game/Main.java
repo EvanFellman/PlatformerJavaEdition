@@ -22,9 +22,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class Main {
+	private static boolean editTemplates = true;
 	public static ArrayList<Thing> level = new ArrayList<Thing>();
 	public static Hashtable<Integer, Hashtable<Integer, Thing>> levelMap; 
-	public static final boolean makeTemplates = false;
 	public static int startX;
 	public static int startY;
 	public static int levelNumber = 1;
@@ -164,11 +164,17 @@ public class Main {
 		previousLevelEdit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if(levelNumber > 1) {
+				if(isShiftPressed) {
+					if(levelNumber < 6) {
+						levelNumber = 1;
+					} else {
+						levelNumber -= 5;
+					}
+				} else if(levelNumber > 1) {
 					levelNumber --;
-					levelNumberDisplayEdit.setText("level " + Integer.toString(levelNumber));
-					loadLevel();
 				}
+				levelNumberDisplayEdit.setText("level " + Integer.toString(levelNumber));
+				loadLevel();
 			}
 		});
 		editNavButtonPanel.add(previousLevelEdit);
@@ -178,7 +184,11 @@ public class Main {
 		nextLevelEdit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				levelNumber++;
+				if(isShiftPressed) {
+					levelNumber+=5;
+				} else {
+					levelNumber++;
+				}
 				levelNumberDisplayEdit.setText("level " + Integer.toString(levelNumber));
 				loadLevel();
 			}
@@ -417,7 +427,7 @@ public class Main {
 				}
 				if(existsAPlayer) {
 					File outFile;
-					if(!makeTemplates){
+					if(!editTemplates) {
 						outFile = new File("level" + Integer.toString(levelNumber) + ".png");
 					} else {
 						outFile = new File("templates/" + Integer.toString(levelNumber) + ".png");
@@ -722,7 +732,7 @@ public class Main {
 		isBlueGateOpen = false;
 		isRedGateOpen = false;
 		File imgFile;
-		if(!makeTemplates){
+		if(!editTemplates) {
 			imgFile = new File("./level" + Integer.toString(levelNumber) + ".png");
 		} else {
 			imgFile = new File("templates/" + Integer.toString(levelNumber) + ".png");

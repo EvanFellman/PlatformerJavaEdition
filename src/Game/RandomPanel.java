@@ -14,7 +14,7 @@ public class RandomPanel extends javax.swing.JPanel {
 	public RandomPanel() {
 		super();
 		templates = new ArrayList<BufferedImage>();
-		int i = 0;
+		int i = 1;
 		File f = new File("./templates/" + Integer.toString(i) + ".png");
 		while(f.exists()) {
 			try {
