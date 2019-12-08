@@ -22,7 +22,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class Main {
-	private static boolean editTemplates = true;
+	private static boolean editTemplates = false;
 	public static ArrayList<Thing> level = new ArrayList<Thing>();
 	public static Hashtable<Integer, Hashtable<Integer, Thing>> levelMap; 
 	public static int startX;
