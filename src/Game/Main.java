@@ -66,6 +66,7 @@ public class Main {
 	private static JButton enemyEdit;
 	private static JButton goalEdit;
 	private static JButton startEdit;
+	private static JButton levelNumberDisplayEdit;
 	public static void main(String[] args) throws IOException, InterruptedException {
 		window = new JFrame();
 		window.setResizable(false);
@@ -157,7 +158,7 @@ public class Main {
 		});
 		editNavButtonPanel.add(backEdit);
 		editNavButtonPanel.add(Box.createRigidArea(new Dimension(100, 10)));
-		final JButton levelNumberDisplayEdit = new JButton("level " + Integer.toString(levelNumber));
+		levelNumberDisplayEdit = new JButton("level " + Integer.toString(levelNumber));
 		levelNumberDisplayEdit.setFocusable(false);
 		JButton previousLevelEdit = new JButton("<");
 		previousLevelEdit.setFocusable(false);
@@ -531,6 +532,7 @@ public class Main {
 				STATE="edit0";
 				levelNumber=1;
 				loadLevel();
+				levelNumberDisplayEdit.setText("level 1");
 				editButtonPanel.setMaximumSize(new Dimension(550,120));
 				editButtonPanel.setPreferredSize(new Dimension(550,120));
 				editButtonPanel.setMinimumSize(new Dimension(550,120));
