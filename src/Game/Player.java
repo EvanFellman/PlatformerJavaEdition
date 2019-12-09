@@ -20,7 +20,8 @@ public class Player extends Thing {
 		}
 		this.dy += Main.GRAVITY;
 		this.y += this.dy;
-		for(Thing a: Main.level) {
+		for(int i = 0; i < Main.level.size(); i++) {
+			Thing a = Main.level.get(i);
 			if(!this.equals(a) && this.isTouching(a)) {
 				if(a.id.contains("wall") || (!this.equals(a) && a.id.equals("player"))) {
 					if(this.dy > 0) {
