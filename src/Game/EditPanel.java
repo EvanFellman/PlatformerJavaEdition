@@ -84,7 +84,10 @@ public class EditPanel extends JPanel implements MouseMotionListener, MouseListe
 			moveX = -1;
 			moveY = -1;
 			if(Main.isAltPressed) {
-				Thing a = Main.getFromMap(mouseXLoc, mouseYLoc);
+				Thing a = Main.getFromMapMoving(mouseXLoc, mouseYLoc);
+				if(a == null) {
+					a = Main.getFromMapStable(mouseXLoc, mouseYLoc);
+				}
 				if(a != null) {
 					switch(a.id) {
 					case "enemy dumb":
@@ -110,6 +113,21 @@ public class EditPanel extends JPanel implements MouseMotionListener, MouseListe
 					case "wall blue reverse gate":
 						Main.paint = "blue reverse gate";
 						break;
+					case "wall moving":
+						switch(((WallMoving) a).direction) {
+						case WallMoving.UP:
+							Main.paint = "wall moving up";
+							break;
+						case WallMoving.DOWN:
+							Main.paint = "wall moving down";
+							break;
+						case WallMoving.LEFT:
+							Main.paint = "wall moving left";
+							break;
+						case WallMoving.RIGHT:
+							Main.paint = "wall moving right";
+							break;
+						}
 					default:
 						Main.paint = a.id;
 						break;
@@ -119,13 +137,16 @@ public class EditPanel extends JPanel implements MouseMotionListener, MouseListe
 			} else {
 				for (int mouseX = mouseXLoc - (Main.isShiftPressed ? Main.SPRITE_WIDTH : 0); mouseX <= mouseXLoc + (Main.isShiftPressed ? Main.SPRITE_WIDTH : 0); mouseX += Main.SPRITE_WIDTH) {
 					for (int mouseY = mouseYLoc - (Main.isShiftPressed ? Main.SPRITE_HEIGHT : 0); mouseY <= mouseYLoc + (Main.isShiftPressed ? Main.SPRITE_HEIGHT : 0); mouseY += Main.SPRITE_HEIGHT) {
-						if (Main.getFromMap(mouseX, mouseY) != null && Main.paint != "erase" && !Main.isCtrlPressed) {
+						if ((Main.getFromMapMoving(mouseX, mouseY) != null || Main.getFromMapStable(mouseX, mouseY) != null) && Main.paint != "erase" && !Main.isCtrlPressed) {
 							continue;
 						}
 						Thing toInsert = null;
 						switch (Main.isCtrlPressed ? "erase" : Main.paint) {
 						case "erase":
-							Thing toRemove = Main.getFromMap(mouseX, mouseY);
+							Thing toRemove = Main.getFromMapMoving(mouseX, mouseY);
+							if(toRemove == null) {
+								toRemove = Main.getFromMapStable(mouseX, mouseY);
+							}
 							if (toRemove != null) {
 								Main.level.remove(toRemove);
 								Main.removeFromMap(toRemove);
@@ -149,6 +170,18 @@ public class EditPanel extends JPanel implements MouseMotionListener, MouseListe
 							break;
 						case "enemy smart":
 							toInsert = new EnemySmart(mouseX, mouseY, Main.enemySpeed);
+							break;
+						case "wall moving left":
+							toInsert = new WallMoving(mouseX, mouseY, WallMoving.LEFT);
+							break;
+						case "wall moving right":
+							toInsert = new WallMoving(mouseX, mouseY, WallMoving.RIGHT);
+							break;
+						case "wall moving up":
+							toInsert = new WallMoving(mouseX, mouseY, WallMoving.UP);
+							break;
+						case "wall moving down":
+							toInsert = new WallMoving(mouseX, mouseY, WallMoving.DOWN);
 							break;
 						case "enemy dumb left":
 							toInsert = new EnemyDumb(mouseX, mouseY, true, Main.enemySpeed);

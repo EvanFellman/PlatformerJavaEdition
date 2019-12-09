@@ -24,7 +24,8 @@ import javax.swing.JPanel;
 public class Main {
 	private static boolean editTemplates = false;
 	public static ArrayList<Thing> level = new ArrayList<Thing>();
-	public static Hashtable<Integer, Hashtable<Integer, Thing>> levelMap; 
+	public static Hashtable<Integer, Hashtable<Integer, Thing>> levelMapStable;
+	public static Hashtable<Integer, Hashtable<Integer, Thing>> levelMapMoving;
 	public static int startX;
 	public static int startY;
 	public static int levelNumber = 1;
@@ -228,6 +229,14 @@ public class Main {
 			public void actionPerformed(ActionEvent arg0) {
 				if(paint.equals("wall")){
 					paint = "disappearing wall";
+				} else if(paint.equals("disappearing wall")){
+					paint = "wall moving left";
+				} else if(paint.equals("wall moving left")) {
+					paint = "wall moving right";
+				} else if(paint.equals("wall moving right")){
+					paint = "wall moving up";
+				} else if(paint.equals("wall moving up")) {
+					paint = "wall moving down";
 				} else {
 					paint = "wall";
 				}
@@ -389,7 +398,7 @@ public class Main {
 					case "wall blue reverse gate":
 						image.setRGB(x, y, (new Color(0, 0, 253).getRGB()));
 						break;
-					case "blue switch":
+					case "blue wall switch":
 						image.setRGB(x, y, (new Color(0, 0, 252).getRGB()));
 						break;
 					case "open red gate":
@@ -400,11 +409,27 @@ public class Main {
 					case "wall red reverse gate":
 						image.setRGB(x, y, (new Color(253, 0, 0).getRGB()));
 						break;
-					case "red switch":
+					case "red wall switch":
 						image.setRGB(x, y, (new Color(252, 0, 0).getRGB()));
 						break;
 					case "wall disappearing":
 						image.setRGB(x, y, (new Color(0, 254, 0).getRGB()));
+						break;
+					case "wall moving":
+						switch(((WallMoving) a).direction) {
+						case WallMoving.UP:
+							image.setRGB(x, y, (new Color(0, 253, 0).getRGB()));
+							break;
+						case WallMoving.DOWN:
+							image.setRGB(x, y, (new Color(0, 252, 0).getRGB()));
+							break;
+						case WallMoving.RIGHT:
+							image.setRGB(x, y, (new Color(0, 251, 0).getRGB()));
+							break;
+						case WallMoving.LEFT:
+							image.setRGB(x, y, (new Color(0, 250, 0).getRGB()));
+							break;
+						}
 						break;
 					case "enemy dumb":
 						if(((EnemyDumb) a).goLeft) {
@@ -463,24 +488,10 @@ public class Main {
 				} else {
 					level.clear();
 				}
-				if (levelMap == null) {
-					levelMap = new Hashtable<Integer, Hashtable<Integer, Thing>>();
-				} else {
-					levelMap.clear();
-				}
+				levelMapStable = new Hashtable<Integer, Hashtable<Integer, Thing>>();
+				levelMapMoving = new Hashtable<Integer, Hashtable<Integer, Thing>>();
 				window.setSize(500, 500);
 				rp = new RandomPanel();
-				DEATH_BELOW = 100;
-				player = new Player(0,-25);
-				putInMap(player);
-				level.add(player);
-				for(int i = 0; i < 1; i++){
-					Wall w = new Wall(i * SPRITE_WIDTH, 25);
-					putInMap(w);
-					level.add(w);
-				}
-				rp.nextX = 0;
-				rp.nextY = 0;
 				window.add(rp);
 				window.setVisible(true);
 				while(STATE.equals("random0")) {
@@ -577,6 +588,7 @@ public class Main {
 				gp = new GamePanel();
 				window.add(gp);
 				window.setVisible(true);
+				player.die();
 				while(STATE.equals("play0")) {
 					Date before = new Date();
 					if(isEscapePressed) {
@@ -643,6 +655,10 @@ public class Main {
 		case "spike":
 			highlightButton(spikeEdit, editButtonPanel);
 			break;
+		case "moving wall left":
+		case "moving wall right":
+		case "moving wall up":
+		case "moving wall down":
 		case "disappearing wall":
 		case "wall":
 			highlightButton(wallEdit, editButtonPanel);
@@ -675,7 +691,15 @@ public class Main {
 			break;
 		}
 		if(paint.equals("disappearing wall")){
-			wallEdit.setText("disappearing wall");
+			wallEdit.setText("Disappearing Wall");
+		} else if(paint.equals("wall moving left")){
+			wallEdit.setText("Moving Wall (L)");
+		} else if(paint.equals("wall moving right")){
+			wallEdit.setText("Moving Wall (R)");
+		} else if(paint.equals("wall moving up")){
+			wallEdit.setText("Moving Wall (U)");
+		} else if(paint.equals("wall moving down")){
+			wallEdit.setText("Moving Wall (D)");
 		} else {
 			wallEdit.setText("Wall");
 		}
@@ -706,27 +730,64 @@ public class Main {
 		}
 	}
 	
-	public static Thing getFromMap(int x, int y) {
-		if(levelMap.get((int) (x / SPRITE_WIDTH)) == null) {
+	public static Thing getFromMapMoving(int x, int y) {
+		if(levelMapMoving.get((int) (x / SPRITE_WIDTH)) == null) {
 			return null;
 		} else {
-			return levelMap.get((int) (x / SPRITE_WIDTH)).get((int) (y / SPRITE_HEIGHT));
+			Thing a = levelMapMoving.get((int) (x / SPRITE_WIDTH)).get((int) (y / SPRITE_HEIGHT));
+			if(!level.contains(a)) {
+				return null;
+			}
+			return a;
 		}
 	}
 	
-	public static Thing getFromMap(double x, double y) {
-		return getFromMap((int) x, (int) y);
+	public static Thing getFromMapMoving(double x, double y) {
+		return getFromMapMoving((int) x, (int) y);
+	}
+	
+	public static Thing getFromMapStable(int x, int y) {
+		if(levelMapStable.get((int) (x / SPRITE_WIDTH)) == null) {
+			return null;
+		} else {
+			Thing a = levelMapStable.get((int) (x / SPRITE_WIDTH)).get((int) (y / SPRITE_HEIGHT));
+			if(!level.contains(a)) {
+				return null;
+			}
+			return a;
+		}
+	}
+	
+	public static Thing getFromMapStable(double x, double y) {
+		return getFromMapStable((int) x, (int) y);
 	}
 	
 	public static void putInMap(Thing a) {
-		if(levelMap.get((int) a.getX() / SPRITE_WIDTH) == null) {
-			levelMap.put((int) (a.getX() / SPRITE_WIDTH), new Hashtable<Integer, Thing>());
+		if(a.id.contains("enemy") || a.id.equals("player")) {
+			if(levelMapMoving.get((int) a.getX() / SPRITE_WIDTH) == null) {
+				levelMapMoving.put((int) (a.getX() / SPRITE_WIDTH), new Hashtable<Integer, Thing>());
+			}
+			levelMapMoving.get((int) (a.getX() / SPRITE_WIDTH)).put((int) (a.getY() / SPRITE_HEIGHT), a);
+		} else {
+			if(levelMapStable.get((int) a.getX() / SPRITE_WIDTH) == null) {
+				levelMapStable.put((int) (a.getX() / SPRITE_WIDTH), new Hashtable<Integer, Thing>());
+			}
+			levelMapStable.get((int) (a.getX() / SPRITE_WIDTH)).put((int) (a.getY() / SPRITE_HEIGHT), a);
 		}
-		levelMap.get((int) (a.getX() / SPRITE_WIDTH)).put((int) (a.getY() / SPRITE_HEIGHT), a);
 	}
 	
 	public static void removeFromMap(Thing a) {
-		levelMap.get((int) (a.getX() / SPRITE_HEIGHT)).remove((int) (a.getY() / SPRITE_WIDTH));
+		if(a.id.contains("enemy") || a.id.equals("player")) {
+			levelMapMoving.get((int) (a.getX() / SPRITE_HEIGHT)).remove((int) (a.getY() / SPRITE_WIDTH));
+		} else {
+			levelMapStable.get((int) (a.getX() / SPRITE_HEIGHT)).remove((int) (a.getY() / SPRITE_WIDTH));
+		}
+	}
+	
+	public static void resetMap() {
+		levelMapMoving = new Hashtable<Integer, Hashtable<Integer, Thing>>();
+		levelMapStable = new Hashtable<Integer, Hashtable<Integer, Thing>>();
+		level = new ArrayList<Thing>();
 	}
 	
 	//resets level
@@ -739,16 +800,7 @@ public class Main {
 		} else {
 			imgFile = new File("templates/" + Integer.toString(levelNumber) + ".png");
 		}
-		if (level==null) {
-			level = new ArrayList<Thing>();
-		} else {
-			level.clear();
-		}
-		if (levelMap == null) {
-			levelMap = new Hashtable<Integer, Hashtable<Integer, Thing>>();
-		} else {
-			levelMap.clear();
-		}
+		resetMap();
 		if(imgFile.exists()) {
 			try {
 				BufferedImage img = ImageIO.read(imgFile);
@@ -793,6 +845,14 @@ public class Main {
 							level.add(new EnemyDumb(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, false, SLOW_SPEED));
 						} else if(pixel.getRed() == 0 && pixel.getGreen() == 254 && pixel.getBlue() == 0) {
 							level.add(new DisappearingWall(SPRITE_WIDTH * x, SPRITE_HEIGHT * y));
+						} else if(pixel.getRed() == 0 && pixel.getGreen() == 253 && pixel.getBlue() == 0) {
+							level.add(new WallMoving(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, WallMoving.UP));
+						} else if(pixel.getRed() == 0 && pixel.getGreen() == 252 && pixel.getBlue() == 0) {
+							level.add(new WallMoving(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, WallMoving.DOWN));
+						} else if(pixel.getRed() == 0 && pixel.getGreen() == 251 && pixel.getBlue() == 0) {
+							level.add(new WallMoving(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, WallMoving.LEFT));
+						} else if(pixel.getRed() == 0 && pixel.getGreen() == 250 && pixel.getBlue() == 0) {
+							level.add(new WallMoving(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, WallMoving.RIGHT));
 						} else if(pixel.getRed() == 245 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
 							level.add(new Spike(SPRITE_WIDTH * x, SPRITE_HEIGHT * y));
 						} else if(pixel.getRed() == 244 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {

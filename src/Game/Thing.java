@@ -56,6 +56,30 @@ public abstract class Thing {
 		return x <= Main.SPRITE_WIDTH && x >= -1 * Main.SPRITE_WIDTH && y <= Main.SPRITE_HEIGHT && y >= -1 * Main.SPRITE_HEIGHT; 
 	}
 	
+	public boolean toLeftOf(Thing other) {
+		double x = this.x - other.getX();
+		double y = this.y - other.getY();
+		return x < 0 && y < Main.SPRITE_HEIGHT && y > -1 * Main.SPRITE_HEIGHT;
+	}
+	
+	public boolean toRightOf(Thing other) {
+		double x = this.x - other.getX();
+		double y = this.y - other.getY();
+		return x > 0 && y < Main.SPRITE_HEIGHT && y > -1 * Main.SPRITE_HEIGHT;
+	}
+	
+	public boolean above(Thing other) {
+		double x = this.x - other.getX();
+		double y = this.y - other.getY();
+		return y < 0 && x < Main.SPRITE_WIDTH && x > -1 * Main.SPRITE_WIDTH;
+	}
+	
+	public boolean below(Thing other) {
+		double x = this.x - other.getX();
+		double y = this.y - other.getY();
+		return y > 0 && x < Main.SPRITE_WIDTH && x > -1 * Main.SPRITE_WIDTH;
+	}
+	
 	public void display(Graphics g) {
 		g.drawImage(this.pic, ((int)this.x) - Main.cameraX, ((int)this.y) - Main.cameraY, null);
 	}

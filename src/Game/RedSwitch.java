@@ -11,7 +11,7 @@ public class RedSwitch extends Thing {
 		boolean wasTouched = false;
 		for(int i = -1; i <= 1; i++) {
 			for(int j = -1; j <= 1; j++) {
-				Thing a = Main.getFromMap(this.x + (i * Main.SPRITE_WIDTH), this.y + (j * Main.SPRITE_HEIGHT));
+				Thing a = Main.getFromMapMoving(this.x + (i * Main.SPRITE_WIDTH), this.y + (j * Main.SPRITE_HEIGHT));
 				if(a != null && this.isNextTo(a) && (a.id.equals("player") || a.id.contains("enemy"))) {
 					if(this.touchedLast <= 0) {
 						wasTouched = true;
