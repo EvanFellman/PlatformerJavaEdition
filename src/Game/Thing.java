@@ -20,7 +20,7 @@ public abstract class Thing {
 		this.id = id;
 		this.uniqueID = nextID++;
 		try {
-			this.pic = ImageIO.read(new File("textures.png")).getSubimage(picX * Main.SPRITE_WIDTH, picY * Main.SPRITE_HEIGHT, Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT);
+			this.pic = ImageIO.read(new File("config/textures.png")).getSubimage(picX * Main.SPRITE_WIDTH, picY * Main.SPRITE_HEIGHT, Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

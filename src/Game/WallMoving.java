@@ -7,7 +7,7 @@ public class WallMoving extends Thing {
 	public static final int RIGHT = 4;
 	public int direction;
 	public WallMoving(double x, double y, int dir) {
-		super(x, y, "wall moving", 1, 1);
+		super(x, y, "wall moving", 3, 3);
 		this.direction = dir;
 	}
 		
@@ -22,7 +22,7 @@ public class WallMoving extends Thing {
 			switch(this.direction) {
 			case UP:
 				if(a.id.contains("wall")) {
-					if(a.dy <= 0) {
+					if(a.dy <= 0  || (a.id.equals("wall moving") && ((WallMoving) a).direction == DOWN)) {
 						this.direction = DOWN;
 					}
 					this.y = a.getY() + Main.SPRITE_HEIGHT;
@@ -30,7 +30,7 @@ public class WallMoving extends Thing {
 				break;
 			case DOWN:
 				if(a.id.contains("wall")) {
-					if(a.dy >= 0) {
+					if(a.dy >= 0 || (a.id.equals("wall moving") && ((WallMoving) a).direction == UP)) {
 						this.direction = UP;
 					}
 					this.y = a.getY() - Main.SPRITE_HEIGHT;
@@ -58,18 +58,18 @@ public class WallMoving extends Thing {
 		switch(this.direction) {
 		case UP:
 			this.dx = 0;
-			this.dy = -0.25;
+			this.dy = -0.2;
 			break;
 		case DOWN:
 			this.dx = 0;
-			this.dy = 0.25;
+			this.dy = 0.2;
 			break;
 		case LEFT:
-			this.dx = -0.25;
+			this.dx = -0.2;
 			this.dy = 0;
 			break;
 		case RIGHT:
-			this.dx = 0.25;
+			this.dx = 0.2;
 			this.dy = 0;
 			break;
 		}

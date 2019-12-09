@@ -74,7 +74,7 @@ public class Main {
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.addKeyListener(keyListener);
 		window.setTitle("Platformer");
-		window.setIconImage(ImageIO.read(new File("textures.png")).getSubimage(Main.SPRITE_WIDTH, 0, Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT));
+		window.setIconImage(ImageIO.read(new File("config/textures.png")).getSubimage(Main.SPRITE_WIDTH, 0, Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT));
 		final JPanel menuPanel = new JPanel();
 		menuPanel.setBackground(Color.LIGHT_GRAY);
 		menuPanel.setLayout(new BoxLayout(menuPanel, 1));
@@ -456,7 +456,7 @@ public class Main {
 					if(!editTemplates) {
 						outFile = new File("level" + Integer.toString(levelNumber) + ".png");
 					} else {
-						outFile = new File("templates/" + Integer.toString(levelNumber) + ".png");
+						outFile = new File("config/" + Integer.toString(levelNumber) + ".png");
 					}
 					try {
 						ImageIO.write(image, "png", outFile);
@@ -655,10 +655,10 @@ public class Main {
 		case "spike":
 			highlightButton(spikeEdit, editButtonPanel);
 			break;
-		case "moving wall left":
-		case "moving wall right":
-		case "moving wall up":
-		case "moving wall down":
+		case "wall moving left":
+		case "wall moving right":
+		case "wall moving up":
+		case "wall moving down":
 		case "disappearing wall":
 		case "wall":
 			highlightButton(wallEdit, editButtonPanel);
@@ -777,10 +777,14 @@ public class Main {
 	}
 	
 	public static void removeFromMap(Thing a) {
-		if(a.id.contains("enemy") || a.id.equals("player")) {
-			levelMapMoving.get((int) (a.getX() / SPRITE_HEIGHT)).remove((int) (a.getY() / SPRITE_WIDTH));
-		} else {
-			levelMapStable.get((int) (a.getX() / SPRITE_HEIGHT)).remove((int) (a.getY() / SPRITE_WIDTH));
+		try {
+			if(a.id.contains("enemy") || a.id.equals("player")) {
+				levelMapMoving.get((int) (a.getX() / SPRITE_HEIGHT)).remove((int) (a.getY() / SPRITE_WIDTH));
+			} else {
+				levelMapStable.get((int) (a.getX() / SPRITE_HEIGHT)).remove((int) (a.getY() / SPRITE_WIDTH));
+			}
+		} catch (Exception e) {
+			
 		}
 	}
 	
@@ -798,7 +802,7 @@ public class Main {
 		if(!editTemplates) {
 			imgFile = new File("./level" + Integer.toString(levelNumber) + ".png");
 		} else {
-			imgFile = new File("templates/" + Integer.toString(levelNumber) + ".png");
+			imgFile = new File("config/" + Integer.toString(levelNumber) + ".png");
 		}
 		resetMap();
 		if(imgFile.exists()) {

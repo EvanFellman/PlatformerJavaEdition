@@ -15,14 +15,14 @@ public class RedGate extends Thing {
 		if(Main.isRedGateOpen && this.id.equals("wall red gate")) {
 			this.id = "open red gate";
 			try {
-				this.pic = ImageIO.read(new File("textures.png")).getSubimage(3 * Main.SPRITE_WIDTH, 2 * Main.SPRITE_HEIGHT, Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT);
+				this.pic = ImageIO.read(new File("config/textures.png")).getSubimage(3 * Main.SPRITE_WIDTH, 2 * Main.SPRITE_HEIGHT, Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		} else if(!Main.isRedGateOpen && this.id.equals("open red gate")){
 			this.id = "wall red gate";
 			try {
-				this.pic = ImageIO.read(new File("textures.png")).getSubimage(3 * Main.SPRITE_WIDTH, 1 * Main.SPRITE_HEIGHT, Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT);
+				this.pic = ImageIO.read(new File("config/textures.png")).getSubimage(3 * Main.SPRITE_WIDTH, 1 * Main.SPRITE_HEIGHT, Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

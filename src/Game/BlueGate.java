@@ -15,14 +15,14 @@ public class BlueGate extends Thing {
 		if(Main.isBlueGateOpen && this.id.equals("wall blue gate")) {
 			this.id = "open blue gate";
 			try {
-				this.pic = ImageIO.read(new File("textures.png")).getSubimage(2 * Main.SPRITE_WIDTH, 2 * Main.SPRITE_HEIGHT, Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT);
+				this.pic = ImageIO.read(new File("config/textures.png")).getSubimage(2 * Main.SPRITE_WIDTH, 2 * Main.SPRITE_HEIGHT, Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		} else if(!Main.isBlueGateOpen && this.id.equals("open blue gate")){
 			this.id = "wall blue gate";
 			try {
-				this.pic = ImageIO.read(new File("textures.png")).getSubimage(2 * Main.SPRITE_WIDTH, 1 * Main.SPRITE_HEIGHT, Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT);
+				this.pic = ImageIO.read(new File("config/textures.png")).getSubimage(2 * Main.SPRITE_WIDTH, 1 * Main.SPRITE_HEIGHT, Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

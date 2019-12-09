@@ -17,7 +17,7 @@ public class RandomPanel extends javax.swing.JPanel {
 		super();
 		templates = new ArrayList<BufferedImage>();
 		int i = 1;
-		File f = new File("./templates/" + Integer.toString(i) + ".png");
+		File f = new File("./config/" + Integer.toString(i) + ".png");
 		while(f.exists()) {
 			try {
 				templates.add(ImageIO.read(f));
@@ -25,7 +25,7 @@ public class RandomPanel extends javax.swing.JPanel {
 				break;
 			}
 			i++;
-			f = new File("./templates/" + Integer.toString(i) + ".png");
+			f = new File("./config/" + Integer.toString(i) + ".png");
 		}
 		Main.player = new Player(0, -25);
 		Main.putInMap(Main.player);
