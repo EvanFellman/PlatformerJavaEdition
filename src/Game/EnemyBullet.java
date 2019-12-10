@@ -1,17 +1,23 @@
 package Game;
 
 public class EnemyBullet extends Enemy {
-	public boolean goLeft;
+	public int direction;
+	public final static int UP = 1;
+	public final static int DOWN = 2;
+	public final static int LEFT = 3;
+	public final static int RIGHT = 4;
 	public double speed;
-	public EnemyBullet(double x, double y, boolean goLeft, double speed) {
-		super(x, y, "enemy bullet " + (goLeft? "left" : "right"), 4, goLeft ? 0 : 1);
-		this.goLeft = goLeft;
+	public EnemyBullet(double x, double y, int direction, double speed) {
+		super(x, y, "enemy bullet " + (direction == UP ? "up" : (direction == DOWN ? "down" : (direction == LEFT ? "left" : "right"))), 4, direction == UP ? 2 : (direction == DOWN ? 3 : (direction == LEFT ? 0 : 1)));
+		this.direction = direction;
 		this.speed = speed;
 	}
 	
 	public boolean move() {
 		this.x += this.dx;
-		if(this.goLeft) {
+		this.y += this.dy;
+		switch(this.direction) {
+		case LEFT:
 			for(int i = 0; i < Main.level.size(); i++) {
 				Thing a = Main.level.get(i);
 				double x = this.x - a.getX();
@@ -19,15 +25,49 @@ public class EnemyBullet extends Enemy {
 					this.die();
 				}
 			}
-		} else {
+			this.dx = -1;
+			break;
+		case RIGHT:
 			for(int i = 0; i < Main.level.size(); i++) {
 				Thing a = Main.level.get(i);
-				if(this.isTouching(a) && a.id.contains("wall") && this.toRightOf(a)) {
+				double x = this.x - a.getX();
+				if(this.isTouching(a) && a.id.contains("wall") && x < Main.SPRITE_WIDTH) {
 					this.die();
 				}
 			}
+			this.dx = 1;
+			break;
+		case UP:
+			for(int i = 0; i < Main.level.size(); i++) {
+				Thing a = Main.level.get(i);
+				double y = this.y - a.getY();
+				if(this.isTouching(a) && a.id.contains("wall") && y < Main.SPRITE_HEIGHT) {
+					this.die();
+				}
+			}
+			this.dy = -1;
+			break;
+		case DOWN:
+			for(int i = 0; i < Main.level.size(); i++) {
+				Thing a = Main.level.get(i);
+				double y = this.y - a.getY();
+				if(this.isTouching(a) && a.id.contains("wall") && y < Main.SPRITE_HEIGHT) {
+					this.die();
+				}
+			}
+			this.dy = 1;
+			break;
 		}
-		this.dx = goLeft ? -1 * speed : 1 * speed;
+//		if(this.direct) {
+//			
+//		} else {
+//			for(int i = 0; i < Main.level.size(); i++) {
+//				Thing a = Main.level.get(i);
+//				if(this.isTouching(a) && a.id.contains("wall") && this.toRightOf(a)) {
+//					this.die();
+//				}
+//			}
+//		}
 		return false;
 	}
 

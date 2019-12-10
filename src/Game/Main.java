@@ -65,6 +65,7 @@ public class Main {
 	private static JButton redGateEdit;
 	private static JButton spikeEdit;
 	private static JButton enemyEdit;
+	private static JButton bulletEdit;
 	private static JButton goalEdit;
 	private static JButton startEdit;
 	private static JButton levelNumberDisplayEdit;
@@ -289,10 +290,6 @@ public class Main {
 					paint = "enemy only jump";
 				} else if(paint.equals("enemy only jump")){
 					paint = "enemy smart";
-				} else if(paint.equals("enemy smart")) {
-					paint = "enemy bullet left";
-				} else if(paint.equals("enemy bullet left")) {
-					paint = "enemy bullet right";
 				} else {
 					paint = "enemy dumb left";
 				}
@@ -300,6 +297,24 @@ public class Main {
 			}
 		});
 		editButtonPanel.add(enemyEdit);
+		bulletEdit = new JButton("Bullet (L)");
+		bulletEdit.setFocusable(false);
+		bulletEdit.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(paint.equals("enemy bullet left")) {
+					paint = "enemy bullet right";
+				} else if(paint.equals("enemy bullet right")) {
+					paint = "enemy bullet up";
+				} else if(paint.equals("enemy bullet up")) {
+					paint = "enemy bullet down";
+				} else {
+					paint = "enemy bullet left";
+				}
+				updateEditButtons();
+			}
+		});
+		editButtonPanel.add(bulletEdit);
 		spikeEdit = new JButton("Spike");
 		spikeEdit.setFocusable(false);
 		spikeEdit.addActionListener(new ActionListener(){
@@ -393,6 +408,20 @@ public class Main {
 							image.setRGB(x, y, (new Color(240, 0, 0).getRGB()));
 						} else {
 							image.setRGB(x, y, (new Color(239, 0, 0).getRGB()));							
+						}
+						break;
+					case "enemy bullet up":
+						if(enemySpeed == FAST_SPEED) {
+							image.setRGB(x, y, (new Color(238, 0, 0).getRGB()));
+						} else {
+							image.setRGB(x, y, (new Color(237, 0, 0).getRGB()));							
+						}
+						break;
+					case "enemy bullet down":
+						if(enemySpeed == FAST_SPEED) {
+							image.setRGB(x, y, (new Color(236, 0, 0).getRGB()));
+						} else {
+							image.setRGB(x, y, (new Color(235, 0, 0).getRGB()));							
 						}
 						break;
 					case "enemy smart":
@@ -696,6 +725,10 @@ public class Main {
 			break;
 		case "enemy bullet left":
 		case "enemy bullet right":
+		case "enemy bullet up":
+		case "enemy bullet down":
+			highlightButton(bulletEdit, editButtonPanel);
+			break;
 		case "enemy dumb left":
 		case "enemy dumb right":
 		case "enemy no jump":
@@ -745,12 +778,18 @@ public class Main {
 			enemyEdit.setText("Enemy (NJ)");
 		} else if(paint.equals("enemy only jump")){
 			enemyEdit.setText("Enemy (OJ)");
-		} else if(paint.equals("enemy bullet left")) {
-			enemyEdit.setText("Enemy Bullet (L)");
-		} else if(paint.equals("enemy bullet right")) {
-			enemyEdit.setText("Enemy Bullet (R)");
 		} else {
 			enemyEdit.setText("Enemy (D L)");
+		}
+		
+		if(paint.equals("enemy bullet down")) {
+			bulletEdit.setText("Bullet (D)");
+		} else if(paint.equals("enemy bullet right")) {
+			bulletEdit.setText("Bullet (R)");
+		} else if(paint.equals("enemy bullet up")) {
+			bulletEdit.setText("Bullet (U)");
+		} else {
+			bulletEdit.setText("Bullet (L)");
 		}
 	}
 	
@@ -888,13 +927,21 @@ public class Main {
 						} else if(pixel.getRed() == 243 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
 							level.add(new EnemySmart(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, SLOW_SPEED));
 						}  else if(pixel.getRed() == 242 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
-							level.add(new EnemyBullet(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, true, FAST_SPEED));
+							level.add(new EnemyBullet(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, EnemyBullet.LEFT, FAST_SPEED));
 						}  else if(pixel.getRed() == 241 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
-							level.add(new EnemyBullet(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, true, SLOW_SPEED));
+							level.add(new EnemyBullet(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, EnemyBullet.LEFT, SLOW_SPEED));
 						} else if(pixel.getRed() == 240 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
-							level.add(new EnemyBullet(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, false, FAST_SPEED));
+							level.add(new EnemyBullet(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, EnemyBullet.RIGHT, FAST_SPEED));
 						} else if(pixel.getRed() == 239 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
-							level.add(new EnemyBullet(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, false, SLOW_SPEED));
+							level.add(new EnemyBullet(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, EnemyBullet.RIGHT, SLOW_SPEED));
+						} else if(pixel.getRed() == 238 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
+							level.add(new EnemyBullet(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, EnemyBullet.UP, FAST_SPEED));
+						} else if(pixel.getRed() == 237 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
+							level.add(new EnemyBullet(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, EnemyBullet.UP, SLOW_SPEED));
+						} else if(pixel.getRed() == 236 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
+							level.add(new EnemyBullet(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, EnemyBullet.DOWN, FAST_SPEED));
+						} else if(pixel.getRed() == 235 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
+							level.add(new EnemyBullet(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, EnemyBullet.DOWN, SLOW_SPEED));
 						}
 					}
 				}

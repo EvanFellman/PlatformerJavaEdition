@@ -42,13 +42,15 @@ public abstract class Enemy extends Thing {
 					}
 				} else if(a.id.equals("wall moving")) {
 					double x = this.x - a.x;
-					if(!(a.y + Main.SPRITE_HEIGHT * 0.95 <= this.y || a.y - Main.SPRITE_HEIGHT * 0.95 >= this.y) && x < Main.SPRITE_WIDTH && x > -1 * Main.SPRITE_WIDTH) {
-						if(this.x < a.x) {
-							this.dx = 0;
-							this.x = a.getX() - Main.SPRITE_WIDTH;
-						} else if(this.x > a.x) {
-							this.dx = 0;
-							this.x = a.getX() + Main.SPRITE_WIDTH;
+					if(x < Main.SPRITE_WIDTH && x > -1 * Main.SPRITE_WIDTH) {
+						if(this.y - a.y > 1 + (-1 * Main.SPRITE_HEIGHT) && this.y - a.y < Main.SPRITE_HEIGHT - 10){
+							if(this.x < a.x) {
+								this.dx = 0;
+								this.x = a.getX() - Main.SPRITE_WIDTH;
+							} else if(this.x > a.x) {
+								this.dx = 0;
+								this.x = a.getX() + Main.SPRITE_WIDTH;
+							}
 						}
 					}
 				} else {
@@ -111,7 +113,7 @@ public abstract class Enemy extends Thing {
 					}
 				}
 				if(this.dy >= 0) {
-					if(!(a.id.equals("wall moving") && a.dy != 0)) {
+					if(this.dy > 0 && a.dy <= 0) {
 						this.dy = 0;
 					}
 					if(a.getY() > this.y) {
