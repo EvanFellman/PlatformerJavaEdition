@@ -397,28 +397,28 @@ public class Main {
 						}
 						break;
 					case "enemy bullet left":
-						if(enemySpeed == FAST_SPEED) {
+						if(((EnemyBullet) a).speed == FAST_SPEED) {
 							image.setRGB(x, y, (new Color(242, 0, 0).getRGB()));
 						} else {
 							image.setRGB(x, y, (new Color(241, 0, 0).getRGB()));							
 						}
 						break;
 					case "enemy bullet right":
-						if(enemySpeed == FAST_SPEED) {
+						if(((EnemyBullet) a).speed == FAST_SPEED) {
 							image.setRGB(x, y, (new Color(240, 0, 0).getRGB()));
 						} else {
 							image.setRGB(x, y, (new Color(239, 0, 0).getRGB()));							
 						}
 						break;
 					case "enemy bullet up":
-						if(enemySpeed == FAST_SPEED) {
+						if(((EnemyBullet) a).speed == FAST_SPEED) {
 							image.setRGB(x, y, (new Color(238, 0, 0).getRGB()));
 						} else {
 							image.setRGB(x, y, (new Color(237, 0, 0).getRGB()));							
 						}
 						break;
 					case "enemy bullet down":
-						if(enemySpeed == FAST_SPEED) {
+						if(((EnemyBullet) a).speed == FAST_SPEED) {
 							image.setRGB(x, y, (new Color(236, 0, 0).getRGB()));
 						} else {
 							image.setRGB(x, y, (new Color(235, 0, 0).getRGB()));							

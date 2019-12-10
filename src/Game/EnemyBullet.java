@@ -25,7 +25,7 @@ public class EnemyBullet extends Enemy {
 					this.die();
 				}
 			}
-			this.dx = -1;
+			this.dx = -1 * this.speed;
 			break;
 		case RIGHT:
 			for(int i = 0; i < Main.level.size(); i++) {
@@ -35,7 +35,7 @@ public class EnemyBullet extends Enemy {
 					this.die();
 				}
 			}
-			this.dx = 1;
+			this.dx = 1 * this.speed;
 			break;
 		case UP:
 			for(int i = 0; i < Main.level.size(); i++) {
@@ -45,7 +45,7 @@ public class EnemyBullet extends Enemy {
 					this.die();
 				}
 			}
-			this.dy = -1;
+			this.dy = -1 * this.speed;
 			break;
 		case DOWN:
 			for(int i = 0; i < Main.level.size(); i++) {
@@ -55,19 +55,9 @@ public class EnemyBullet extends Enemy {
 					this.die();
 				}
 			}
-			this.dy = 1;
+			this.dy = 1 * this.speed;
 			break;
 		}
-//		if(this.direct) {
-//			
-//		} else {
-//			for(int i = 0; i < Main.level.size(); i++) {
-//				Thing a = Main.level.get(i);
-//				if(this.isTouching(a) && a.id.contains("wall") && this.toRightOf(a)) {
-//					this.die();
-//				}
-//			}
-//		}
 		return false;
 	}
 
