@@ -36,7 +36,7 @@ public class Shooter extends Thing {
 		}
 		Thing moveable = Main.getFromMapMoving(this.x + i, this.y + j);
 		Thing stable = Main.getFromMapStable(this.x + i, this.y + j);
-		if((moveable == null || !this.isNextTo(moveable) ) && (stable == null || !stable.id.contains("wall"))) {
+		if(moveable == null && (stable == null || !stable.id.contains("wall"))) {
 			this.countDown--;
 			if(this.countDown <= 0) {
 				Thing bullet = new EnemyBullet(this.x + i, this.y + j, this.direction, this.speed);

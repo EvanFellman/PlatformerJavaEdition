@@ -14,6 +14,7 @@ public class EnemyBullet extends Enemy {
 	}
 	
 	public boolean move() {
+		Main.removeFromMap(this);
 		this.x += this.dx;
 		this.y += this.dy;
 		switch(this.direction) {
@@ -58,6 +59,7 @@ public class EnemyBullet extends Enemy {
 			this.dy = 1 * this.speed;
 			break;
 		}
+		Main.putInMap(this);
 		return false;
 	}
 

@@ -141,6 +141,10 @@ public abstract class Enemy extends Thing {
 					break;
 				}
 			}
+			if(a != null && !this.equals(a) && a.id.contains("bullet") && this.isTouching(a)) {
+				this.die();
+				return false;
+			}
 		}
 		if((nearWalla && nearWallMovingb) || (nearWallMovinga && nearWallb) || (nearWallMovinga && nearWallMovingb)) {
 			this.die();
