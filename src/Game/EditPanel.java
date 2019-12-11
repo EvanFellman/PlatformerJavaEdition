@@ -207,6 +207,18 @@ public class EditPanel extends JPanel implements MouseMotionListener, MouseListe
 						case "enemy bullet down":
 							toInsert = new EnemyBullet(mouseX, mouseY, EnemyBullet.DOWN, Main.enemySpeed);
 							break;
+						case "wall shooter left":
+							toInsert = new Shooter(mouseX, mouseY, Shooter.LEFT, Main.enemySpeed);
+							break;
+						case "wall shooter right":
+							toInsert = new Shooter(mouseX, mouseY, Shooter.RIGHT, Main.enemySpeed);
+							break;
+						case "wall shooter up":
+							toInsert = new Shooter(mouseX, mouseY, Shooter.UP, Main.enemySpeed);
+							break;
+						case "wall shooter down":
+							toInsert = new Shooter(mouseX, mouseY, Shooter.DOWN, Main.enemySpeed);
+							break;
 						case "next level":
 							toInsert = new NextLevel(mouseX, mouseY);
 							break;
