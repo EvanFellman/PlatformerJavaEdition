@@ -23,7 +23,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class Main {
-	private static boolean editTemplates = false;
+	private static boolean editTemplates = true;
 	public static ArrayList<Thing> level = new ArrayList<Thing>();
 	public static Hashtable<Integer, Hashtable<Integer, Thing>> levelMapStable;
 	public static Hashtable<Integer, Hashtable<Integer, Thing>> levelMapMoving;
@@ -237,8 +237,8 @@ public class Main {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if(paint.equals("wall")){
-					paint = "disappearing wall";
-				} else if(paint.equals("disappearing wall")){
+					paint = "wall disappearing";
+				} else if(paint.equals("wall disappearing")){
 					paint = "wall moving left";
 				} else if(paint.equals("wall moving left")) {
 					paint = "wall moving right";
@@ -833,7 +833,7 @@ public class Main {
 		case "wall moving right":
 		case "wall moving up":
 		case "wall moving down":
-		case "disappearing wall":
+		case "wall disappearing":
 		case "wall":
 			highlightButton(wallEdit, editButtonPanel);
 			break;
@@ -874,7 +874,7 @@ public class Main {
 			highlightButton(goalEdit, editButtonPanel);
 			break;
 		}
-		if(paint.equals("disappearing wall")){
+		if(paint.equals("wall disappearing")){
 			wallEdit.setText("Temporary Wall");
 		} else if(paint.equals("wall moving left")){
 			wallEdit.setText("Moving Wall (L)");

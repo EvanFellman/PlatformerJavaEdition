@@ -118,6 +118,38 @@ public class RandomPanel extends javax.swing.JPanel {
 					templateLevel.add(new EnemySmart(Main.SPRITE_WIDTH * x, Main.SPRITE_HEIGHT * y, Main.FAST_SPEED));
 				} else if (pixel.getRed() == 243 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
 					templateLevel.add(new EnemySmart(Main.SPRITE_WIDTH * x, Main.SPRITE_HEIGHT * y, Main.SLOW_SPEED));
+				}else if(pixel.getRed() == 242 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
+					templateLevel.add(new EnemyBullet(Main.SPRITE_WIDTH * x, Main.SPRITE_HEIGHT * y, EnemyBullet.LEFT, Main.FAST_SPEED));
+				} else if(pixel.getRed() == 241 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
+					templateLevel.add(new EnemyBullet(Main.SPRITE_WIDTH * x, Main.SPRITE_HEIGHT * y, EnemyBullet.LEFT, Main.SLOW_SPEED));
+				} else if(pixel.getRed() == 240 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
+					templateLevel.add(new EnemyBullet(Main.SPRITE_WIDTH * x, Main.SPRITE_HEIGHT * y, EnemyBullet.RIGHT, Main.FAST_SPEED));
+				} else if(pixel.getRed() == 239 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
+					templateLevel.add(new EnemyBullet(Main.SPRITE_WIDTH * x, Main.SPRITE_HEIGHT * y, EnemyBullet.RIGHT, Main.SLOW_SPEED));
+				} else if(pixel.getRed() == 238 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
+					templateLevel.add(new EnemyBullet(Main.SPRITE_WIDTH * x, Main.SPRITE_HEIGHT * y, EnemyBullet.UP, Main.FAST_SPEED));
+				} else if(pixel.getRed() == 237 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
+					templateLevel.add(new EnemyBullet(Main.SPRITE_WIDTH * x, Main.SPRITE_HEIGHT * y, EnemyBullet.UP, Main.SLOW_SPEED));
+				} else if(pixel.getRed() == 236 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
+					templateLevel.add(new EnemyBullet(Main.SPRITE_WIDTH * x, Main.SPRITE_HEIGHT * y, EnemyBullet.DOWN, Main.FAST_SPEED));
+				} else if(pixel.getRed() == 235 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
+					templateLevel.add(new EnemyBullet(Main.SPRITE_WIDTH * x, Main.SPRITE_HEIGHT * y, EnemyBullet.DOWN, Main.SLOW_SPEED));
+				} else if(pixel.getRed() == 234 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
+					templateLevel.add(new Shooter(Main.SPRITE_WIDTH * x, Main.SPRITE_HEIGHT * y, Shooter.LEFT, Main.FAST_SPEED));
+				} else if(pixel.getRed() == 233 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
+					templateLevel.add(new Shooter(Main.SPRITE_WIDTH * x, Main.SPRITE_HEIGHT * y, Shooter.LEFT, Main.SLOW_SPEED));
+				} else if(pixel.getRed() == 232 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
+					templateLevel.add(new Shooter(Main.SPRITE_WIDTH * x, Main.SPRITE_HEIGHT * y, Shooter.RIGHT, Main.FAST_SPEED));
+				} else if(pixel.getRed() == 231 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
+					templateLevel.add(new Shooter(Main.SPRITE_WIDTH * x, Main.SPRITE_HEIGHT * y, Shooter.RIGHT, Main.SLOW_SPEED));
+				} else if(pixel.getRed() == 230 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
+					templateLevel.add(new Shooter(Main.SPRITE_WIDTH * x, Main.SPRITE_HEIGHT * y, Shooter.UP, Main.FAST_SPEED));
+				} else if(pixel.getRed() == 229 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
+					templateLevel.add(new Shooter(Main.SPRITE_WIDTH * x, Main.SPRITE_HEIGHT * y, Shooter.UP, Main.SLOW_SPEED));
+				} else if(pixel.getRed() == 228 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
+					templateLevel.add(new Shooter(Main.SPRITE_WIDTH * x, Main.SPRITE_HEIGHT * y, Shooter.DOWN, Main.FAST_SPEED));
+				} else if(pixel.getRed() == 227 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
+					templateLevel.add(new Shooter(Main.SPRITE_WIDTH * x, Main.SPRITE_HEIGHT * y, Shooter.DOWN, Main.SLOW_SPEED));
 				}
 			}
 		}

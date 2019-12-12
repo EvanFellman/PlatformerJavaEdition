@@ -237,7 +237,7 @@ public class EditPanel extends JPanel implements MouseMotionListener, MouseListe
 						case "player":
 							toInsert = new Player(mouseX, mouseY);
 							break;
-						case "disappearing wall":
+						case "wall disappearing":
 							toInsert = new DisappearingWall(mouseX, mouseY);
 							break;
 						default:
