@@ -566,9 +566,9 @@ public class Main {
 			Thread.sleep(1/30);
 			switch(STATE) {
 			case "menu":
-				window.setSize(200,300);
 				window.add(menuPanel);
 				STATE="menu0";
+				window.setSize(200,300);
 				break;
 			case "random":
 				STATE="random0";
@@ -581,33 +581,67 @@ public class Main {
 				}
 				levelMapStable = new Hashtable<Integer, Hashtable<Integer, Thing>>();
 				levelMapMoving = new Hashtable<Integer, Hashtable<Integer, Thing>>();
-				window.setSize(500, 500);
 				rp = new RandomPanel();
 				window.add(rp);
 				window.setVisible(true);
+				window.setSize(500, 500);
 				while(STATE.equals("random0")) {
 					Date before = new Date();
 					if(isEscapePressed) {
-						JLabel quitLabel = new JLabel("paused - Press w to quit or escape to continue");
-						quitLabel.setFocusable(false);
-						window.add(quitLabel);
+						final JPanel pausePanel = new JPanel();
+						pausePanel.setBackground(Color.DARK_GRAY);
+						pausePanel.setLayout(new BoxLayout(pausePanel, 1));
+						JLabel pauseLabel = new JLabel("Paused");
+						pauseLabel.setForeground(Color.WHITE);
+						final InterThreadFlag flag = new InterThreadFlag(true);
+						pauseLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+						pauseLabel.setFont(new Font("TimesRoman", Font.BOLD, 30));
+						pausePanel.add(Box.createVerticalStrut(100));
+						pausePanel.add(pauseLabel);
+						pausePanel.add(Box.createVerticalStrut(75));
+						JButton continueButton = new JButton("Return To Game");
+						continueButton.setFocusable(false);
+						continueButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+						continueButton.setMinimumSize(new Dimension(200, 50));
+						continueButton.setMaximumSize(new Dimension(200, 50));
+						continueButton.setPreferredSize(new Dimension(200, 50));
+						continueButton.setBackground(Color.LIGHT_GRAY);
+						continueButton.addActionListener(new ActionListener() {
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								window.remove(pausePanel);
+								window.add(rp);
+								window.repaint();
+								window.setVisible(true);
+								isEscapePressed = false;
+								flag.flag = false;
+								window.setVisible(true);
+							}
+						});
+						pausePanel.add(continueButton);
+						pausePanel.add(Box.createVerticalStrut(50));
+						JButton exitButton = new JButton("Exit To Menu");
+						exitButton.setFocusable(false);
+						exitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+						exitButton.setMinimumSize(new Dimension(200, 50));
+						exitButton.setMaximumSize(new Dimension(200, 50));
+						exitButton.setPreferredSize(new Dimension(200, 50));
+						exitButton.setBackground(Color.LIGHT_GRAY);
+						exitButton.addActionListener(new ActionListener() {
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								window.remove(pausePanel);
+								STATE = "menu";
+								isEscapePressed = false;
+								flag.flag = false;
+								window.setVisible(true);
+							}
+						});
+						pausePanel.add(exitButton);
+						window.add(pausePanel);
 						window.remove(rp);
 						window.setVisible(true);
-						while(isEscapePressed) { Thread.sleep(50); }
-						while(!isEscapePressed && !isWPressed) { Thread.sleep(50); }
-						if(isWPressed) {
-							window.remove(quitLabel);
-							window.remove(rp);
-							STATE = "menu";
-							break;
-						} else if(isEscapePressed) {
-							window.remove(quitLabel);
-							window.add(rp);
-							window.repaint();
-							window.setVisible(true);
-							isEscapePressed = false;
-							continue;
-						}
+						while(flag.flag) {}
 					}
 					while(player.getX() - cameraX < 150) {
 						cameraX --;
@@ -630,7 +664,6 @@ public class Main {
 				}
 				break;
 			case "edit":
-				window.setSize(550, 645);
 				STATE="edit0";
 				levelNumber=1;
 				loadLevel();
@@ -648,6 +681,7 @@ public class Main {
 				}
 				window.add(editPanel);
 				window.setVisible(true);
+				window.setSize(550, 645);
 				while(STATE.equals("edit0")) {
 					Date before = new Date();
 					window.repaint();
@@ -675,37 +709,83 @@ public class Main {
 				}
 				break;
 			case "play":
-				window.setSize(500,500);
 				STATE="play0";
+				final JPanel loadingPanel = new JPanel();
+				loadingPanel.setLayout(new BoxLayout(loadingPanel, 1));
+				loadingPanel.setBackground(Color.DARK_GRAY);
+				loadingPanel.add(Box.createVerticalStrut(200));
+				final JLabel loadingLabel = new JLabel("Loading...");
+				loadingLabel.setFont(new Font("TimesRoman", Font.BOLD, 30));
+				loadingLabel.setForeground(Color.WHITE);
+				loadingLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+				loadingPanel.add(loadingLabel);
+				window.add(loadingPanel);
+				window.repaint();
 				levelNumber = 1;
 				loadLevel();
 				gp = new GamePanel();
+				window.setSize(500,500);
+				player.die();
+				window.remove(loadingPanel);
 				window.add(gp);
 				window.setVisible(true);
-				player.die();
 				while(STATE.equals("play0")) {
 					Date before = new Date();
 					if(isEscapePressed) {
-						JLabel quitLabel = new JLabel("paused - Press w to quit or escape to continue");
-						quitLabel.setFocusable(false);
-						window.add(quitLabel);
+						final JPanel pausePanel = new JPanel();
+						pausePanel.setBackground(Color.DARK_GRAY);
+						pausePanel.setLayout(new BoxLayout(pausePanel, 1));
+						JLabel pauseLabel = new JLabel("Paused");
+						pauseLabel.setForeground(Color.WHITE);
+						final InterThreadFlag flag = new InterThreadFlag(true);
+						pauseLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+						pauseLabel.setFont(new Font("TimesRoman", Font.BOLD, 30));
+						pausePanel.add(Box.createVerticalStrut(100));
+						pausePanel.add(pauseLabel);
+						pausePanel.add(Box.createVerticalStrut(75));
+						JButton continueButton = new JButton("Return To Game");
+						continueButton.setFocusable(false);
+						continueButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+						continueButton.setMinimumSize(new Dimension(200, 50));
+						continueButton.setMaximumSize(new Dimension(200, 50));
+						continueButton.setPreferredSize(new Dimension(200, 50));
+						continueButton.setBackground(Color.LIGHT_GRAY);
+						continueButton.addActionListener(new ActionListener() {
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								window.remove(pausePanel);
+								window.add(gp);
+								window.repaint();
+								window.setVisible(true);
+								isEscapePressed = false;
+								flag.flag = false;
+								window.setVisible(true);
+							}
+						});
+						pausePanel.add(continueButton);
+						pausePanel.add(Box.createVerticalStrut(50));
+						JButton exitButton = new JButton("Exit To Menu");
+						exitButton.setFocusable(false);
+						exitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+						exitButton.setMinimumSize(new Dimension(200, 50));
+						exitButton.setMaximumSize(new Dimension(200, 50));
+						exitButton.setPreferredSize(new Dimension(200, 50));
+						exitButton.setBackground(Color.LIGHT_GRAY);
+						exitButton.addActionListener(new ActionListener() {
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								window.remove(pausePanel);
+								STATE = "menu";
+								isEscapePressed = false;
+								flag.flag = false;
+								window.setVisible(true);
+							}
+						});
+						pausePanel.add(exitButton);
+						window.add(pausePanel);
 						window.remove(gp);
 						window.setVisible(true);
-						while(isEscapePressed) { Thread.sleep(50); }
-						while(!isEscapePressed && !isWPressed) { Thread.sleep(50); }
-						if(isWPressed) {
-							window.remove(quitLabel);
-							window.remove(gp);
-							STATE = "menu";
-							break;
-						} else if(isEscapePressed) {
-							window.remove(quitLabel);
-							window.add(gp);
-							window.repaint();
-							window.setVisible(true);
-							isEscapePressed = false;
-							continue;
-						}
+						while(flag.flag) {}
 					}
 					while(player.getX() - cameraX < 150) {
 						cameraX --;
@@ -1140,5 +1220,12 @@ class MKeyListener extends KeyAdapter {
 	    default:
 	    	break;
 	    }
+	}
+}
+
+class InterThreadFlag{
+	public boolean flag;
+	InterThreadFlag(boolean flag){
+		this.flag = flag;
 	}
 }
