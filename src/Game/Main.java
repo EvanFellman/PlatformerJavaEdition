@@ -3,6 +3,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -145,8 +146,15 @@ public class Main {
 		menuPanel.add(quitMenu);
 		final JPanel editPanel = new JPanel();
 		editButtonPanel = new JPanel();
+		editButtonPanel.setLayout(new BoxLayout(editButtonPanel, 1));
+		JPanel speedAndErasePanel = new JPanel();
+		speedAndErasePanel.setLayout(new GridLayout(1, 2));
+		editButtonPanel.add(speedAndErasePanel);
+		JPanel otherButtonsPanel = new JPanel();
+		otherButtonsPanel.setLayout(new GridLayout(2, 5));
+		editButtonPanel.add(otherButtonsPanel);
 		JPanel editNavButtonPanel = new JPanel();
-		editButtonPanel.add(editNavButtonPanel);
+		editPanel.add(editNavButtonPanel);
 		editPanel.add(editButtonPanel);
 		JButton backEdit = new JButton("Back");
 		backEdit.setFocusable(false);
@@ -197,7 +205,7 @@ public class Main {
 			}
 		});
 		editNavButtonPanel.add(nextLevelEdit);
-		editNavButtonPanel.add(Box.createRigidArea(new Dimension(150, 10)));
+		editNavButtonPanel.add(Box.createRigidArea(new Dimension(100, 10)));
 		final JButton enemySpeedEdit = new JButton("slow speed");
 		enemySpeedEdit.setFocusable(false);
 		enemySpeedEdit.addActionListener(new ActionListener() {
@@ -212,7 +220,7 @@ public class Main {
 				}
 			}
 		});
-		editButtonPanel.add(enemySpeedEdit);
+		speedAndErasePanel.add(enemySpeedEdit);
 		eraseEdit = new JButton("Erase");
 		eraseEdit.setFocusable(false);
 		eraseEdit.addActionListener(new ActionListener() {
@@ -222,7 +230,7 @@ public class Main {
 				updateEditButtons();				
 			}
 		});
-		editButtonPanel.add(eraseEdit);
+		speedAndErasePanel.add(eraseEdit);
 		wallEdit = new JButton("Wall");
 		wallEdit.setFocusable(false);
 		wallEdit.addActionListener(new ActionListener() {
@@ -244,7 +252,7 @@ public class Main {
 				updateEditButtons();
 			}
 		});
-		editButtonPanel.add(wallEdit);
+		otherButtonsPanel.add(wallEdit);
 		blueGateEdit = new JButton("Blue Gate");
 		blueGateEdit.setFocusable(false);
 		blueGateEdit.addActionListener(new ActionListener() {
@@ -260,7 +268,7 @@ public class Main {
 				updateEditButtons();
 			}
 		});
-		editButtonPanel.add(blueGateEdit);
+		otherButtonsPanel.add(blueGateEdit);
 		redGateEdit = new JButton("Red Gate");
 		redGateEdit.setFocusable(false);
 		redGateEdit.addActionListener(new ActionListener() {
@@ -276,8 +284,8 @@ public class Main {
 				updateEditButtons();
 			}
 		});
-		editButtonPanel.add(redGateEdit);
-		enemyEdit = new JButton("Enemy (D L)");
+		otherButtonsPanel.add(redGateEdit);
+		enemyEdit = new JButton("Enemy (Dumb L)");
 		enemyEdit.setFocusable(false);
 		enemyEdit.addActionListener(new ActionListener() {
 			@Override
@@ -296,7 +304,7 @@ public class Main {
 				updateEditButtons();
 			}
 		});
-		editButtonPanel.add(enemyEdit);
+		otherButtonsPanel.add(enemyEdit);
 		bulletEdit = new JButton("Bullet (L)");
 		bulletEdit.setFocusable(false);
 		bulletEdit.addActionListener(new ActionListener() {
@@ -322,7 +330,7 @@ public class Main {
 				updateEditButtons();
 			}
 		});
-		editButtonPanel.add(bulletEdit);
+		otherButtonsPanel.add(bulletEdit);
 		spikeEdit = new JButton("Spike");
 		spikeEdit.setFocusable(false);
 		spikeEdit.addActionListener(new ActionListener(){
@@ -332,7 +340,7 @@ public class Main {
 				updateEditButtons();
 			}
 		});
-		editButtonPanel.add(spikeEdit);
+		otherButtonsPanel.add(spikeEdit);
 		goalEdit = new JButton("Goal");
 		goalEdit.setFocusable(false);
 		goalEdit.addActionListener(new ActionListener() {
@@ -342,7 +350,7 @@ public class Main {
 				updateEditButtons();
 			}
 		});
-		editButtonPanel.add(goalEdit);
+		otherButtonsPanel.add(goalEdit);
 		startEdit = new JButton("Start");
 		startEdit.setFocusable(false);
 		startEdit.addActionListener(new ActionListener() {
@@ -352,7 +360,7 @@ public class Main {
 				updateEditButtons();
 			}
 		});
-		editButtonPanel.add(startEdit);
+		otherButtonsPanel.add(startEdit);
 		JButton saveEdit = new JButton("Save");
 		saveEdit.setFocusable(false);
 		saveEdit.addActionListener(new ActionListener() {
@@ -630,11 +638,14 @@ public class Main {
 				editButtonPanel.setMaximumSize(new Dimension(550,120));
 				editButtonPanel.setPreferredSize(new Dimension(550,120));
 				editButtonPanel.setMinimumSize(new Dimension(550,120));
-				ep.setMaximumSize(new Dimension(550,500));
-				ep.setPreferredSize(new Dimension(550, 500));
-				ep.setMinimumSize(new Dimension(550,500));
+				ep.setMaximumSize(new Dimension(550,455));
+				ep.setPreferredSize(new Dimension(550, 455));
+				ep.setMinimumSize(new Dimension(550,455));
 				BoxLayout bl = new BoxLayout(editPanel, BoxLayout.PAGE_AXIS);
 				editPanel.setLayout(bl);
+				for(Component i : editNavButtonPanel.getComponents()) {
+					i.setBackground(new Color(150, 187, 255));
+				}
 				window.add(editPanel);
 				window.setVisible(true);
 				while(STATE.equals("edit0")) {
@@ -784,7 +795,7 @@ public class Main {
 			break;
 		}
 		if(paint.equals("disappearing wall")){
-			wallEdit.setText("Disappearing Wall");
+			wallEdit.setText("Temporary Wall");
 		} else if(paint.equals("wall moving left")){
 			wallEdit.setText("Moving Wall (L)");
 		} else if(paint.equals("wall moving right")){
@@ -811,15 +822,15 @@ public class Main {
 			redGateEdit.setText("Red Gate");
 		}
 		if(paint.equals("enemy smart")){
-			enemyEdit.setText("Enemy (S)");
+			enemyEdit.setText("Enemy (Smart)");
 		} else if (paint.equals("enemy dumb right")) {
-			enemyEdit.setText("Enemy (D R)");
+			enemyEdit.setText("Enemy (Dumb R)");
 		} else if (paint.equals("enemy no jump")) {
-			enemyEdit.setText("Enemy (NJ)");
+			enemyEdit.setText("Enemy (No Jump)");
 		} else if(paint.equals("enemy only jump")){
-			enemyEdit.setText("Enemy (OJ)");
+			enemyEdit.setText("Enemy (Jump)");
 		} else {
-			enemyEdit.setText("Enemy (D L)");
+			enemyEdit.setText("Enemy (Dumb L)");
 		}
 		
 		if(paint.equals("enemy bullet down")) {

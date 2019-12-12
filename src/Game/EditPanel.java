@@ -65,6 +65,9 @@ public class EditPanel extends JPanel implements MouseMotionListener, MouseListe
 	public void mouseDragged(MouseEvent e) {
 		int mouseXLoc = (e.getX() + Main.cameraX) - ((e.getX() + Main.cameraX) % Main.SPRITE_WIDTH);
 		int mouseYLoc = (e.getY() + Main.cameraY) - ((e.getY() + Main.cameraY) % Main.SPRITE_HEIGHT);
+		if(e.getY() < 0) {
+			return;
+		}
 		if(e.getX() + Main.cameraX < 0) {
 			mouseXLoc -= Main.SPRITE_WIDTH;
 		} 
