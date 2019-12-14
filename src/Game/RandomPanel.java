@@ -105,13 +105,21 @@ public class RandomPanel extends javax.swing.JPanel {
 				} else if (pixel.getRed() == 0 && pixel.getGreen() == 254 && pixel.getBlue() == 0) {
 					templateLevel.add(new DisappearingWall(Main.SPRITE_WIDTH * x, Main.SPRITE_HEIGHT * y));
 				} else if(pixel.getRed() == 0 && pixel.getGreen() == 253 && pixel.getBlue() == 0) {
-					templateLevel.add(new WallMoving(Main.SPRITE_WIDTH * x, Main.SPRITE_HEIGHT * y, WallMoving.UP));
+					templateLevel.add(new WallMoving(Main.SPRITE_WIDTH * x, Main.SPRITE_HEIGHT * y, WallMoving.UP, Main.SLOW_SPEED));
 				} else if(pixel.getRed() == 0 && pixel.getGreen() == 252 && pixel.getBlue() == 0) {
-					templateLevel.add(new WallMoving(Main.SPRITE_WIDTH * x, Main.SPRITE_HEIGHT * y, WallMoving.DOWN));
+					templateLevel.add(new WallMoving(Main.SPRITE_WIDTH * x, Main.SPRITE_HEIGHT * y, WallMoving.DOWN, Main.SLOW_SPEED));
 				} else if(pixel.getRed() == 0 && pixel.getGreen() == 251 && pixel.getBlue() == 0) {
-					templateLevel.add(new WallMoving(Main.SPRITE_WIDTH * x, Main.SPRITE_HEIGHT * y, WallMoving.LEFT));
+					templateLevel.add(new WallMoving(Main.SPRITE_WIDTH * x, Main.SPRITE_HEIGHT * y, WallMoving.LEFT, Main.SLOW_SPEED));
 				} else if(pixel.getRed() == 0 && pixel.getGreen() == 250 && pixel.getBlue() == 0) {
-					templateLevel.add(new WallMoving(Main.SPRITE_WIDTH * x, Main.SPRITE_HEIGHT * y, WallMoving.RIGHT));
+					templateLevel.add(new WallMoving(Main.SPRITE_WIDTH * x, Main.SPRITE_HEIGHT * y, WallMoving.RIGHT, Main.SLOW_SPEED));
+				} else if(pixel.getRed() == 0 && pixel.getGreen() == 249 && pixel.getBlue() == 0) {
+					templateLevel.add(new WallMoving(Main.SPRITE_WIDTH * x, Main.SPRITE_HEIGHT * y, WallMoving.UP, Main.FAST_SPEED));
+				} else if(pixel.getRed() == 0 && pixel.getGreen() == 248 && pixel.getBlue() == 0) {
+					templateLevel.add(new WallMoving(Main.SPRITE_WIDTH * x, Main.SPRITE_HEIGHT * y, WallMoving.DOWN, Main.FAST_SPEED));
+				} else if(pixel.getRed() == 0 && pixel.getGreen() == 247 && pixel.getBlue() == 0) {
+					templateLevel.add(new WallMoving(Main.SPRITE_WIDTH * x, Main.SPRITE_HEIGHT * y, WallMoving.LEFT, Main.FAST_SPEED));
+				} else if(pixel.getRed() == 0 && pixel.getGreen() == 246 && pixel.getBlue() == 0) {
+					templateLevel.add(new WallMoving(Main.SPRITE_WIDTH * x, Main.SPRITE_HEIGHT * y, WallMoving.RIGHT, Main.FAST_SPEED));
 				} else if (pixel.getRed() == 245 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
 					templateLevel.add(new Spike(Main.SPRITE_WIDTH * x, Main.SPRITE_HEIGHT * y));
 				} else if (pixel.getRed() == 244 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {

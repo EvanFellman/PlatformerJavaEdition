@@ -175,16 +175,16 @@ public class EditPanel extends JPanel implements MouseMotionListener, MouseListe
 							toInsert = new EnemySmart(mouseX, mouseY, Main.enemySpeed);
 							break;
 						case "wall moving left":
-							toInsert = new WallMoving(mouseX, mouseY, WallMoving.LEFT);
+							toInsert = new WallMoving(mouseX, mouseY, WallMoving.LEFT, Main.enemySpeed);
 							break;
 						case "wall moving right":
-							toInsert = new WallMoving(mouseX, mouseY, WallMoving.RIGHT);
+							toInsert = new WallMoving(mouseX, mouseY, WallMoving.RIGHT, Main.enemySpeed);
 							break;
 						case "wall moving up":
-							toInsert = new WallMoving(mouseX, mouseY, WallMoving.UP);
+							toInsert = new WallMoving(mouseX, mouseY, WallMoving.UP, Main.enemySpeed);
 							break;
 						case "wall moving down":
-							toInsert = new WallMoving(mouseX, mouseY, WallMoving.DOWN);
+							toInsert = new WallMoving(mouseX, mouseY, WallMoving.DOWN, Main.enemySpeed);
 							break;
 						case "enemy dumb left":
 							toInsert = new EnemyDumb(mouseX, mouseY, true, Main.enemySpeed);

@@ -5,10 +5,12 @@ public class WallMoving extends Thing {
 	public static final int DOWN = 2;
 	public static final int LEFT = 3;
 	public static final int RIGHT = 4;
+	public double speed;
 	public int direction;
-	public WallMoving(double x, double y, int dir) {
+	public WallMoving(double x, double y, int dir, double speed) {
 		super(x, y, "wall moving", 3, 3);
 		this.direction = dir;
+		this.speed = speed;
 	}
 		
 	public boolean move() {
@@ -58,18 +60,18 @@ public class WallMoving extends Thing {
 		switch(this.direction) {
 		case UP:
 			this.dx = 0;
-			this.dy = -0.2;
+			this.dy = -1 * this.speed;
 			break;
 		case DOWN:
 			this.dx = 0;
-			this.dy = 0.2;
+			this.dy = this.speed;
 			break;
 		case LEFT:
-			this.dx = -0.2;
+			this.dx = this.speed;
 			this.dy = 0;
 			break;
 		case RIGHT:
-			this.dx = 0.2;
+			this.dx = -1 * this.speed;
 			this.dy = 0;
 			break;
 		}

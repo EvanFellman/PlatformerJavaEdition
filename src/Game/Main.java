@@ -43,6 +43,7 @@ public class Main {
 	public static boolean isShiftPressed = false;
 	public static boolean isAltPressed = false;
 	public static boolean isCtrlPressed = false;
+	public static Hashtable<Integer, Hashtable<Integer, Boolean>> clouds = new Hashtable<Integer, Hashtable<Integer, Boolean>>();
 	public static final double GRAVITY = 0.02f;
 	public static final int SPRITE_HEIGHT = 25;
 	public static final int SPRITE_WIDTH = 25;
@@ -507,18 +508,22 @@ public class Main {
 						image.setRGB(x, y, (new Color(0, 254, 0).getRGB()));
 						break;
 					case "wall moving":
+						int speed = 0;
+						if(((WallMoving) a).speed == FAST_SPEED) {
+							speed = 4;
+						}
 						switch(((WallMoving) a).direction) {
 						case WallMoving.UP:
-							image.setRGB(x, y, (new Color(0, 253, 0).getRGB()));
+							image.setRGB(x, y, (new Color(0, 253 - speed, 0).getRGB()));
 							break;
 						case WallMoving.DOWN:
-							image.setRGB(x, y, (new Color(0, 252, 0).getRGB()));
+							image.setRGB(x, y, (new Color(0, 252 - speed, 0).getRGB()));
 							break;
 						case WallMoving.RIGHT:
-							image.setRGB(x, y, (new Color(0, 251, 0).getRGB()));
+							image.setRGB(x, y, (new Color(0, 251 - speed, 0).getRGB()));
 							break;
 						case WallMoving.LEFT:
-							image.setRGB(x, y, (new Color(0, 250, 0).getRGB()));
+							image.setRGB(x, y, (new Color(0, 250 - speed, 0).getRGB()));
 							break;
 						}
 						break;
@@ -1052,13 +1057,21 @@ public class Main {
 						} else if(pixel.getRed() == 0 && pixel.getGreen() == 254 && pixel.getBlue() == 0) {
 							level.add(new DisappearingWall(SPRITE_WIDTH * x, SPRITE_HEIGHT * y));
 						} else if(pixel.getRed() == 0 && pixel.getGreen() == 253 && pixel.getBlue() == 0) {
-							level.add(new WallMoving(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, WallMoving.UP));
+							level.add(new WallMoving(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, WallMoving.UP, SLOW_SPEED));
 						} else if(pixel.getRed() == 0 && pixel.getGreen() == 252 && pixel.getBlue() == 0) {
-							level.add(new WallMoving(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, WallMoving.DOWN));
+							level.add(new WallMoving(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, WallMoving.DOWN, SLOW_SPEED));
 						} else if(pixel.getRed() == 0 && pixel.getGreen() == 251 && pixel.getBlue() == 0) {
-							level.add(new WallMoving(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, WallMoving.LEFT));
+							level.add(new WallMoving(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, WallMoving.LEFT, SLOW_SPEED));
 						} else if(pixel.getRed() == 0 && pixel.getGreen() == 250 && pixel.getBlue() == 0) {
-							level.add(new WallMoving(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, WallMoving.RIGHT));
+							level.add(new WallMoving(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, WallMoving.RIGHT, SLOW_SPEED));
+						} else if(pixel.getRed() == 0 && pixel.getGreen() == 249 && pixel.getBlue() == 0) {
+							level.add(new WallMoving(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, WallMoving.UP, FAST_SPEED));
+						} else if(pixel.getRed() == 0 && pixel.getGreen() == 248 && pixel.getBlue() == 0) {
+							level.add(new WallMoving(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, WallMoving.DOWN, FAST_SPEED));
+						} else if(pixel.getRed() == 0 && pixel.getGreen() == 247 && pixel.getBlue() == 0) {
+							level.add(new WallMoving(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, WallMoving.LEFT, FAST_SPEED));
+						} else if(pixel.getRed() == 0 && pixel.getGreen() == 246 && pixel.getBlue() == 0) {
+							level.add(new WallMoving(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, WallMoving.RIGHT, FAST_SPEED));
 						} else if(pixel.getRed() == 245 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
 							level.add(new Spike(SPRITE_WIDTH * x, SPRITE_HEIGHT * y));
 						} else if(pixel.getRed() == 244 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
