@@ -18,12 +18,12 @@ public class WallMoving extends Thing {
 		this.y += this.dy;
 		for(int i = 0; i < Main.level.size(); i++) {
 			Thing a = Main.level.get(i);
-			if(a == null || !this.isTouching(a) || this.equals(a)) {
+			if(a == null || !this.isTouching(a) || this.equals(a) || !a.id.contains("wall")) {
 				continue;
 			}
 			switch(this.direction) {
 			case UP:
-				if(a.id.contains("wall")) {
+				if(a.id.contains("wall") && this.below(a)) {
 					if(a.dy <= 0  || (a.id.equals("wall moving") && ((WallMoving) a).direction == DOWN)) {
 						this.direction = DOWN;
 					}
@@ -31,7 +31,7 @@ public class WallMoving extends Thing {
 				}
 				break;
 			case DOWN:
-				if(a.id.contains("wall")) {
+				if(a.id.contains("wall") && this.above(a)) {
 					if(a.dy >= 0 || (a.id.equals("wall moving") && ((WallMoving) a).direction == UP)) {
 						this.direction = UP;
 					}
@@ -39,19 +39,19 @@ public class WallMoving extends Thing {
 				}
 				break;
 			case LEFT:
-				if(a.id.contains("wall")) {
+				if(a.id.contains("wall") && this.toLeftOf(a)) {
 					if(a.dx >= 0) {
 						this.direction = RIGHT;
+						this.x = a.getX() - Main.SPRITE_WIDTH;
 					}
-					this.x = a.getX() + Main.SPRITE_WIDTH;
 				} 
 				break;
 			case RIGHT:
-				if(a.id.contains("wall")) {
+				if(a.id.contains("wall") && this.toRightOf(a)) {
 					if(a.dx <= 0) {
 						this.direction = LEFT;
+						this.x = a.getX() + Main.SPRITE_WIDTH;
 					}
-					this.x = a.getX() - Main.SPRITE_WIDTH;
 				}
 				break;
 			}
