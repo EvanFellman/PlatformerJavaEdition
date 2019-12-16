@@ -4,7 +4,7 @@ public class DisappearingWall extends Thing {
 	public int disappearCount;
 	public DisappearingWall(double x, double y) {
 		super(x, y, "wall disappearing", 0, 3);
-		disappearCount = 50;
+		disappearCount = 10;
 	}
 	
 	public boolean move() {

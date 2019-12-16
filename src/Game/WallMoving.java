@@ -21,9 +21,6 @@ public class WallMoving extends Thing {
 			if(a == null || !this.isTouching(a) || this.equals(a) || !a.id.contains("wall")) {
 				continue;
 			}
-			if(a instanceof Spike) {
-				System.out.println("hiii");
-			}
 			switch(this.direction) {
 			case UP:
 				if(a.id.contains("wall") && this.below(a)) {

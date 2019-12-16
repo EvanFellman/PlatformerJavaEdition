@@ -50,7 +50,7 @@ public abstract class Enemy extends Thing {
 					this.dx = 0;
 					this.x = a.getX() + Main.SPRITE_WIDTH;
 				}
-			} else if(a != null && this.isTouching(a) && a.id.equals("player")) {
+			} else if(a != null && this.isNextTo(a) && a.id.equals("player")) {
 				if(a.dy > this.dy && a.y + 1 < this.y) {
 					if(Main.isWPressed) {
 						a.dy = -2.5f;

@@ -3,6 +3,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -72,7 +73,9 @@ public class Main {
 	private static JButton goalEdit;
 	private static JButton startEdit;
 	private static JButton levelNumberDisplayEdit;
+	private static BufferedImage background;
 	public static void main(String[] args) throws IOException, InterruptedException {
+		background = ImageIO.read(new File("./config/background.png"));
 		window = new JFrame();
 		window.setResizable(false);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -694,23 +697,23 @@ public class Main {
 					window.repaint();
 					window.setVisible(true);
 					if(isWPressed) {
-						cameraY -= SPRITE_HEIGHT / 4;
+						cameraY -= SPRITE_HEIGHT;
 					} 
 					if(isSPressed) {
-						cameraY += SPRITE_HEIGHT / 4;
+						cameraY += SPRITE_HEIGHT;
 					}
 					if(isAPressed) {
-						cameraX -= SPRITE_WIDTH / 4;
+						cameraX -= SPRITE_WIDTH;
 					}
 					if(isDPressed) {
-						cameraX += SPRITE_WIDTH / 4;
+						cameraX += SPRITE_WIDTH;
 					}
 					if(isEscapePressed) {
 						cameraX = startX - (int)(window.getWidth() * 0.5);
 						cameraY = startY - (int)(window.getHeight() * 0.5);
 					}
 					Date after = new Date();
-					while(after.getTime() - before.getTime() <= 3) {
+					while(after.getTime() - before.getTime() < 1000 / MAX_FRAMERATE) {
 						after = new Date();
 					}
 				}
@@ -833,7 +836,6 @@ public class Main {
 	}
 	
 	public static void updateEditButtons() {
-		System.out.println(Main.paint);
 		switch(Main.paint){
 		case "spike":
 			highlightButton(spikeEdit, editButtonPanel);
@@ -844,7 +846,6 @@ public class Main {
 		case "wall moving down":
 		case "wall disappearing":
 		case "wall":
-			System.out.println("hi");
 			highlightButton(wallEdit, editButtonPanel);
 			break;
 		case "erase":
@@ -1146,6 +1147,46 @@ public class Main {
 			STATE = "menu";
 		} else if(STATE.equals("edit0")){
 			
+		}
+	}
+	
+	public static void drawBackground(Graphics g, int x, int y) {
+		int i = (int) (-0.25 * x);
+		if(i < g.getClipBounds().getWidth()) {
+			i -= background.getWidth();
+			while(i < g.getClipBounds().getWidth()) {
+				int j = (int) (-0.25 * y);
+				if(j < g.getClipBounds().getHeight()) {
+					j -= background.getHeight();
+					while(j < g.getClipBounds().getHeight()) {
+						g.drawImage(background, i, j, null);
+						j += background.getHeight();
+					}
+				} else {
+					while(j > 0) {
+						g.drawImage(background, i, j, null);
+						j -= background.getHeight();
+					}
+				}
+				i += background.getWidth();
+			}
+		} else {
+			while(i > 0) {
+				int j = (int) (-0.25 * y);
+				if(j < g.getClipBounds().getHeight()) {
+					j -= background.getHeight();
+					while(j < g.getClipBounds().getHeight()) {
+						g.drawImage(background, i, j, null);
+						j += background.getHeight();
+					}
+				} else {
+					while(j > 0) {
+						g.drawImage(background, i, j, null);
+						j -= background.getHeight();
+					}
+				}
+				i -= background.getWidth();
+			}
 		}
 	}
 }

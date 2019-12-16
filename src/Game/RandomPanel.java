@@ -33,8 +33,7 @@ public class RandomPanel extends javax.swing.JPanel {
 		loadTemplate(0,0);		
 	}
 	public void paint(Graphics g) {
-		g.setColor(Color.CYAN);
-		g.fillRect(0, 0, (int)g.getClipBounds().getWidth(), (int)g.getClipBounds().getHeight());
+		Main.drawBackground(g, Main.cameraX, Main.cameraY);
 		boolean playerDied = false;
 		for(int i = 0; i < Main.level.size(); i++) {
 			Thing a = Main.level.get(i);

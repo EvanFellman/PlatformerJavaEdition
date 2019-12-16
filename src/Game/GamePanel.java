@@ -1,5 +1,4 @@
 package Game;
-import java.awt.Color;
 import java.awt.Graphics;
 import javax.swing.JPanel;
 
@@ -7,8 +6,7 @@ public class GamePanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
 	public void paint(Graphics g) {
-		g.setColor(Color.CYAN);
-		g.fillRect(0, 0, (int)g.getClipBounds().getWidth(), (int)g.getClipBounds().getHeight());
+		Main.drawBackground(g, Main.cameraX, Main.cameraY);
 		boolean playerDied = false;
 		for(int i = 0; i < Main.level.size(); i++) {
 			double x = Main.level.get(i).getX() - Main.cameraX;
