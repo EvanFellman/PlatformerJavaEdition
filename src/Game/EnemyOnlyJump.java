@@ -11,7 +11,7 @@ public class EnemyOnlyJump extends Enemy {
 			for(int i = 0; i < Main.level.size(); i++) {
 				Thing a = Main.level.get(i);
 				if(a != null && !a.equals(this) && (a.id.contains("wall") || a.id.contains("enemy")) && this.dy >= 0 && this.above(a) && this.y + Main.SPRITE_HEIGHT + 1 >= a.y) {
-					this.dy = -2;
+					this.dy = -10;
 					break;
 				}
 			}

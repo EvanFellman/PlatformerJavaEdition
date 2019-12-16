@@ -8,7 +8,7 @@ public class Shooter extends Thing {
 	public final static int RIGHT = 4;
 	public double speed;
 	private int countDown;
-	private int SHOOTING_WAIT = 500;
+	private int SHOOTING_WAIT = 100;
 	public Shooter(double x, double y, int direction, double speed) {
 		super(x, y, "wall shooter " + (direction == UP ? "up" : (direction == DOWN ? "down" : (direction == LEFT ? "left" : "right"))), direction == UP ? 2 : (direction == DOWN ? 3 : (direction == LEFT ? 0 : 1)), 4);
 		this.direction = direction;

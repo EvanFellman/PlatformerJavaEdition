@@ -21,6 +21,9 @@ public class WallMoving extends Thing {
 			if(a == null || !this.isTouching(a) || this.equals(a) || !a.id.contains("wall")) {
 				continue;
 			}
+			if(a instanceof Spike) {
+				System.out.println("hiii");
+			}
 			switch(this.direction) {
 			case UP:
 				if(a.id.contains("wall") && this.below(a)) {
@@ -39,19 +42,15 @@ public class WallMoving extends Thing {
 				}
 				break;
 			case LEFT:
-				if(a.id.contains("wall") && this.toLeftOf(a)) {
-					if(a.dx >= 0) {
-						this.direction = RIGHT;
-						this.x = a.getX() - Main.SPRITE_WIDTH;
-					}
-				} 
+				if(this.toRightOf(a)) {
+					this.direction = RIGHT;
+					this.x = a.getX() + Main.SPRITE_WIDTH;
+				}
 				break;
 			case RIGHT:
-				if(a.id.contains("wall") && this.toRightOf(a)) {
-					if(a.dx <= 0) {
-						this.direction = LEFT;
-						this.x = a.getX() + Main.SPRITE_WIDTH;
-					}
+				if(this.toLeftOf(a)) {
+					this.direction = LEFT;
+					this.x = a.getX() - Main.SPRITE_WIDTH;
 				}
 				break;
 			}
@@ -67,11 +66,11 @@ public class WallMoving extends Thing {
 			this.dy = this.speed;
 			break;
 		case LEFT:
-			this.dx = this.speed;
+			this.dx = -1 * this.speed;
 			this.dy = 0;
 			break;
 		case RIGHT:
-			this.dx = -1 * this.speed;
+			this.dx = this.speed;
 			this.dy = 0;
 			break;
 		}

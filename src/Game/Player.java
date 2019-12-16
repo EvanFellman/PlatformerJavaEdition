@@ -8,68 +8,47 @@ public class Player extends Thing {
 	@Override
 	public boolean move() {
 		Main.removeFromMap(this);
-		if(this.dy > 5) {
-			this.dy = 5;
+		if(this.dy > 10) {
+			this.dy = 10;
 		}
 		this.dx = 0;
 		if(Main.isAPressed) {
-			this.dx = -1f;
+			this.dx = -4f;
 		}
 		if(Main.isDPressed) {
-			this.dx = 1f;
+			this.dx = 4f;
 		}
 		boolean nearWalll = false, nearWallMovingl = false, nearWallr = false, nearWallMovingr = false;
 		this.x += this.dx;
 		for(Thing a: Main.level) {
-				if(a != null && (a.id.contains("wall") || (!this.equals(a) && a.id.equals("player"))) && this.isTouching(a)) {
-					if(a.x > this.x) {
-						if(a.id.equals("wall moving")) {
-							if(a.dx < 0) {
-								nearWallMovingr = true;
-							}
-						} else {
-							nearWallr = true;
+			if(a != null && (a.id.contains("wall") || (!this.equals(a) && a.id.equals("player"))) && this.isTouching(a)) {
+				if(a.x > this.x) {
+					if(a.id.equals("wall moving")) {
+						if(a.dx < 0) {
+							nearWallMovingr = true;
 						}
 					} else {
-						if(a.id.equals("wall moving")) {
-							if(a.dx > 0) {
-								nearWallMovingl = true;
-							}
-						} else {
-							nearWalll = true;
-						}
+						nearWallr = true;
 					}
-					if(a.id.equals("wall moving") && a.dx != 0) {
-						if(this.x < a.x) {
-							this.dx = 0;
-							this.x = a.getX() - Main.SPRITE_WIDTH;
-						} else if(this.x > a.x) {
-							this.dx = 0;
-							this.x = a.getX() + Main.SPRITE_WIDTH;
-						}
-					} else if(a.id.equals("wall moving")) {
-						double x = this.x - a.x;
-						if(x < Main.SPRITE_WIDTH && x > -1 * Main.SPRITE_WIDTH) {
-							if(this.y - a.y > 1 + (-1 * Main.SPRITE_HEIGHT) && this.y - a.y < Main.SPRITE_HEIGHT - 10){
-								if(this.x < a.x) {
-									this.dx = 0;
-									this.x = a.getX() - Main.SPRITE_WIDTH;
-								} else if(this.x > a.x) {
-									this.dx = 0;
-									this.x = a.getX() + Main.SPRITE_WIDTH;
-								}
-							}
+				} else {
+					if(a.id.equals("wall moving")) {
+						if(a.dx > 0) {
+							nearWallMovingl = true;
 						}
 					} else {
-						if(this.dx > 0) {
-							this.dx = 0;
-							this.x = a.getX() - Main.SPRITE_WIDTH;
-						} else if(this.dx < 0) {
-							this.dx = 0;
-							this.x = a.getX() + Main.SPRITE_WIDTH;
-						}
+						nearWalll = true;
 					}
 				}
+				if((a.y - this.y < a.dy + Main.SPRITE_HEIGHT && this.y - a.y < Main.SPRITE_HEIGHT + a.dy)){
+					if(this.x < a.x && this.dx >= 0) {
+						this.dx = 0;
+						this.x = a.getX() - Main.SPRITE_WIDTH;
+					} else if(this.x > a.x && this.dx <= 0) {
+						this.dx = 0;
+						this.x = a.getX() + Main.SPRITE_WIDTH;
+					}
+				}
+			}
 		}
 		if((nearWalll && nearWallMovingr) || (nearWallMovingl && nearWallr) || (nearWallMovingl && nearWallMovingr)) {
 			this.die();
@@ -101,14 +80,14 @@ public class Player extends Thing {
 					}
 					if(this.dy >= 0) {
 						if(Main.isWPressed && a.getY() > this.y) {
-							this.dy = -2;
-						} else if(this.dy > 0 && a.dy <= 0) {
+							this.dy = -10;
+						} else if(this.dy > a.dy) {
 							this.dy = 0;
 						}
 						if(a.getY() > this.y) {
-							this.y = a.y - Main.SPRITE_HEIGHT;
-						} else {
-							this.y = a.y + Main.SPRITE_HEIGHT;
+							this.y = (a.y - Main.SPRITE_HEIGHT);
+						} else if(a.getY() < this.y) {
+							this.y = (a.y + Main.SPRITE_HEIGHT);
 						}
 					} else if(this.dy < 0) {
 						this.dy = 0;
@@ -120,9 +99,9 @@ public class Player extends Thing {
 					Main.levelNumber += 1;
 					Main.loadLevel();
 				} else if(a.id.contains("enemy")) {
-					if(this.y < a.y && this.dy >= 0) {
+					if(this.y + 3 < a.y && this.dy >= 0) {
 						if(Main.isWPressed) {
-							this.dy = -2.5f;
+							this.dy = -15;
 						} else {
 							this.dy = 0;
 						}

@@ -59,13 +59,13 @@ public abstract class Thing {
 	public boolean toLeftOf(Thing other) {
 		double x = this.x - other.getX();
 		double y = this.y - other.getY();
-		return x < 0 && y < Main.SPRITE_HEIGHT && y > -1 * Main.SPRITE_HEIGHT;
+		return x <= 0 && y < Main.SPRITE_HEIGHT && y > -1 * Main.SPRITE_HEIGHT;
 	}
 	
 	public boolean toRightOf(Thing other) {
 		double x = this.x - other.getX();
 		double y = this.y - other.getY();
-		return x > 0 && y < Main.SPRITE_HEIGHT && y > -1 * Main.SPRITE_HEIGHT;
+		return x >= 0 && y < Main.SPRITE_HEIGHT && y > -1 * Main.SPRITE_HEIGHT;
 	}
 	
 	public boolean above(Thing other) {

@@ -117,6 +117,7 @@ public class EditPanel extends JPanel implements MouseMotionListener, MouseListe
 						Main.paint = "blue reverse gate";
 						break;
 					case "wall moving":
+						System.out.println("got here");
 						switch(((WallMoving) a).direction) {
 						case WallMoving.UP:
 							Main.paint = "wall moving up";
@@ -131,6 +132,7 @@ public class EditPanel extends JPanel implements MouseMotionListener, MouseListe
 							Main.paint = "wall moving right";
 							break;
 						}
+						break;
 					default:
 						Main.paint = a.id;
 						break;

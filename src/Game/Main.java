@@ -23,7 +23,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class Main {
-	private static boolean editTemplates = true;
+	private static boolean editTemplates = false;
+	private static final double MAX_FRAMERATE = 60;
 	public static ArrayList<Thing> level = new ArrayList<Thing>();
 	public static Hashtable<Integer, Hashtable<Integer, Thing>> levelMapStable;
 	public static Hashtable<Integer, Hashtable<Integer, Thing>> levelMapMoving;
@@ -44,11 +45,11 @@ public class Main {
 	public static boolean isAltPressed = false;
 	public static boolean isCtrlPressed = false;
 	public static Hashtable<Integer, Hashtable<Integer, Boolean>> clouds = new Hashtable<Integer, Hashtable<Integer, Boolean>>();
-	public static final double GRAVITY = 0.02f;
+	public static final double GRAVITY = 0.5;
 	public static final int SPRITE_HEIGHT = 25;
 	public static final int SPRITE_WIDTH = 25;
-	public static final double SLOW_SPEED = 0.25;
-	public static final double FAST_SPEED = 0.4;
+	public static final double SLOW_SPEED = 1.5;
+	public static final double FAST_SPEED = 2;
 	public static Player player;
 	public static String STATE = "menu";
 	public static JFrame window;
@@ -519,10 +520,10 @@ public class Main {
 						case WallMoving.DOWN:
 							image.setRGB(x, y, (new Color(0, 252 - speed, 0).getRGB()));
 							break;
-						case WallMoving.RIGHT:
+						case WallMoving.LEFT:
 							image.setRGB(x, y, (new Color(0, 251 - speed, 0).getRGB()));
 							break;
-						case WallMoving.LEFT:
+						case WallMoving.RIGHT:
 							image.setRGB(x, y, (new Color(0, 250 - speed, 0).getRGB()));
 							break;
 						}
@@ -644,6 +645,7 @@ public class Main {
 						});
 						pausePanel.add(exitButton);
 						window.add(pausePanel);
+						Thread.yield();
 						window.remove(rp);
 						window.setVisible(true);
 						while(flag.flag) {}
@@ -662,7 +664,7 @@ public class Main {
 					}
 					window.repaint();
 					Date after = new Date();
-					while(after.getTime() - before.getTime() < 3) {
+					while(after.getTime() - before.getTime() < 1000 / MAX_FRAMERATE) {
 						Thread.sleep(1);
 						after = new Date();
 					}
@@ -788,6 +790,7 @@ public class Main {
 						});
 						pausePanel.add(exitButton);
 						window.add(pausePanel);
+						Thread.yield();
 						window.remove(gp);
 						window.setVisible(true);
 						while(flag.flag) {}
@@ -806,7 +809,7 @@ public class Main {
 					}
 					window.repaint();
 					Date after = new Date();
-					while(after.getTime() - before.getTime() < 3) {
+					while(after.getTime() - before.getTime() < 1000 / MAX_FRAMERATE) {
 						Thread.sleep(1);
 						after = new Date();
 					}
@@ -830,6 +833,7 @@ public class Main {
 	}
 	
 	public static void updateEditButtons() {
+		System.out.println(Main.paint);
 		switch(Main.paint){
 		case "spike":
 			highlightButton(spikeEdit, editButtonPanel);
@@ -840,6 +844,7 @@ public class Main {
 		case "wall moving down":
 		case "wall disappearing":
 		case "wall":
+			System.out.println("hi");
 			highlightButton(wallEdit, editButtonPanel);
 			break;
 		case "erase":

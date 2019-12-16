@@ -14,7 +14,7 @@ public abstract class Enemy extends Thing {
 		this.x += this.dx;
 		for(int i = 0; i < Main.level.size(); i++) {
 			Thing a = Main.level.get(i);
-			if(a != null && a.id.contains("wall") && this.isTouching(a)) {
+			if(a != null && (a.id.contains("wall") || (!this.equals(a) && a.id.equals("player"))) && this.isTouching(a)) {
 				if(a.x > this.x) {
 					if(a.id.equals("wall moving")) {
 						if(a.dx < 0) {
@@ -32,32 +32,11 @@ public abstract class Enemy extends Thing {
 						nearWalll = true;
 					}
 				}
-				if(a.id.equals("wall moving") && a.dx != 0) {
-					if(this.x < a.x) {
+				if((a.y - this.y < a.dy + Main.SPRITE_HEIGHT && this.y - a.y < Main.SPRITE_HEIGHT + a.dy)){
+					if(this.x < a.x && this.dx >= 0) {
 						this.dx = 0;
 						this.x = a.getX() - Main.SPRITE_WIDTH;
-					} else if(this.x > a.x) {
-						this.dx = 0;
-						this.x = a.getX() + Main.SPRITE_WIDTH;
-					}
-				} else if(a.id.equals("wall moving")) {
-					double x = this.x - a.x;
-					if(x < Main.SPRITE_WIDTH && x > -1 * Main.SPRITE_WIDTH) {
-						if(this.y - a.y > 1 + (-1 * Main.SPRITE_HEIGHT) && this.y - a.y < Main.SPRITE_HEIGHT - 10){
-							if(this.x < a.x) {
-								this.dx = 0;
-								this.x = a.getX() - Main.SPRITE_WIDTH;
-							} else if(this.x > a.x) {
-								this.dx = 0;
-								this.x = a.getX() + Main.SPRITE_WIDTH;
-							}
-						}
-					}
-				} else {
-					if(this.dx > 0) {
-						this.dx = 0;
-						this.x = a.getX() - Main.SPRITE_WIDTH;
-					} else if(this.dx < 0) {
+					} else if(this.x > a.x && this.dx <= 0) {
 						this.dx = 0;
 						this.x = a.getX() + Main.SPRITE_WIDTH;
 					}

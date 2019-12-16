@@ -151,9 +151,9 @@ public class EnemySmart extends Enemy {
 					}
 				}
 				if(!somethingToFallTo && somethingToJumpTo) {
-					this.dy = -2;
+					this.dy = -10;
 				} else if(somethingToFallTo && somethingToJumpTo && (wallNextToMe || this.y >= Main.player.getY())) {
-					this.dy = -2;
+					this.dy = -10;
 				} else if(!somethingToFallTo && !somethingToJumpTo) {
 					this.dx = 0;
 				}
