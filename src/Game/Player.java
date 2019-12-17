@@ -8,8 +8,8 @@ public class Player extends Thing {
 	@Override
 	public boolean move() {
 		Main.removeFromMap(this);
-		if(this.dy > 10) {
-			this.dy = 10;
+		if(this.dy > 15) {
+			this.dy = 15;
 		}
 		this.dx = 0;
 		if(Main.isAPressed) {

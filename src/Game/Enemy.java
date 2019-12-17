@@ -7,8 +7,8 @@ public abstract class Enemy extends Thing {
 	
 	public boolean move() {
 		Main.removeFromMap(this);
-		if(this.dy > 5) {
-			this.dy = 5;
+		if(this.dy > 15) {
+			this.dy = 15;
 		}
 		boolean nearWalll = false, nearWallMovingl = false, nearWallr = false, nearWallMovingr = false;
 		this.x += this.dx;
@@ -50,7 +50,7 @@ public abstract class Enemy extends Thing {
 					this.dx = 0;
 					this.x = a.getX() + Main.SPRITE_WIDTH;
 				}
-			} else if(a != null && this.isNextTo(a) && a.id.equals("player")) {
+			} else if(a != null && this.isNextTo(a) && (this.above(a) || this.toLeftOf(a) || this.toRightOf(a)) && a.id.equals("player")) {
 				if(a.dy > this.dy && a.y + 1 < this.y) {
 					if(Main.isWPressed) {
 						a.dy = -2.5f;
