@@ -24,7 +24,7 @@ public class WallMoving extends Thing {
 			switch(this.direction) {
 			case UP:
 				if(a.id.contains("wall") && this.below(a)) {
-					if(a.dy <= 0  || (a.id.equals("wall moving") && ((WallMoving) a).direction == DOWN)) {
+					if(a.dy >= 0  || (a.id.equals("wall moving") && ((WallMoving) a).direction == DOWN)) {
 						this.direction = DOWN;
 					}
 					this.y = a.getY() + Main.SPRITE_HEIGHT;
@@ -32,7 +32,7 @@ public class WallMoving extends Thing {
 				break;
 			case DOWN:
 				if(a.id.contains("wall") && this.above(a)) {
-					if(a.dy >= 0 || (a.id.equals("wall moving") && ((WallMoving) a).direction == UP)) {
+					if(a.dy <= 0 || (a.id.equals("wall moving") && ((WallMoving) a).direction == UP)) {
 						this.direction = UP;
 					}
 					this.y = a.getY() - Main.SPRITE_HEIGHT;

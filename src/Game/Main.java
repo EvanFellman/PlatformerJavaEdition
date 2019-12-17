@@ -697,23 +697,23 @@ public class Main {
 					window.repaint();
 					window.setVisible(true);
 					if(isWPressed) {
-						cameraY -= SPRITE_HEIGHT;
+						cameraY -= SPRITE_HEIGHT / 25;
 					} 
 					if(isSPressed) {
-						cameraY += SPRITE_HEIGHT;
+						cameraY += SPRITE_HEIGHT / 25;
 					}
 					if(isAPressed) {
-						cameraX -= SPRITE_WIDTH;
+						cameraX -= SPRITE_WIDTH / 25;
 					}
 					if(isDPressed) {
-						cameraX += SPRITE_WIDTH;
+						cameraX += SPRITE_WIDTH / 25;
 					}
 					if(isEscapePressed) {
 						cameraX = startX - (int)(window.getWidth() * 0.5);
 						cameraY = startY - (int)(window.getHeight() * 0.5);
 					}
 					Date after = new Date();
-					while(after.getTime() - before.getTime() < 1000 / MAX_FRAMERATE) {
+					while(after.getTime() - before.getTime() < 1000 / (MAX_FRAMERATE * 2)) {
 						after = new Date();
 					}
 				}
