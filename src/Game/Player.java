@@ -40,10 +40,10 @@ public class Player extends Thing {
 					}
 				}
 				if((a.y - this.y < a.dy + Main.SPRITE_HEIGHT && this.y - a.y < Main.SPRITE_HEIGHT + a.dy)){
-					if(this.x < a.x && this.dx >= 0) {
+					if(this.x <= a.x - Main.SPRITE_WIDTH + this.dx && this.dx >= 0) {
 						this.dx = 0;
 						this.x = a.getX() - Main.SPRITE_WIDTH;
-					} else if(this.x > a.x && this.dx <= 0) {
+					} else if(this.x >= a.x + Main.SPRITE_WIDTH + this.dx && this.dx <= 0) {
 						this.dx = 0;
 						this.x = a.getX() + Main.SPRITE_WIDTH;
 					}
