@@ -27,9 +27,11 @@ public class RandomPanel extends javax.swing.JPanel {
 			i++;
 			f = new File("./config/" + Integer.toString(i) + ".png");
 		}
-		Main.player = new Player(0, -25);
-		Main.putInMap(Main.player);
-		Main.level.add(Main.player);
+		Player p = new Player(0, -25);
+		Main.player = new ArrayList<Player>();
+		Main.player.add(p);
+		Main.putInMap(p);
+		Main.level.add(p);
 		loadTemplate(0,0);		
 	}
 	public void paint(Graphics g) {
@@ -58,7 +60,9 @@ public class RandomPanel extends javax.swing.JPanel {
 				}
 			}
 		}
-		Main.player.display(g);
+		for(Player i: Main.player) {
+			i.display(g);
+		}
 	}
 	
 	public void loadTemplate(int startX, int startY) {

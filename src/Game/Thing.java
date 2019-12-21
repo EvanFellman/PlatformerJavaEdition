@@ -99,6 +99,10 @@ public abstract class Thing {
 		return this.id + " (" + Double.toString(this.x) + ", " + Double.toString(this.y) + ")";  
 	}
 	
+	public double dist(Thing a) {
+		return Math.pow(this.x - a.x, 2) + Math.pow(this.y - a.y, 2);  
+	}
+	
 	public boolean move() { return false; }
 	public void die() {}
 }

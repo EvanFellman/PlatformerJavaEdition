@@ -22,6 +22,8 @@ public class GamePanel extends JPanel {
 				}
 			}
 		}
-		Main.player.display(g);
+		for(Player i: Main.player) {
+			i.display(g);
+		}
 	}
 }

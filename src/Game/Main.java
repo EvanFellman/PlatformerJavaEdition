@@ -51,7 +51,7 @@ public class Main {
 	public static final int SPRITE_WIDTH = 25;
 	public static final double SLOW_SPEED = 1.5;
 	public static final double FAST_SPEED = 2;
-	public static Player player;
+	public static ArrayList<Player> player;
 	public static String STATE = "menu";
 	public static JFrame window;
 	public static boolean isBlueGateOpen = false;
@@ -74,6 +74,7 @@ public class Main {
 	private static JButton startEdit;
 	private static JButton levelNumberDisplayEdit;
 	private static BufferedImage background;
+	public static boolean deadPlayer = false;
 	public static void main(String[] args) throws IOException, InterruptedException {
 		background = ImageIO.read(new File("./config/background.png"));
 		window = new JFrame();
@@ -653,17 +654,19 @@ public class Main {
 						window.setVisible(true);
 						while(flag.flag) {}
 					}
-					while(player.getX() - cameraX < 150) {
-						cameraX --;
-					}
-					while(player.getX() - cameraX > 350) {
-						cameraX ++;
-					}
-					while(player.getY() - cameraY < 150) {
-						cameraY --;
-					}
-					while(player.getY() - cameraY > 350) {
-						cameraY ++;
+					for(Player i: player) {
+						while(i.getX() - cameraX < 150) {
+							cameraX --;
+						}
+						while(i.getX() - cameraX > 350) {
+							cameraX ++;
+						}
+						while(i.getY() - cameraY < 150) {
+							cameraY --;
+						}
+						while(i.getY() - cameraY > 350) {
+							cameraY ++;
+						}
 					}
 					window.repaint();
 					Date after = new Date();
@@ -735,7 +738,7 @@ public class Main {
 				loadLevel();
 				gp = new GamePanel();
 				window.setSize(500,500);
-				player.die();
+//				player.get(0).die();
 				window.remove(loadingPanel);
 				window.add(gp);
 				window.setVisible(true);
@@ -798,17 +801,19 @@ public class Main {
 						window.setVisible(true);
 						while(flag.flag) {}
 					}
-					while(player.getX() - cameraX < 150) {
-						cameraX --;
-					}
-					while(player.getX() - cameraX > 350) {
-						cameraX ++;
-					}
-					while(player.getY() - cameraY < 150) {
-						cameraY --;
-					}
-					while(player.getY() - cameraY > 350) {
-						cameraY ++;
+					for(Player i: player) {
+						while(i.getX() - cameraX < 175) {
+							cameraX --;
+						}
+						while(i.getX() - cameraX > 325) {
+							cameraX ++;
+						}
+						while(i.getY() - cameraY < 175) {
+							cameraY --;
+						}
+						while(i.getY() - cameraY > 325) {
+							cameraY ++;
+						}
 					}
 					window.repaint();
 					Date after = new Date();
@@ -1018,6 +1023,7 @@ public class Main {
 			imgFile = new File("config/" + Integer.toString(levelNumber) + ".png");
 		}
 		resetMap();
+		player = new ArrayList<Player>();
 		if(imgFile.exists()) {
 			try {
 				BufferedImage img = ImageIO.read(imgFile);
@@ -1032,8 +1038,9 @@ public class Main {
 						} else if(pixel.getRed() == 0 && pixel.getGreen() == 0 && pixel.getBlue() == 255) {
 							startX = SPRITE_WIDTH * x;
 							startY = SPRITE_HEIGHT * y;
-							player = new Player(SPRITE_WIDTH * x, SPRITE_HEIGHT * y);
-							level.add(player);
+							Player p = new Player(SPRITE_WIDTH * x, SPRITE_HEIGHT * y);
+							player.add(p);
+							level.add(p);
 						} else if(pixel.getRed() == 255 && pixel.getGreen() == 255 && pixel.getBlue() == 2) {
 							level.add(new EnemyNoJump(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, FAST_SPEED));
 						} else if(pixel.getRed() == 255 && pixel.getGreen() == 255 && pixel.getBlue() == 1) {
@@ -1122,8 +1129,8 @@ public class Main {
 				for(Thing i: level) {
 					putInMap(i);
 				}
-				cameraX = (int) (player.getX() - (window.getWidth() * 0.5));
-				cameraY = (int) (player.getY() - (window.getHeight() * 0.5));
+				cameraX = (int) (player.get(0).getX() - (window.getWidth() * 0.5));
+				cameraY = (int) (player.get(0).getY() - (window.getHeight() * 0.5));
 			} catch (IOException e) {
 				window.remove(gp);
 				STATE = "menu";

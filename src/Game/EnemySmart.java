@@ -8,12 +8,18 @@ public class EnemySmart extends Enemy {
 	}
 	
 	public boolean move() {
+		Player player = Main.player.get(0);
+		for(int i = 1; i < Main.player.size(); i++) {
+			if(this.dist(Main.player.get(i)) < this.dist(player)) {
+				player = Main.player.get(i);
+			}
+		}
 		//set dx
 		if(this.dx == 0) {
-			this.dx = Main.player.getX() < this.x ? this.speed * -1 : this.speed;
-		} else if(Main.player.getX() < this.x - (Main.SPRITE_WIDTH * 2)) {
+			this.dx = player.getX() < this.x ? this.speed * -1 : this.speed;
+		} else if(player.getX() < this.x - (Main.SPRITE_WIDTH * 2)) {
 			this.dx = this.speed * -1;
-		} else if(Main.player.getX() > this.x + (Main.SPRITE_WIDTH * 2)) {
+		} else if(player.getX() > this.x + (Main.SPRITE_WIDTH * 2)) {
 			this.dx = this.speed;
 		}
 		//Figure out if allowed to jump
@@ -152,7 +158,7 @@ public class EnemySmart extends Enemy {
 				}
 				if(!somethingToFallTo && somethingToJumpTo) {
 					this.dy = -10;
-				} else if(somethingToFallTo && somethingToJumpTo && (wallNextToMe || this.y >= Main.player.getY())) {
+				} else if(somethingToFallTo && somethingToJumpTo && (wallNextToMe || this.y >= player.getY())) {
 					this.dy = -10;
 				} else if(!somethingToFallTo && !somethingToJumpTo) {
 					this.dx = 0;

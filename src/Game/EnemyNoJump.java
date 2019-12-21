@@ -8,14 +8,20 @@ public class EnemyNoJump extends Enemy {
 	}
 	
 	public boolean move() {
-		if(Main.player.getX() + (Main.SPRITE_WIDTH * 2) < this.x) {
+		Player player = Main.player.get(0);
+		for(int i = 1; i < Main.player.size(); i++) {
+			if(this.dist(Main.player.get(i)) < this.dist(player)) {
+				player = Main.player.get(i);
+			}
+		}
+		if(player.getX() + (Main.SPRITE_WIDTH * 2) < this.x) {
 			this.dx = -1 * this.speed;
 		}
-		if(Main.player.getX() - (Main.SPRITE_WIDTH * 2) > this.x) {
+		if(player.getX() - (Main.SPRITE_WIDTH * 2) > this.x) {
 			this.dx = this.speed;
 		}
 		if(this.dx == 0) {
-			this.dx = Main.player.getX() < this.x ? -1 * speed : speed;
+			this.dx = player.getX() < this.x ? -1 * speed : speed;
 		}
 		return super.move();
 	}
