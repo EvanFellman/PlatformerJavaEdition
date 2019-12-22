@@ -69,6 +69,8 @@ public class RandomPanel extends javax.swing.JPanel {
 				Main.STATE = "menu";
 				Main.window.remove(Main.rp);
 			}
+			g.setColor(new Color(255, 0, 0, 10 + (75 - Main.deadPlayerCounter)));
+			g.fillRect(0, 0, (int) g.getClipBounds().getWidth(), (int) g.getClipBounds().getHeight());
 		} else {
 			boolean playerDied = false;
 			for(int i = 0; i < Main.level.size(); i++) {

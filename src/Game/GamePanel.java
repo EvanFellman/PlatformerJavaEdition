@@ -1,4 +1,5 @@
 package Game;
+import java.awt.Color;
 import java.awt.Graphics;
 import javax.swing.JPanel;
 
@@ -27,6 +28,8 @@ public class GamePanel extends JPanel {
 				i.display(g);
 			}
 			Main.deadPlayerCounter --;
+			g.setColor(new Color(255, 0, 0, 10 + (75 - Main.deadPlayerCounter)));
+			g.fillRect(0, 0, (int) g.getClipBounds().getWidth(), (int) g.getClipBounds().getHeight());
 			if(Main.deadPlayerCounter == 0) {
 				Main.loadLevel();
 			}
