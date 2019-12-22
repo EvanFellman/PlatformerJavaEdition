@@ -7,23 +7,52 @@ public class GamePanel extends JPanel {
 	
 	public void paint(Graphics g) {
 		Main.drawBackground(g, Main.cameraX, Main.cameraY);
-		boolean playerDied = false;
-		for(int i = 0; i < Main.level.size(); i++) {
-			double x = Main.level.get(i).getX() - Main.cameraX;
-			double y = Main.level.get(i).getY() - Main.cameraY;
-			if(x <= Main.window.getWidth() && x >= - 1* Main.window.getWidth() && y <= Main.window.getHeight() && y >= -1 * Main.window.getHeight()) {
-				if(!playerDied) {
-					playerDied = Main.level.get(i).move();
+		if(Main.deadPlayer) {
+			for(int i = 0; i < Main.level.size(); i++) {
+				if(Main.level.get(i).id.equals("player")) {
+					continue;
 				}
-				try {
-					Main.level.get(i).display(g);
-				} catch(Exception e) {
-					
+				double x = Main.level.get(i).getX() - Main.cameraX;
+				double y = Main.level.get(i).getY() - Main.cameraY;
+				if(x <= Main.window.getWidth() && x >= - 1* Main.window.getWidth() && y <= Main.window.getHeight() && y >= -1 * Main.window.getHeight()) {
+					try {
+						Main.level.get(i).display(g);
+					} catch(Exception e) {
+						
+					}
 				}
 			}
-		}
-		for(Player i: Main.player) {
-			i.display(g);
+			for(Player i: Main.player) {
+				i.move();
+				i.display(g);
+			}
+			Main.deadPlayerCounter --;
+			if(Main.deadPlayerCounter == 0) {
+				Main.loadLevel();
+			}
+		} else {
+			boolean playerDied = false;
+			for(int i = 0; i < Main.level.size(); i++) {
+				double x = Main.level.get(i).getX() - Main.cameraX;
+				double y = Main.level.get(i).getY() - Main.cameraY;
+				if(x <= Main.window.getWidth() && x >= - 1* Main.window.getWidth() && y <= Main.window.getHeight() && y >= -1 * Main.window.getHeight()) {
+					if(!playerDied) {
+						playerDied = Main.level.get(i).move();
+					}
+					try {
+						Main.level.get(i).display(g);
+					} catch(Exception e) { }
+				}
+			}
+			for(Player i: Main.player) {
+				i.display(g);
+			}
+			if(Main.deadPlayer) {
+				for(Player i: Main.player) {
+					i.dy = -15;
+					i.dx = 0;
+				}
+			}
 		}
 	}
 }

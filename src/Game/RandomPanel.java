@@ -5,7 +5,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-
 import javax.imageio.ImageIO;
 
 public class RandomPanel extends javax.swing.JPanel {
@@ -15,6 +14,7 @@ public class RandomPanel extends javax.swing.JPanel {
 	private int nextY;
 	public RandomPanel() {
 		super();
+		Main.deadPlayer = false;
 		templates = new ArrayList<BufferedImage>();
 		int i = 1;
 		File f = new File("./config/" + Integer.toString(i) + ".png");
@@ -36,32 +36,73 @@ public class RandomPanel extends javax.swing.JPanel {
 	}
 	public void paint(Graphics g) {
 		Main.drawBackground(g, Main.cameraX, Main.cameraY);
-		boolean playerDied = false;
-		for(int i = 0; i < Main.level.size(); i++) {
-			Thing a = Main.level.get(i);
-			double x = a.getX() - Main.cameraX;
-			double y = a.getY() - Main.cameraY;
-			if(x <= Main.window.getWidth() && x >= -1 * Main.window.getWidth() && y <= Main.window.getHeight() && y >= -1 * Main.window.getHeight()) {
-				if(a.id.equals("player") || a.id.contains("enemy") && !a.equals(Main.getFromMapMoving(a.getX(), a.getY()))) {
-					Main.putInMap(a);
-				} else if(!a.equals(Main.getFromMapMoving(a.getX(), a.getY()))) {
-					Main.putInMap(a);
+		if(Main.deadPlayer) {
+			for(int i = 0; i < Main.level.size(); i++) {
+				if(Main.level.get(i).id.equals("player")) {
+					continue;
 				}
-				if(!playerDied) {
-					playerDied = Main.level.get(i).move();
-				}
-				try {
-					if(Main.level.get(i).getX() >= nextX) {
-						loadTemplate(nextX, nextY);
-					} else {
-						Main.level.get(i).display(g);
+				Thing a = Main.level.get(i);
+				double x = a.getX() - Main.cameraX;
+				double y = a.getY() - Main.cameraY;
+				if(x <= Main.window.getWidth() && x >= -1 * Main.window.getWidth() && y <= Main.window.getHeight() && y >= -1 * Main.window.getHeight()) {
+					if(a.id.equals("player") || a.id.contains("enemy") && !a.equals(Main.getFromMapMoving(a.getX(), a.getY()))) {
+						Main.putInMap(a);
+					} else if(!a.equals(Main.getFromMapMoving(a.getX(), a.getY()))) {
+						Main.putInMap(a);
 					}
-				} catch(Exception e) {
+					try {
+						if(Main.level.get(i).getX() >= nextX) {
+							loadTemplate(nextX, nextY);
+						} else {
+							Main.level.get(i).display(g);
+						}
+					} catch(Exception e) {
+					}
 				}
 			}
-		}
-		for(Player i: Main.player) {
-			i.display(g);
+			for(Player i: Main.player) {
+				i.move();
+				i.display(g);
+			}
+			Main.deadPlayerCounter --;
+			if(Main.deadPlayerCounter == 0) {
+				Main.STATE = "menu";
+				Main.window.remove(Main.rp);
+			}
+		} else {
+			boolean playerDied = false;
+			for(int i = 0; i < Main.level.size(); i++) {
+				Thing a = Main.level.get(i);
+				double x = a.getX() - Main.cameraX;
+				double y = a.getY() - Main.cameraY;
+				if(x <= Main.window.getWidth() && x >= -1 * Main.window.getWidth() && y <= Main.window.getHeight() && y >= -1 * Main.window.getHeight()) {
+					if(a.id.equals("player") || a.id.contains("enemy") && !a.equals(Main.getFromMapMoving(a.getX(), a.getY()))) {
+						Main.putInMap(a);
+					} else if(!a.equals(Main.getFromMapMoving(a.getX(), a.getY()))) {
+						Main.putInMap(a);
+					}
+					if(!playerDied) {
+						playerDied = Main.level.get(i).move();
+					}
+					try {
+						if(Main.level.get(i).getX() >= nextX) {
+							loadTemplate(nextX, nextY);
+						} else {
+							Main.level.get(i).display(g);
+						}
+					} catch(Exception e) {
+					}
+				}
+			}
+			for(Player i: Main.player) {
+				i.display(g);
+			}
+			if(Main.deadPlayer) {
+				for(Player i: Main.player) {
+					i.dy = -15;
+					i.dx = 0;
+				}
+			}
 		}
 	}
 	

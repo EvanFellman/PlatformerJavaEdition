@@ -75,6 +75,7 @@ public class Main {
 	private static JButton levelNumberDisplayEdit;
 	private static BufferedImage background;
 	public static boolean deadPlayer = false;
+	public static int deadPlayerCounter;
 	public static void main(String[] args) throws IOException, InterruptedException {
 		background = ImageIO.read(new File("./config/background.png"));
 		window = new JFrame();
@@ -738,7 +739,6 @@ public class Main {
 				loadLevel();
 				gp = new GamePanel();
 				window.setSize(500,500);
-//				player.get(0).die();
 				window.remove(loadingPanel);
 				window.add(gp);
 				window.setVisible(true);
@@ -1017,6 +1017,8 @@ public class Main {
 		isBlueGateOpen = false;
 		isRedGateOpen = false;
 		File imgFile;
+		deadPlayer = false;
+		deadPlayerCounter = 100;
 		if(!editTemplates) {
 			imgFile = new File("./level" + Integer.toString(levelNumber) + ".png");
 		} else {
