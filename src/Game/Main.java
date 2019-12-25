@@ -16,6 +16,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -76,7 +79,17 @@ public class Main {
 	private static BufferedImage background;
 	public static boolean deadPlayer = false;
 	public static int deadPlayerCounter;
+	public static Clip clip;
 	public static void main(String[] args) throws IOException, InterruptedException {
+		try {
+	        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("config/music.wav").getAbsoluteFile()); 
+	        clip = AudioSystem.getClip(); 
+	        clip.open(audioInputStream); 
+	        clip.loop(Clip.LOOP_CONTINUOUSLY); 
+	        clip.stop();
+		} catch(Exception e) {
+			System.out.println(e);
+		}
 		background = ImageIO.read(new File("./config/background.png"));
 		window = new JFrame();
 		window.setResizable(false);
@@ -1204,6 +1217,13 @@ class MKeyListener extends KeyAdapter {
 	@Override
 	public void keyPressed(KeyEvent event) {
 		switch(event.getKeyCode()) {
+		case KeyEvent.VK_M:
+			if(Main.clip.isActive()) {
+				Main.clip.stop();
+			} else {
+				Main.clip.start();
+			}
+			break;
 		case KeyEvent.VK_Z:
 			Main.isZPressed = true;
 			break;
