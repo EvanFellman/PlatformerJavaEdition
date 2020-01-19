@@ -1222,6 +1222,7 @@ class MKeyListener extends KeyAdapter {
 				Main.clip.stop();
 			} else {
 				Main.clip.start();
+		        Main.clip.loop(Clip.LOOP_CONTINUOUSLY); 
 			}
 			break;
 		case KeyEvent.VK_Z:
