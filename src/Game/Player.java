@@ -13,6 +13,7 @@ public class Player extends Thing {
 		try {
 			deadImage = ImageIO.read(new File("config/textures.png")).getSubimage(4 * Main.SPRITE_WIDTH, 4 * Main.SPRITE_HEIGHT, Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT);
 		} catch (IOException e) { }
+		this.dx = 0;
 	}
 
 	@Override
@@ -22,12 +23,24 @@ public class Player extends Thing {
 			if(this.dy > 15) {
 				this.dy = 15;
 			}
-			this.dx = 0;
 			if(Main.isAPressed) {
-				this.dx = -4f;
-			}
-			if(Main.isDPressed) {
-				this.dx = 4f;
+				if(this.dx > 0) {
+					this.dx = 0;
+				}
+				if(this.dx > -4) {
+					this.dx -= 0.5;
+				}
+			} else if(Main.isDPressed) {
+				if(this.dx < 0) {
+					this.dx = 0;
+				}
+				if(this.dx < 4) {
+					this.dx += 0.5;
+				}
+			} else if(this.dx > 0){
+				this.dx -= 0.5;
+			} else if(this.dx < 0){
+				this.dx += 0.5;
 			}
 			this.x += this.dx;
 			boolean nearWalll = false, nearWallMovingl = false, nearWallr = false, nearWallMovingr = false;
