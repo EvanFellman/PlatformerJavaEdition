@@ -32,7 +32,12 @@ public class RandomPanel extends javax.swing.JPanel {
 		Main.player.add(p);
 		Main.putInMap(p);
 		Main.level.add(p);
-		loadTemplate(0,0);		
+		for(int j = 0; j < 5 * Main.SPRITE_WIDTH; j += Main.SPRITE_WIDTH) {
+			Wall w = new Wall(j, 0);
+			Main.putInMap(w);
+			Main.level.add(w);
+		}
+		loadTemplate(5 * Main.SPRITE_WIDTH, -1 * Main.SPRITE_HEIGHT);		
 	}
 	public void paint(Graphics g) {
 		Main.drawBackground(g, Main.cameraX, Main.cameraY);
@@ -88,7 +93,7 @@ public class RandomPanel extends javax.swing.JPanel {
 					}
 					try {
 						if(Main.level.get(i).getX() >= nextX) {
-							loadTemplate(nextX, nextY);
+							loadTemplate(nextX + Main.SPRITE_WIDTH, nextY);
 						} else {
 							Main.level.get(i).display(g);
 						}
