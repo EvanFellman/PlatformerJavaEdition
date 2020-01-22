@@ -27,7 +27,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class Main {
-	private static boolean editTemplates = true;
+	private static boolean editTemplates = false;
 	private static final double MAX_FRAMERATE = 60;
 	public static ArrayList<Thing> level = new ArrayList<Thing>();
 	public static Hashtable<Integer, Hashtable<Integer, Thing>> levelMapStable;
@@ -80,6 +80,7 @@ public class Main {
 	public static boolean deadPlayer = false;
 	public static int deadPlayerCounter;
 	public static Clip clip;
+	public static JPanel menuPanel;
 	public static void main(String[] args) throws IOException, InterruptedException {
 		try {
 	        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("config/music.wav").getAbsoluteFile()); 
@@ -97,7 +98,7 @@ public class Main {
 		window.addKeyListener(keyListener);
 		window.setTitle("Platformer");
 		window.setIconImage(ImageIO.read(new File("config/textures.png")).getSubimage(Main.SPRITE_WIDTH, 0, Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT));
-		final JPanel menuPanel = new JPanel();
+		menuPanel = new JPanel();
 		menuPanel.setBackground(Color.LIGHT_GRAY);
 		menuPanel.setLayout(new BoxLayout(menuPanel, 1));
 		JLabel menuTitle = new JLabel("Platformer");
@@ -1230,6 +1231,10 @@ class MKeyListener extends KeyAdapter {
 			break;
 		case KeyEvent.VK_SPACE:
 			Main.isSpacePressed = true;
+			if(Main.STATE.equals("menu0")) {
+				Main.window.remove(Main.menuPanel);
+				Main.STATE="random";
+			}
 			break;
 		case KeyEvent.VK_ESCAPE:
 			Main.isEscapePressed = true;
