@@ -9,7 +9,7 @@ public class Player extends Thing {
 	public Player(float x, float y) {
 		super(x, y, "player", 1, 0);
 		this.dx = 0;
-		this.playerState = new PlayerState(PlayerState.SHIELD);
+		this.playerState = new PlayerState();
 	}
 
 	@Override

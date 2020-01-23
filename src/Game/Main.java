@@ -75,6 +75,7 @@ public class Main {
 	private static JButton bulletEdit;
 	private static JButton goalEdit;
 	private static JButton startEdit;
+	private static JButton powerUpEdit;
 	private static JButton levelNumberDisplayEdit;
 	private static BufferedImage background;
 	public static boolean deadPlayer = false;
@@ -176,7 +177,7 @@ public class Main {
 		speedAndErasePanel.setLayout(new GridLayout(1, 2));
 		editButtonPanel.add(speedAndErasePanel);
 		JPanel otherButtonsPanel = new JPanel();
-		otherButtonsPanel.setLayout(new GridLayout(2, 5));
+		otherButtonsPanel.setLayout(new GridLayout(2, 6));
 		editButtonPanel.add(otherButtonsPanel);
 		JPanel editNavButtonPanel = new JPanel();
 		editPanel.add(editNavButtonPanel);
@@ -386,6 +387,16 @@ public class Main {
 			}
 		});
 		otherButtonsPanel.add(startEdit);
+		powerUpEdit = new JButton("Shield");
+		powerUpEdit.setFocusable(false);
+		powerUpEdit.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				paint = "shield";
+				updateEditButtons();
+			}
+		});
+		otherButtonsPanel.add(powerUpEdit);
 		JButton saveEdit = new JButton("Save");
 		saveEdit.setFocusable(false);
 		saveEdit.addActionListener(new ActionListener() {
@@ -569,6 +580,9 @@ public class Main {
 								break;
 							}
 						}
+					case "shield":
+						image.setRGB(x, y, (new Color(226, 0, 0).getRGB()));
+						break;
 					}
 				}
 				if(existsAPlayer) {
@@ -860,6 +874,9 @@ public class Main {
 	
 	public static void updateEditButtons() {
 		switch(Main.paint){
+		case "shield":
+			highlightButton(powerUpEdit, editButtonPanel);
+			break;
 		case "spike":
 			highlightButton(spikeEdit, editButtonPanel);
 			break;
@@ -1143,6 +1160,8 @@ public class Main {
 							level.add(new Shooter(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, Shooter.DOWN, FAST_SPEED));
 						} else if(pixel.getRed() == 227 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
 							level.add(new Shooter(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, Shooter.DOWN, SLOW_SPEED));
+						} else if(pixel.getRed() == 226 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
+							level.add(new Shield(SPRITE_WIDTH * x, SPRITE_HEIGHT * y));
 						}
 					}
 				}
