@@ -699,16 +699,16 @@ public class Main {
 						while(flag.flag) {}
 					}
 					for(Player i: player) {
-						while(i.getX() - cameraX < 150) {
+						while(i.getX() - cameraX < 250) {
 							cameraX --;
 						}
-						while(i.getX() - cameraX > 350) {
+						while(i.getX() - cameraX > 450) {
 							cameraX ++;
 						}
 						while(i.getY() - cameraY < 150) {
 							cameraY --;
 						}
-						while(i.getY() - cameraY > 350) {
+						while(i.getY() - cameraY > 300) {
 							cameraY ++;
 						}
 					}
@@ -845,16 +845,16 @@ public class Main {
 						while(flag.flag) {}
 					}
 					for(Player i: player) {
-						while(i.getX() - cameraX < 175) {
+						while(i.getX() - cameraX < 250) {
 							cameraX --;
 						}
-						while(i.getX() - cameraX > 325) {
+						while(i.getX() - cameraX > 450) {
 							cameraX ++;
 						}
-						while(i.getY() - cameraY < 175) {
+						while(i.getY() - cameraY < 150) {
 							cameraY --;
 						}
-						while(i.getY() - cameraY > 325) {
+						while(i.getY() - cameraY > 300) {
 							cameraY ++;
 						}
 					}
