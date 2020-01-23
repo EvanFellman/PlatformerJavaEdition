@@ -1,9 +1,6 @@
 package Game;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 
 public abstract class Thing {
 	private static int nextID = 0;
@@ -19,11 +16,7 @@ public abstract class Thing {
 		this.dy = 0;
 		this.id = id;
 		this.uniqueID = nextID++;
-		try {
-			this.pic = ImageIO.read(new File("config/textures.png")).getSubimage(picX * Main.SPRITE_WIDTH, picY * Main.SPRITE_HEIGHT, Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		this.pic = Main.texturedImg.getSubimage(picX * Main.SPRITE_WIDTH, picY * Main.SPRITE_HEIGHT, Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT);
 		Main.putInMap(this);
 	}
 	

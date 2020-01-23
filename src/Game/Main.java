@@ -81,7 +81,11 @@ public class Main {
 	public static int deadPlayerCounter;
 	public static Clip clip;
 	public static JPanel menuPanel;
+	public static BufferedImage texturedImg;
 	public static void main(String[] args) throws IOException, InterruptedException {
+		try {
+			texturedImg = ImageIO.read(new File("config/textures.png"));
+		} catch(Exception e) {	}
 		try {
 	        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("config/music.wav").getAbsoluteFile()); 
 	        clip = AudioSystem.getClip(); 
@@ -97,7 +101,7 @@ public class Main {
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.addKeyListener(keyListener);
 		window.setTitle("Platformer");
-		window.setIconImage(ImageIO.read(new File("config/textures.png")).getSubimage(Main.SPRITE_WIDTH, 0, Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT));
+		window.setIconImage(texturedImg.getSubimage(Main.SPRITE_WIDTH, 0, Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT));
 		menuPanel = new JPanel();
 		menuPanel.setBackground(Color.LIGHT_GRAY);
 		menuPanel.setLayout(new BoxLayout(menuPanel, 1));

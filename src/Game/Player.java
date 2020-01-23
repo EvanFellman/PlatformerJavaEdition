@@ -2,23 +2,20 @@ package Game;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 
 public class Player extends Thing {
-	private static BufferedImage deadImage; 
+	private static final BufferedImage deadImage = Main.texturedImg.getSubimage(4 * Main.SPRITE_WIDTH, 4 * Main.SPRITE_HEIGHT, Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT);
+	public PlayerState playerState;
 	public Player(float x, float y) {
 		super(x, y, "player", 1, 0);
-		try {
-			deadImage = ImageIO.read(new File("config/textures.png")).getSubimage(4 * Main.SPRITE_WIDTH, 4 * Main.SPRITE_HEIGHT, Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT);
-		} catch (IOException e) { }
 		this.dx = 0;
+		this.playerState = new PlayerState(PlayerState.SHIELD);
 	}
 
 	@Override
 	public boolean move() {
 		Main.removeFromMap(this);
+		this.playerState.tick();
 		if(!Main.deadPlayer) {
 			if(this.dy > 15) {
 				this.dy = 15;
@@ -154,15 +151,15 @@ public class Player extends Thing {
 		return false;
 	}
 	
+	@SuppressWarnings("unlikely-arg-type")
 	public void die() {
-		if(Main.STATE.equals("play0")) {
-			Main.deadPlayer = true;
-			Main.deadPlayerCounter = 75;
+		if(this.playerState.equals(PlayerState.SHIELD)) {
+			this.playerState.timer = 60;
 		} else {
-			Main.deadPlayer = true;
+			this.playerState.setValue(PlayerState.DEAD);
+			this.playerState.timer = 75;
 			Main.deadPlayerCounter = 75;
-//			Main.STATE = "menu";
-//			Main.window.remove(Main.rp);
+			Main.deadPlayer = true;
 		}
 	}
 	
@@ -170,7 +167,65 @@ public class Player extends Thing {
 	public void display(Graphics g) {
 		if(Main.deadPlayer) {
 			this.pic = deadImage;
+		} else {
+			this.pic = this.playerState.getImage();
 		}
 		super.display(g);
+	}
+}
+
+class PlayerState{
+	public final static Integer NONE = 0;
+	public final static Integer DEAD = 1;
+	public final static Integer SHIELD = 2;
+	private final static BufferedImage[] IMAGES = {
+			Main.texturedImg.getSubimage(1 * Main.SPRITE_WIDTH, 0, Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT),
+			Main.texturedImg.getSubimage(4 * Main.SPRITE_WIDTH, 4 * Main.SPRITE_HEIGHT, Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT),
+			Main.texturedImg.getSubimage(5 * Main.SPRITE_WIDTH, 0, Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT)
+	};
+	public int timer;
+	private Integer value;
+	
+	public PlayerState(){
+		this.value = NONE;
+	}
+	
+	public PlayerState(Integer v) {
+		this.value = v;
+		this.timer = -1;
+	}
+	
+	public void setValue(Integer v) {
+		this.value = v;
+		this.timer = -1;
+	}
+	
+	public BufferedImage getImage() {
+		if(this.timer > 0 && this.timer / 4 % 2 == 0) {
+			return IMAGES[NONE];
+		} else {
+			return IMAGES[this.value];
+		}
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if(o instanceof Integer) {
+			return (Integer) o == this.value;
+		} else if(!(o instanceof PlayerState)) {
+			return false;
+		} else {
+			return ((PlayerState) o).value == this.value;
+		}
+	}
+	
+	public void tick() {
+		if(this.timer > 0) {
+			this.timer --;
+		}
+		if(this.timer == 0) {
+			this.value = NONE;
+			this.timer = -1;
+		}
 	}
 }
