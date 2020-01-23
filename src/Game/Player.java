@@ -153,7 +153,7 @@ public class Player extends Thing {
 	
 	@SuppressWarnings("unlikely-arg-type")
 	public void die() {
-		if(this.playerState.equals(PlayerState.SHIELD)) {
+		if(this.playerState.equals(PlayerState.SHIELD) && this.y <= Main.DEATH_BELOW) {
 			this.playerState.timer = 60;
 		} else {
 			this.playerState.setValue(PlayerState.DEAD);

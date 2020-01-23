@@ -77,6 +77,7 @@ public class Main {
 	private static JButton startEdit;
 	private static JButton powerUpEdit;
 	private static JButton levelNumberDisplayEdit;
+	private static JButton movingWallEdit;
 	private static BufferedImage background;
 	public static boolean deadPlayer = false;
 	public static int deadPlayerCounter;
@@ -264,14 +265,6 @@ public class Main {
 			public void actionPerformed(ActionEvent arg0) {
 				if(paint.equals("wall")){
 					paint = "wall disappearing";
-				} else if(paint.equals("wall disappearing")){
-					paint = "wall moving left";
-				} else if(paint.equals("wall moving left")) {
-					paint = "wall moving right";
-				} else if(paint.equals("wall moving right")){
-					paint = "wall moving up";
-				} else if(paint.equals("wall moving up")) {
-					paint = "wall moving down";
 				} else {
 					paint = "wall";
 				}
@@ -279,6 +272,24 @@ public class Main {
 			}
 		});
 		otherButtonsPanel.add(wallEdit);
+		movingWallEdit = new JButton("Moving Wall (L)");
+		movingWallEdit.setFocusable(false);
+		movingWallEdit.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(paint.equals("wall moving left")) {
+					paint = "wall moving right";
+				} else if(paint.equals("wall moving right")){
+					paint = "wall moving up";
+				} else if(paint.equals("wall moving up")) {
+					paint = "wall moving down";
+				} else {
+					paint = "wall moving left";
+				}
+				updateEditButtons();
+			}
+		});
+		otherButtonsPanel.add(movingWallEdit);
 		blueGateEdit = new JButton("Blue Gate");
 		blueGateEdit.setFocusable(false);
 		blueGateEdit.addActionListener(new ActionListener() {
@@ -627,7 +638,7 @@ public class Main {
 				rp = new RandomPanel();
 				window.add(rp);
 				window.setVisible(true);
-				window.setSize(500, 500);
+				window.setSize(700, 500);
 				while(STATE.equals("random0")) {
 					Date before = new Date();
 					if(isEscapePressed) {
@@ -714,12 +725,12 @@ public class Main {
 				levelNumber=1;
 				loadLevel();
 				levelNumberDisplayEdit.setText("level 1");
-				editButtonPanel.setMaximumSize(new Dimension(550,120));
-				editButtonPanel.setPreferredSize(new Dimension(550,120));
-				editButtonPanel.setMinimumSize(new Dimension(550,120));
-				ep.setMaximumSize(new Dimension(550,455));
-				ep.setPreferredSize(new Dimension(550, 455));
-				ep.setMinimumSize(new Dimension(550,455));
+				editButtonPanel.setMaximumSize(new Dimension(700,120));
+				editButtonPanel.setPreferredSize(new Dimension(700,120));
+				editButtonPanel.setMinimumSize(new Dimension(700,120));
+				ep.setMaximumSize(new Dimension(700,455));
+				ep.setPreferredSize(new Dimension(700, 455));
+				ep.setMinimumSize(new Dimension(700,455));
 				BoxLayout bl = new BoxLayout(editPanel, BoxLayout.PAGE_AXIS);
 				editPanel.setLayout(bl);
 				for(Component i : editNavButtonPanel.getComponents()) {
@@ -727,7 +738,7 @@ public class Main {
 				}
 				window.add(editPanel);
 				window.setVisible(true);
-				window.setSize(550, 645);
+				window.setSize(700, 645);
 				while(STATE.equals("edit0")) {
 					Date before = new Date();
 					window.repaint();
@@ -770,7 +781,7 @@ public class Main {
 				levelNumber = 1;
 				loadLevel();
 				gp = new GamePanel();
-				window.setSize(500,500);
+				window.setSize(700,500);
 				window.remove(loadingPanel);
 				window.add(gp);
 				window.setVisible(true);
@@ -884,6 +895,8 @@ public class Main {
 		case "wall moving right":
 		case "wall moving up":
 		case "wall moving down":
+			highlightButton(movingWallEdit, editButtonPanel);
+			break;
 		case "wall disappearing":
 		case "wall":
 			highlightButton(wallEdit, editButtonPanel);
@@ -925,16 +938,17 @@ public class Main {
 			highlightButton(goalEdit, editButtonPanel);
 			break;
 		}
+		if(paint.equals("wall moving right")){
+			movingWallEdit.setText("Moving Wall (R)");
+		} else if(paint.equals("wall moving up")){
+			movingWallEdit.setText("Moving Wall (U)");
+		} else if(paint.equals("wall moving down")){
+			movingWallEdit.setText("Moving Wall (D)");
+		} else {
+			movingWallEdit.setText("Moving Wall (L)");
+		}
 		if(paint.equals("wall disappearing")){
 			wallEdit.setText("Temporary Wall");
-		} else if(paint.equals("wall moving left")){
-			wallEdit.setText("Moving Wall (L)");
-		} else if(paint.equals("wall moving right")){
-			wallEdit.setText("Moving Wall (R)");
-		} else if(paint.equals("wall moving up")){
-			wallEdit.setText("Moving Wall (U)");
-		} else if(paint.equals("wall moving down")){
-			wallEdit.setText("Moving Wall (D)");
 		} else {
 			wallEdit.setText("Wall");
 		}
