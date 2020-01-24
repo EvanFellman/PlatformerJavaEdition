@@ -150,7 +150,6 @@ public class Player extends Thing {
 					}
 				}
 			}
-			System.out.println(inAir);
 			if(Main.isWPressed && !this.didDoubleJump && inAir && this.wReleased && this.playerState.equals(PlayerState.DOUBLEJUMP)) {
 				this.dy = -14;
 				this.didDoubleJump = true;

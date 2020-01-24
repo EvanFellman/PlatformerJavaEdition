@@ -27,7 +27,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class Main {
-	private static boolean editTemplates = false;
+	private static boolean editTemplates = true;
 	private static final double MAX_FRAMERATE = 60;
 	public static ArrayList<Thing> level = new ArrayList<Thing>();
 	public static Hashtable<Integer, Hashtable<Integer, Thing>> levelMapStable;
@@ -403,7 +403,11 @@ public class Main {
 		powerUpEdit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				paint = "shield";
+				if(paint == "shield") {
+					paint = "double jump";
+				} else {
+					paint = "shield";
+				}
 				updateEditButtons();
 			}
 		});
@@ -593,6 +597,9 @@ public class Main {
 						}
 					case "shield":
 						image.setRGB(x, y, (new Color(226, 0, 0).getRGB()));
+						break;
+					case "double jump":
+						image.setRGB(x, y, (new Color(225, 0, 0).getRGB()));
 						break;
 					}
 				}
@@ -886,6 +893,7 @@ public class Main {
 	public static void updateEditButtons() {
 		switch(Main.paint){
 		case "shield":
+		case "double jump":
 			highlightButton(powerUpEdit, editButtonPanel);
 			break;
 		case "spike":
@@ -994,6 +1002,12 @@ public class Main {
 			bulletEdit.setText("Shooter (L)");
 		} else {
 			bulletEdit.setText("Bullet (L)");
+		}
+		
+		if(paint.equals("double jump")) {
+			powerUpEdit.setText("Double Jump");
+		} else {
+			powerUpEdit.setText("Shield");
 		}
 	}
 	
@@ -1176,6 +1190,8 @@ public class Main {
 							level.add(new Shooter(SPRITE_WIDTH * x, SPRITE_HEIGHT * y, Shooter.DOWN, SLOW_SPEED));
 						} else if(pixel.getRed() == 226 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
 							level.add(new Shield(SPRITE_WIDTH * x, SPRITE_HEIGHT * y));
+						} else if(pixel.getRed() == 225 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
+							level.add(new DoubleJump(SPRITE_WIDTH * x, SPRITE_HEIGHT * y));
 						}
 					}
 				}

@@ -157,6 +157,9 @@ public class EditPanel extends JPanel implements MouseMotionListener, MouseListe
 							}
 							toInsert = null;
 							break;
+						case "double jump":
+							toInsert = new DoubleJump(mouseX, mouseY);
+							break;
 						case "shield":
 							toInsert = new Shield(mouseX, mouseY);
 							break;
