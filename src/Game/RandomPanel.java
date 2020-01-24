@@ -88,9 +88,7 @@ public class RandomPanel extends javax.swing.JPanel {
 					} else if(!a.equals(Main.getFromMapMoving(a.getX(), a.getY()))) {
 						Main.putInMap(a);
 					}
-					if(!playerDied) {
-						playerDied = Main.level.get(i).move();
-					}
+					playerDied = playerDied || Main.level.get(i).move();
 					try {
 						if(Main.level.get(i).getX() >= nextX) {
 							loadTemplate(nextX + Main.SPRITE_WIDTH, nextY);

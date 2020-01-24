@@ -6,14 +6,22 @@ import java.awt.image.BufferedImage;
 public class Player extends Thing {
 	private static final BufferedImage deadImage = Main.texturedImg.getSubimage(4 * Main.SPRITE_WIDTH, 4 * Main.SPRITE_HEIGHT, Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT);
 	public PlayerState playerState;
+	private boolean didDoubleJump;
+	private boolean wReleased;
 	public Player(float x, float y) {
 		super(x, y, "player", 1, 0);
 		this.dx = 0;
 		this.playerState = new PlayerState();
+		this.didDoubleJump = false;
+		this.wReleased = false;
 	}
 
+	@SuppressWarnings("unlikely-arg-type")
 	@Override
 	public boolean move() {
+		if(!Main.isWPressed) {
+			this.wReleased = true;
+		}
 		Main.removeFromMap(this);
 		this.playerState.tick();
 		if(!Main.deadPlayer) {
@@ -80,6 +88,7 @@ public class Player extends Thing {
 		this.y += this.dy;
 		if(!Main.deadPlayer) {
 			boolean nearWalla = false, nearWallMovinga = false, nearWallb = false, nearWallMovingb = false;
+			boolean inAir = true;
 			for(int i = 0; i < Main.level.size(); i++) {
 				Thing a = Main.level.get(i);
 				if(!this.equals(a) && this.isTouching(a)) {
@@ -104,11 +113,14 @@ public class Player extends Thing {
 						if(this.dy >= 0) {
 							if(Main.isWPressed && a.getY() > this.y) {
 								this.dy = -10;
+								this.wReleased = false;
 							} else if(this.dy > a.dy) {
 								this.dy = 0;
 							}
 							if(a.getY() > this.y) {
 								this.y = (a.y - Main.SPRITE_HEIGHT);
+								this.didDoubleJump = false;
+								inAir = false;
 							} else if(a.getY() < this.y) {
 								this.y = (a.y + Main.SPRITE_HEIGHT);
 							}
@@ -133,18 +145,23 @@ public class Player extends Thing {
 							a.die();
 						} else {
 							this.die();
-							return true;
+							return Main.deadPlayer;
 						}
 					}
 				}
 			}
+			System.out.println(inAir);
+			if(Main.isWPressed && !this.didDoubleJump && inAir && this.wReleased && this.playerState.equals(PlayerState.DOUBLEJUMP)) {
+				this.dy = -14;
+				this.didDoubleJump = true;
+			}
 			if((nearWalla && nearWallMovingb) || (nearWallMovinga && nearWallb) || (nearWallMovinga && nearWallMovingb)) {
 				this.die();
-				return true;
+				return Main.deadPlayer;
 			}
 			if(this.y > Main.DEATH_BELOW) {
 				this.die();
-				return true;
+				return Main.deadPlayer;
 			}
 		}
 		Main.putInMap(this);
@@ -154,7 +171,9 @@ public class Player extends Thing {
 	@SuppressWarnings("unlikely-arg-type")
 	public void die() {
 		if(this.playerState.equals(PlayerState.SHIELD) && this.y <= Main.DEATH_BELOW) {
-			this.playerState.timer = 60;
+			if(this.playerState.timer == -1) {
+				this.playerState.timer = 60;
+			}
 		} else {
 			this.playerState.setValue(PlayerState.DEAD);
 			this.playerState.timer = 75;
@@ -178,10 +197,12 @@ class PlayerState{
 	public final static Integer NONE = 0;
 	public final static Integer DEAD = 1;
 	public final static Integer SHIELD = 2;
+	public final static Integer DOUBLEJUMP = 3;
 	private final static BufferedImage[] IMAGES = {
 			Main.texturedImg.getSubimage(1 * Main.SPRITE_WIDTH, 0, Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT),
 			Main.texturedImg.getSubimage(4 * Main.SPRITE_WIDTH, 4 * Main.SPRITE_HEIGHT, Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT),
-			Main.texturedImg.getSubimage(5 * Main.SPRITE_WIDTH, 0, Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT)
+			Main.texturedImg.getSubimage(5 * Main.SPRITE_WIDTH, 0, Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT),
+			Main.texturedImg.getSubimage(5 * Main.SPRITE_WIDTH, 2 * Main.SPRITE_HEIGHT, Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT)
 	};
 	public int timer;
 	private Integer value;
