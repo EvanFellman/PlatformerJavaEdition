@@ -5,12 +5,14 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,6 +40,7 @@ public class Main {
 	public static int cameraX = 0;
 	public static int cameraY = 0;
 	public static int DEATH_BELOW;
+	public static boolean fullscreen = false;
 	public static boolean isWPressed = false;
 	public static boolean isAPressed = false;
 	public static boolean isSPressed = false;
@@ -83,6 +86,7 @@ public class Main {
 	public static int deadPlayerCounter;
 	public static Clip clip;
 	public static JPanel menuPanel;
+	public static JPanel menuPanelFull;
 	public static BufferedImage texturedImg;
 	public static void main(String[] args) throws IOException, InterruptedException {
 		try {
@@ -105,7 +109,7 @@ public class Main {
 		window.setTitle("Platformer");
 		window.setIconImage(texturedImg.getSubimage(Main.SPRITE_WIDTH, 0, Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT));
 		menuPanel = new JPanel();
-		menuPanel.setBackground(Color.LIGHT_GRAY);
+		menuPanel.setBackground(Color.GRAY);
 		menuPanel.setLayout(new BoxLayout(menuPanel, 1));
 		JLabel menuTitle = new JLabel("Platformer");
 		menuTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -114,7 +118,7 @@ public class Main {
 		menuPanel.add(menuTitle);
 		menuPanel.add(Box.createRigidArea(new Dimension(1,50)));
 		JButton playMenu = new JButton("Play your levels");
-		playMenu.setBackground(Color.GRAY);
+		playMenu.setBackground(Color.DARK_GRAY);
 		playMenu.setForeground(Color.WHITE);
 		playMenu.setFocusable(false);
 		playMenu.addActionListener(new ActionListener(){
@@ -127,9 +131,9 @@ public class Main {
 		playMenu.setAlignmentX(Component.CENTER_ALIGNMENT);
 		playMenu.setBounds(0, 0, 50,50);
 		menuPanel.add(playMenu);
-		menuPanel.add(Box.createRigidArea(new Dimension(1,25)));
+		menuPanel.add(Box.createVerticalGlue());
 		JButton randomMenu = new JButton("Play a random level");
-		randomMenu.setBackground(Color.GRAY);
+		randomMenu.setBackground(Color.DARK_GRAY);
 		randomMenu.setForeground(Color.WHITE);
 		randomMenu.setFocusable(false);
 		randomMenu.addActionListener(new ActionListener(){
@@ -142,9 +146,9 @@ public class Main {
 		randomMenu.setAlignmentX(Component.CENTER_ALIGNMENT);
 		randomMenu.setBounds(0,0,50,50);
 		menuPanel.add(randomMenu);
-		menuPanel.add(Box.createRigidArea(new Dimension(1,25)));
+		menuPanel.add(Box.createVerticalGlue());
 		JButton editMenu = new JButton("Edit levels");
-		editMenu.setBackground(Color.GRAY);
+		editMenu.setBackground(Color.DARK_GRAY);
 		editMenu.setForeground(Color.WHITE);
 		editMenu.setFocusable(false);
 		editMenu.addActionListener(new ActionListener(){
@@ -157,9 +161,9 @@ public class Main {
 		editMenu.setAlignmentX(Component.CENTER_ALIGNMENT);
 		editMenu.setBounds(0,0,50,50);
 		menuPanel.add(editMenu);
-		menuPanel.add(Box.createRigidArea(new Dimension(1,25)));
+		menuPanel.add(Box.createVerticalGlue());
 		JButton quitMenu = new JButton("Quit");
-		quitMenu.setBackground(Color.GRAY);
+		quitMenu.setBackground(Color.DARK_GRAY);
 		quitMenu.setForeground(Color.WHITE);
 		quitMenu.setFocusable(false);
 		quitMenu.addActionListener(new ActionListener(){
@@ -171,6 +175,81 @@ public class Main {
 		quitMenu.setBounds(0,0,50,50);
 		quitMenu.setAlignmentX(Component.CENTER_ALIGNMENT);
 		menuPanel.add(quitMenu);
+		
+		menuPanelFull = new JPanel();
+		menuPanelFull.setBackground(Color.GRAY);
+		menuPanelFull.setLayout(new BoxLayout(menuPanelFull, 1));
+		menuPanelFull.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
+		menuPanelFull.setMinimumSize(Toolkit.getDefaultToolkit().getScreenSize());
+		JLabel menuTitleFull = new JLabel("Platformer");
+		menuTitleFull.setAlignmentX(Component.CENTER_ALIGNMENT);
+		menuTitleFull.setFont(new Font("TimesRoman", Font.BOLD, 100));
+		menuTitleFull.setForeground(Color.WHITE);
+		menuPanelFull.add(menuTitleFull);
+		menuPanelFull.add(Box.createVerticalGlue());
+		JButton playMenuFull = new JButton("Play your levels");
+		playMenuFull.setBackground(Color.DARK_GRAY);
+		playMenuFull.setForeground(Color.WHITE);
+		playMenuFull.setFocusable(false);
+		playMenuFull.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0){
+				window.remove(menuPanelFull);
+				STATE="play";
+			}
+		});
+		playMenuFull.setAlignmentX(Component.CENTER_ALIGNMENT);
+		playMenuFull.setFont(new Font("TimesRoman", Font.PLAIN, 30));
+		updateSize(playMenuFull, 500, 100);
+		menuPanelFull.add(playMenuFull);
+		menuPanelFull.add(Box.createVerticalGlue());
+		JButton randomMenuFull = new JButton("Play a random level");
+		randomMenuFull.setBackground(Color.DARK_GRAY);
+		randomMenuFull.setForeground(Color.WHITE);
+		randomMenuFull.setFocusable(false);
+		randomMenuFull.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0){
+				window.remove(menuPanelFull);
+				STATE="random";
+			}
+		});
+		randomMenuFull.setAlignmentX(Component.CENTER_ALIGNMENT);
+		randomMenuFull.setFont(new Font("TimesRoman", Font.PLAIN, 30));
+		updateSize(randomMenuFull, 500, 100);
+		menuPanelFull.add(randomMenuFull);
+		menuPanelFull.add(Box.createVerticalGlue());
+		JButton editMenuFull = new JButton("Edit levels");
+		editMenuFull.setBackground(Color.DARK_GRAY);
+		editMenuFull.setForeground(Color.WHITE);
+		editMenuFull.setFocusable(false);
+		editMenuFull.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0){
+				window.remove(menuPanelFull);
+				STATE="edit";
+			}
+		});
+		editMenuFull.setAlignmentX(Component.CENTER_ALIGNMENT);
+		editMenuFull.setFont(new Font("TimesRoman", Font.PLAIN, 30));
+		updateSize(editMenuFull, 500, 100);
+		menuPanelFull.add(editMenuFull);
+		menuPanelFull.add(Box.createVerticalGlue());
+		JButton quitMenuFull = new JButton("Quit");
+		quitMenuFull.setBackground(Color.DARK_GRAY);
+		quitMenuFull.setForeground(Color.WHITE);
+		quitMenuFull.setFocusable(false);
+		quitMenu.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0){
+				System.exit(0);
+			}
+		});
+		quitMenuFull.setAlignmentX(Component.CENTER_ALIGNMENT);
+		quitMenuFull.setFont(new Font("TimesRoman", Font.PLAIN, 30));
+		updateSize(quitMenuFull, 500, 100);
+		menuPanelFull.add(quitMenuFull);
+		
 		final JPanel editPanel = new JPanel();
 		editButtonPanel = new JPanel();
 		editButtonPanel.setLayout(new BoxLayout(editButtonPanel, 1));
@@ -621,15 +700,21 @@ public class Main {
 		editNavButtonPanel.add(saveEdit);
 		editPanel.add(Box.createVerticalGlue());
 		editPanel.add(ep);
+		loadOptions();
 		highlightButton(wallEdit, editButtonPanel);
 		window.setVisible(true);
 		while(true) {
 			Thread.sleep(1/30);
 			switch(STATE) {
 			case "menu":
-				window.add(menuPanel);
 				STATE="menu0";
-				window.setSize(200,300);
+				if(fullscreen) {
+					window.setExtendedState(JFrame.MAXIMIZED_BOTH);
+					window.add(menuPanelFull);
+				} else {
+					window.setSize(200,300);
+					window.add(menuPanel);
+				}
 				break;
 			case "random":
 				STATE="random0";
@@ -645,7 +730,11 @@ public class Main {
 				rp = new RandomPanel();
 				window.add(rp);
 				window.setVisible(true);
-				window.setSize(700, 500);
+				if(fullscreen) {
+					window.setExtendedState(JFrame.MAXIMIZED_BOTH);
+				} else {
+					window.setSize(700, 500);
+				} 
 				while(STATE.equals("random0")) {
 					Date before = new Date();
 					if(isEscapePressed) {
@@ -791,6 +880,7 @@ public class Main {
 				window.setSize(700,500);
 				window.remove(loadingPanel);
 				window.add(gp);
+//				window.setExtendedState(JFrame.MAXIMIZED_BOTH); 
 				window.setVisible(true);
 				while(STATE.equals("play0")) {
 					Date before = new Date();
@@ -1265,6 +1355,42 @@ public class Main {
 			}
 		}
 	}
+	
+	public static void updateSize(Component c, Dimension d) {
+		c.setMinimumSize(d);
+		c.setMaximumSize(d);
+		c.setPreferredSize(d);
+	}
+	
+	public static void updateSize(Component c, int width, int height) {
+		updateSize(c, new Dimension(width, height));
+	}
+	
+	public static void updateSize(Component c, double width, double height) {
+		updateSize(c, new Dimension((int) width, (int) height));
+	}
+	
+	public static void loadOptions() {
+		FileReader optionsReader = null;
+		try {
+			optionsReader = new FileReader(new File("./config/options.txt"));
+			if((char)optionsReader.read() == '1') {
+				fullscreen = true;
+			} else {
+				fullscreen = false;
+			}
+			if((char)optionsReader.read() == '1') {
+				if(!Main.clip.isActive()) {
+					Main.clip.start();
+			        Main.clip.loop(Clip.LOOP_CONTINUOUSLY); 
+				}
+			} else {
+				if(Main.clip.isActive()) {
+					Main.clip.stop();
+				}
+			}
+		} catch (IOException e) {	}
+	}
 }
 
 class MKeyListener extends KeyAdapter {
@@ -1286,6 +1412,7 @@ class MKeyListener extends KeyAdapter {
 			Main.isSpacePressed = true;
 			if(Main.STATE.equals("menu0")) {
 				Main.window.remove(Main.menuPanel);
+				Main.window.remove(Main.menuPanelFull);
 				Main.STATE="random";
 			}
 			break;

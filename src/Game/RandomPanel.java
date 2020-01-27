@@ -32,12 +32,12 @@ public class RandomPanel extends javax.swing.JPanel {
 		Main.player.add(p);
 		Main.putInMap(p);
 		Main.level.add(p);
-		for(int j = 0; j < 5 * Main.SPRITE_WIDTH; j += Main.SPRITE_WIDTH) {
+		for(int j = 0; j < 7 * Main.SPRITE_WIDTH; j += Main.SPRITE_WIDTH) {
 			Wall w = new Wall(j, 0);
 			Main.putInMap(w);
 			Main.level.add(w);
 		}
-		loadTemplate(5 * Main.SPRITE_WIDTH, -1 * Main.SPRITE_HEIGHT);		
+		loadTemplate(7 * Main.SPRITE_WIDTH, -1 * Main.SPRITE_HEIGHT);		
 	}
 	public void paint(Graphics g) {
 		Main.drawBackground(g, Main.cameraX, Main.cameraY);
@@ -50,11 +50,6 @@ public class RandomPanel extends javax.swing.JPanel {
 				double x = a.getX() - Main.cameraX;
 				double y = a.getY() - Main.cameraY;
 				if(x <= Main.window.getWidth() && x >= -1 * Main.window.getWidth() && y <= Main.window.getHeight() && y >= -1 * Main.window.getHeight()) {
-					if(a.id.equals("player") || a.id.contains("enemy") && !a.equals(Main.getFromMapMoving(a.getX(), a.getY()))) {
-						Main.putInMap(a);
-					} else if(!a.equals(Main.getFromMapMoving(a.getX(), a.getY()))) {
-						Main.putInMap(a);
-					}
 					try {
 						if(Main.level.get(i).getX() >= nextX) {
 							loadTemplate(nextX, nextY);
@@ -73,6 +68,7 @@ public class RandomPanel extends javax.swing.JPanel {
 			if(Main.deadPlayerCounter == 0) {
 				Main.STATE = "menu";
 				Main.window.remove(Main.rp);
+				Main.window.repaint();
 			}
 			g.setColor(new Color(255, 0, 0, 10 + (75 - Main.deadPlayerCounter)));
 			g.fillRect(0, 0, (int) g.getClipBounds().getWidth(), (int) g.getClipBounds().getHeight());

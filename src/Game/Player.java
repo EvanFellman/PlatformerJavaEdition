@@ -50,7 +50,7 @@ public class Player extends Thing {
 			this.x += this.dx;
 			boolean nearWalll = false, nearWallMovingl = false, nearWallr = false, nearWallMovingr = false;
 			for(Thing a: Main.level) {
-				if(a != null && (a.id.contains("wall") || (!this.equals(a) && a.id.equals("player"))) && this.isTouching(a)) {
+				if(a != null && ((this.playerState.equals(PlayerState.SHIELD) && a.id.equals("spike")) || a.id.contains("wall") || (!this.equals(a) && a.id.equals("player"))) && this.isTouching(a)) {
 					if(a.x > this.x) {
 						if(a.id.equals("wall moving")) {
 							if(a.dx < 0) {
@@ -92,7 +92,7 @@ public class Player extends Thing {
 			for(int i = 0; i < Main.level.size(); i++) {
 				Thing a = Main.level.get(i);
 				if(!this.equals(a) && this.isTouching(a)) {
-					if(a.id.contains("wall") || (!this.equals(a) && a.id.equals("player"))) {
+					if(a.id.contains("wall") || a.id.equals("spike") || (!this.equals(a) && a.id.equals("player"))) {
 						if(a.y > this.y) {
 							if(a.id.equals("wall moving")) {
 								if(a.dy < 0) {
@@ -129,6 +129,9 @@ public class Player extends Thing {
 							if(this.x + Main.SPRITE_WIDTH > a.x && this.x - Main.SPRITE_WIDTH < a.x) {
 								this.y = a.y + Main.SPRITE_HEIGHT;
 							}
+						}
+						if(a.id.equals("spike")) {
+							this.die();
 						}
 					} else if(a.id.equals("next level")) {
 						Main.levelNumber += 1;

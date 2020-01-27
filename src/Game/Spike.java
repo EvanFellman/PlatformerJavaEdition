@@ -15,7 +15,7 @@ public class Spike extends Thing {
 						a.die();
 					} else if(a.id.equals("player")) {
 						a.die();
-						return true;
+						return Main.deadPlayer;
 					}
 				}
 			}
