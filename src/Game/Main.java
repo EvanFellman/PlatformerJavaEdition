@@ -239,7 +239,7 @@ public class Main {
 		quitMenuFull.setBackground(Color.DARK_GRAY);
 		quitMenuFull.setForeground(Color.WHITE);
 		quitMenuFull.setFocusable(false);
-		quitMenu.addActionListener(new ActionListener(){
+		quitMenuFull.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0){
 				System.exit(0);
@@ -269,7 +269,8 @@ public class Main {
 			public void actionPerformed(ActionEvent arg0) {
 				window.remove(editPanel);
 				STATE="menu";
-				Thread.yield();
+				window.repaint();
+				window.setVisible(true);
 			}
 		});
 		editNavButtonPanel.add(backEdit);
@@ -700,8 +701,8 @@ public class Main {
 		editNavButtonPanel.add(saveEdit);
 		editPanel.add(Box.createVerticalGlue());
 		editPanel.add(ep);
+		highlightButton(wallEdit, editButtonPanel);		
 		loadOptions();
-		highlightButton(wallEdit, editButtonPanel);
 		window.setVisible(true);
 		while(true) {
 			Thread.sleep(1/30);
@@ -715,6 +716,7 @@ public class Main {
 					window.setSize(200,300);
 					window.add(menuPanel);
 				}
+				window.repaint();
 				break;
 			case "random":
 				STATE="random0";
@@ -795,16 +797,16 @@ public class Main {
 						while(flag.flag) {}
 					}
 					for(Player i: player) {
-						while(i.getX() - cameraX < 250) {
+						while(i.getX() - cameraX < window.getWidth() / 4) {
 							cameraX --;
 						}
-						while(i.getX() - cameraX > 450) {
+						while(i.getX() - cameraX > 3 * window.getWidth() / 4) {
 							cameraX ++;
 						}
-						while(i.getY() - cameraY < 150) {
+						while(i.getY() - cameraY < window.getHeight() / 4) {
 							cameraY --;
 						}
-						while(i.getY() - cameraY > 300) {
+						while(i.getY() - cameraY > 3 * window.getHeight() / 4) {
 							cameraY ++;
 						}
 					}
@@ -821,20 +823,28 @@ public class Main {
 				levelNumber=1;
 				loadLevel();
 				levelNumberDisplayEdit.setText("level 1");
-				editButtonPanel.setMaximumSize(new Dimension(700,120));
-				editButtonPanel.setPreferredSize(new Dimension(700,120));
-				editButtonPanel.setMinimumSize(new Dimension(700,120));
-				ep.setMaximumSize(new Dimension(700,455));
-				ep.setPreferredSize(new Dimension(700, 455));
-				ep.setMinimumSize(new Dimension(700,455));
 				BoxLayout bl = new BoxLayout(editPanel, BoxLayout.PAGE_AXIS);
+				if(fullscreen) {
+					window.setExtendedState(JFrame.MAXIMIZED_BOTH);
+					Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+					updateSize(editButtonPanel, screen.getWidth(), screen.getHeight() / 8);
+					updateSize(ep, screen.getWidth(), 7 * screen.getHeight() / 8);
+				} else {
+					editButtonPanel.setMaximumSize(new Dimension(700,120));
+					editButtonPanel.setPreferredSize(new Dimension(700,120));
+					editButtonPanel.setMinimumSize(new Dimension(700,120));
+					ep.setMaximumSize(new Dimension(700,455));
+					ep.setPreferredSize(new Dimension(700, 455));
+					ep.setMinimumSize(new Dimension(700,455));
+					window.setSize(700, 645);
+				}
 				editPanel.setLayout(bl);
+				editPanel.add(ep);
 				for(Component i : editNavButtonPanel.getComponents()) {
 					i.setBackground(new Color(150, 187, 255));
 				}
 				window.add(editPanel);
 				window.setVisible(true);
-				window.setSize(700, 645);
 				while(STATE.equals("edit0")) {
 					Date before = new Date();
 					window.repaint();
@@ -880,7 +890,6 @@ public class Main {
 				window.setSize(700,500);
 				window.remove(loadingPanel);
 				window.add(gp);
-//				window.setExtendedState(JFrame.MAXIMIZED_BOTH); 
 				window.setVisible(true);
 				while(STATE.equals("play0")) {
 					Date before = new Date();
@@ -1373,7 +1382,7 @@ public class Main {
 	public static void loadOptions() {
 		FileReader optionsReader = null;
 		try {
-			optionsReader = new FileReader(new File("./config/options.txt"));
+			optionsReader = new FileReader(new File("./config/options.bin"));
 			if((char)optionsReader.read() == '1') {
 				fullscreen = true;
 			} else {

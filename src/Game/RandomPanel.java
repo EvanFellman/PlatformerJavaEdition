@@ -32,6 +32,7 @@ public class RandomPanel extends javax.swing.JPanel {
 		Main.player.add(p);
 		Main.putInMap(p);
 		Main.level.add(p);
+		Main.cameraY = (int) (p.getY() - (Main.window.getHeight() / 2));
 		for(int j = 0; j < 7 * Main.SPRITE_WIDTH; j += Main.SPRITE_WIDTH) {
 			Wall w = new Wall(j, 0);
 			Main.putInMap(w);
