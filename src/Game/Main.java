@@ -162,6 +162,21 @@ public class Main {
 		editMenu.setBounds(0,0,50,50);
 		menuPanel.add(editMenu);
 		menuPanel.add(Box.createVerticalGlue());
+		JButton optionsMenu = new JButton("Options");
+		optionsMenu.setBackground(Color.DARK_GRAY);
+		optionsMenu.setForeground(Color.WHITE);
+		optionsMenu.setFocusable(false);
+		optionsMenu.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0){
+				window.remove(menuPanel);
+				STATE="options";
+			}
+		});
+		optionsMenu.setAlignmentX(Component.CENTER_ALIGNMENT);
+		optionsMenu.setBounds(0,0,50,50);
+		menuPanel.add(optionsMenu);
+		menuPanel.add(Box.createVerticalGlue());
 		JButton quitMenu = new JButton("Quit");
 		quitMenu.setBackground(Color.DARK_GRAY);
 		quitMenu.setForeground(Color.WHITE);
@@ -234,6 +249,22 @@ public class Main {
 		editMenuFull.setFont(new Font("TimesRoman", Font.PLAIN, 30));
 		updateSize(editMenuFull, 500, 100);
 		menuPanelFull.add(editMenuFull);
+		menuPanelFull.add(Box.createVerticalGlue());
+		JButton optionsMenuFull = new JButton("Options");
+		optionsMenuFull.setBackground(Color.DARK_GRAY);
+		optionsMenuFull.setForeground(Color.WHITE);
+		optionsMenuFull.setFocusable(false);
+		optionsMenuFull.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0){
+				window.remove(menuPanelFull);
+				STATE="options";
+			}
+		});
+		optionsMenuFull.setAlignmentX(Component.CENTER_ALIGNMENT);
+		optionsMenuFull.setFont(new Font("TimesRoman", Font.PLAIN, 30));
+		updateSize(optionsMenuFull, 500, 100);
+		menuPanelFull.add(optionsMenuFull);
 		menuPanelFull.add(Box.createVerticalGlue());
 		JButton quitMenuFull = new JButton("Quit");
 		quitMenuFull.setBackground(Color.DARK_GRAY);
@@ -994,6 +1025,47 @@ public class Main {
 						after = new Date();
 					}
 				}
+			 case "options":
+				STATE = "options0";
+				JPanel optionsPanel = new JPanel();
+				optionsPanel.setBackground(Color.GRAY);
+				optionsPanel.setLayout(new BoxLayout(optionsPanel, 1));
+				window.add(optionsPanel);
+				JLabel optionsLabel = new JLabel("Options");
+				optionsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+				optionsLabel.setForeground(Color.WHITE);
+				optionsPanel.add(optionsLabel);
+				optionsPanel.add(Box.createVerticalGlue());
+				final JButton windowSizeBtn = new JButton();
+				windowSizeBtn.setBackground(Color.DARK_GRAY);
+				windowSizeBtn.setForeground(Color.WHITE);
+				windowSizeBtn.setFocusable(false);
+				windowSizeBtn.addActionListener(new ActionListener(){
+					@Override
+					public void actionPerformed(ActionEvent arg0){
+						fullscreen = !fullscreen;
+						if(fullscreen) {
+							windowSizeBtn.setText("windowed");
+						} else {
+							windowSizeBtn.setText("fullscreen");
+						}
+					}
+				});
+				windowSizeBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+				if(fullscreen) {
+					windowSizeBtn.setText("windowed");
+				} else {
+					windowSizeBtn.setText("fullscreen");
+				}
+				optionsPanel.add(windowSizeBtn);
+				optionsPanel.add(Box.createVerticalGlue());
+				if(fullscreen) {
+					Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+					optionsLabel.setFont(new Font("TimesRoman", Font.BOLD, 100));
+					updateSize(windowSizeBtn, screen.getWidth() / 4, screen.getHeight() / 8);
+					windowSizeBtn.setFont(new Font("TimesRoman", Font.PLAIN, 50));
+				}
+				break;
 			}
 		}
 	}
