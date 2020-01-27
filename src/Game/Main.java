@@ -747,16 +747,12 @@ public class Main {
 						pauseLabel.setForeground(Color.WHITE);
 						final InterThreadFlag flag = new InterThreadFlag(true);
 						pauseLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-						pauseLabel.setFont(new Font("TimesRoman", Font.BOLD, 30));
-						pausePanel.add(Box.createVerticalStrut(100));
+						pausePanel.add(Box.createVerticalGlue());
 						pausePanel.add(pauseLabel);
-						pausePanel.add(Box.createVerticalStrut(75));
+						pausePanel.add(Box.createVerticalGlue());
 						JButton continueButton = new JButton("Return To Game");
 						continueButton.setFocusable(false);
 						continueButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-						continueButton.setMinimumSize(new Dimension(200, 50));
-						continueButton.setMaximumSize(new Dimension(200, 50));
-						continueButton.setPreferredSize(new Dimension(200, 50));
 						continueButton.setBackground(Color.LIGHT_GRAY);
 						continueButton.addActionListener(new ActionListener() {
 							@Override
@@ -771,13 +767,10 @@ public class Main {
 							}
 						});
 						pausePanel.add(continueButton);
-						pausePanel.add(Box.createVerticalStrut(50));
+						pausePanel.add(Box.createVerticalGlue());
 						JButton exitButton = new JButton("Exit To Menu");
 						exitButton.setFocusable(false);
 						exitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-						exitButton.setMinimumSize(new Dimension(200, 50));
-						exitButton.setMaximumSize(new Dimension(200, 50));
-						exitButton.setPreferredSize(new Dimension(200, 50));
 						exitButton.setBackground(Color.LIGHT_GRAY);
 						exitButton.addActionListener(new ActionListener() {
 							@Override
@@ -790,6 +783,22 @@ public class Main {
 							}
 						});
 						pausePanel.add(exitButton);
+						if(fullscreen) {
+							Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+							pauseLabel.setFont(new Font("TimesRoman", Font.BOLD, 100));
+							updateSize(continueButton, 3 * screen.getWidth() / 4, screen.getHeight() / 8);
+							continueButton.setFont(new Font("TimesRoman", Font.PLAIN, 50));
+							updateSize(exitButton, 3 * screen.getWidth() / 4, screen.getHeight() / 8);
+							exitButton.setFont(new Font("TimesRoman", Font.PLAIN, 50));
+							pausePanel.add(Box.createVerticalGlue());
+							pausePanel.add(Box.createRigidArea(new Dimension((int) (3 * screen.getWidth() / 4), (int) (screen.getHeight() / 8))));
+						} else {
+							pauseLabel.setFont(new Font("TimesRoman", Font.BOLD, 30));
+							updateSize(continueButton, 200, 50);
+							updateSize(exitButton, 200, 50);
+							pausePanel.add(Box.createVerticalGlue());
+							pausePanel.add(Box.createRigidArea(new Dimension(200, 50)));
+						}
 						window.add(pausePanel);
 						Thread.yield();
 						window.remove(rp);
@@ -887,10 +896,15 @@ public class Main {
 				levelNumber = 1;
 				loadLevel();
 				gp = new GamePanel();
-				window.setSize(700,500);
+				if(fullscreen) {
+					window.setSize(Toolkit.getDefaultToolkit().getScreenSize());
+				} else {
+					window.setSize(700,500);
+				}
 				window.remove(loadingPanel);
 				window.add(gp);
 				window.setVisible(true);
+				cameraY = (int) (player.get(0).getY() - (window.getHeight() / 2));
 				while(STATE.equals("play0")) {
 					Date before = new Date();
 					if(isEscapePressed) {
@@ -901,16 +915,12 @@ public class Main {
 						pauseLabel.setForeground(Color.WHITE);
 						final InterThreadFlag flag = new InterThreadFlag(true);
 						pauseLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-						pauseLabel.setFont(new Font("TimesRoman", Font.BOLD, 30));
-						pausePanel.add(Box.createVerticalStrut(100));
+						pausePanel.add(Box.createVerticalGlue());
 						pausePanel.add(pauseLabel);
-						pausePanel.add(Box.createVerticalStrut(75));
+						pausePanel.add(Box.createVerticalGlue());
 						JButton continueButton = new JButton("Return To Game");
 						continueButton.setFocusable(false);
 						continueButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-						continueButton.setMinimumSize(new Dimension(200, 50));
-						continueButton.setMaximumSize(new Dimension(200, 50));
-						continueButton.setPreferredSize(new Dimension(200, 50));
 						continueButton.setBackground(Color.LIGHT_GRAY);
 						continueButton.addActionListener(new ActionListener() {
 							@Override
@@ -925,13 +935,10 @@ public class Main {
 							}
 						});
 						pausePanel.add(continueButton);
-						pausePanel.add(Box.createVerticalStrut(50));
+						pausePanel.add(Box.createVerticalGlue());
 						JButton exitButton = new JButton("Exit To Menu");
 						exitButton.setFocusable(false);
 						exitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-						exitButton.setMinimumSize(new Dimension(200, 50));
-						exitButton.setMaximumSize(new Dimension(200, 50));
-						exitButton.setPreferredSize(new Dimension(200, 50));
 						exitButton.setBackground(Color.LIGHT_GRAY);
 						exitButton.addActionListener(new ActionListener() {
 							@Override
@@ -944,6 +951,22 @@ public class Main {
 							}
 						});
 						pausePanel.add(exitButton);
+						if(fullscreen) {
+							Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+							pauseLabel.setFont(new Font("TimesRoman", Font.BOLD, 100));
+							updateSize(continueButton, 3 * screen.getWidth() / 4, screen.getHeight() / 8);
+							continueButton.setFont(new Font("TimesRoman", Font.PLAIN, 50));
+							updateSize(exitButton, 3 * screen.getWidth() / 4, screen.getHeight() / 8);
+							exitButton.setFont(new Font("TimesRoman", Font.PLAIN, 50));
+							pausePanel.add(Box.createVerticalGlue());
+							pausePanel.add(Box.createRigidArea(new Dimension((int) (3 * screen.getWidth() / 4), (int) (screen.getHeight() / 8))));
+						} else {
+							pauseLabel.setFont(new Font("TimesRoman", Font.BOLD, 30));
+							updateSize(continueButton, 200, 50);
+							updateSize(exitButton, 200, 50);
+							pausePanel.add(Box.createVerticalGlue());
+							pausePanel.add(Box.createRigidArea(new Dimension(200, 50)));
+						}
 						window.add(pausePanel);
 						Thread.yield();
 						window.remove(gp);
@@ -951,16 +974,16 @@ public class Main {
 						while(flag.flag) {}
 					}
 					for(Player i: player) {
-						while(i.getX() - cameraX < 250) {
+						while(i.getX() - cameraX < window.getWidth() / 4) {
 							cameraX --;
 						}
-						while(i.getX() - cameraX > 450) {
+						while(i.getX() - cameraX > 3 * window.getWidth() / 4) {
 							cameraX ++;
 						}
-						while(i.getY() - cameraY < 150) {
+						while(i.getY() - cameraY < window.getHeight() / 4) {
 							cameraY --;
 						}
-						while(i.getY() - cameraY > 300) {
+						while(i.getY() - cameraY > 3 * window.getHeight() / 4) {
 							cameraY ++;
 						}
 					}
