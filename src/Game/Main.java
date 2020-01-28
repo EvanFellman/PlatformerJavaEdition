@@ -1083,16 +1083,16 @@ public class Main {
 						}
 					}
 					for(Player i: player) {
-						while((i.getX() - cameraX) < window.getWidth() / 4) {
+						while(i.getX() - cameraX < window.getWidth() / 4) {
 							cameraX --;
 						}
-						while((i.getX() - cameraX) > 3 * window.getWidth() / 4) {
+						while(i.getX() - cameraX > 3 * window.getWidth() / 4) {
 							cameraX ++;
 						}
-						while((i.getY() - cameraY) < window.getHeight() / 4) {
+						while(i.getY() - cameraY < window.getHeight() / 4) {
 							cameraY --;
 						}
-						while((i.getY() - cameraY) > 3 * window.getHeight() / 4) {
+						while(i.getY() - cameraY > 3 * window.getHeight() / 4) {
 							cameraY ++;
 						}
 					}
