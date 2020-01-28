@@ -13,6 +13,7 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,7 +31,7 @@ import javax.swing.JPanel;
 
 public class Main {
 	private static boolean editTemplates = false;
-	private static final double MAX_FRAMERATE = 60;
+	private static final double MAX_FRAMERATE = 65;
 	public static ArrayList<Thing> level = new ArrayList<Thing>();
 	public static Hashtable<Integer, Hashtable<Integer, Thing>> levelMapStable;
 	public static Hashtable<Integer, Hashtable<Integer, Thing>> levelMapMoving;
@@ -748,6 +749,7 @@ public class Main {
 					window.add(menuPanel);
 				}
 				window.repaint();
+				window.setVisible(true);
 				break;
 			case "random":
 				STATE="random0";
@@ -1005,16 +1007,16 @@ public class Main {
 						while(flag.flag) {}
 					}
 					for(Player i: player) {
-						while(i.getX() - cameraX < window.getWidth() / 4) {
+						while((i.getX() - cameraX) < window.getWidth() / 4) {
 							cameraX --;
 						}
-						while(i.getX() - cameraX > 3 * window.getWidth() / 4) {
+						while((i.getX() - cameraX) > 3 * window.getWidth() / 4) {
 							cameraX ++;
 						}
-						while(i.getY() - cameraY < window.getHeight() / 4) {
+						while((i.getY() - cameraY) < window.getHeight() / 4) {
 							cameraY --;
 						}
-						while(i.getY() - cameraY > 3 * window.getHeight() / 4) {
+						while((i.getY() - cameraY) > 3 * window.getHeight() / 4) {
 							cameraY ++;
 						}
 					}
@@ -1025,13 +1027,15 @@ public class Main {
 						after = new Date();
 					}
 				}
+				break;
 			 case "options":
 				STATE = "options0";
-				JPanel optionsPanel = new JPanel();
+				final JPanel optionsPanel = new JPanel();
 				optionsPanel.setBackground(Color.GRAY);
 				optionsPanel.setLayout(new BoxLayout(optionsPanel, 1));
 				window.add(optionsPanel);
-				JLabel optionsLabel = new JLabel("Options");
+				optionsPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+				final JLabel optionsLabel = new JLabel("Options");
 				optionsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 				optionsLabel.setForeground(Color.WHITE);
 				optionsPanel.add(optionsLabel);
@@ -1040,30 +1044,67 @@ public class Main {
 				windowSizeBtn.setBackground(Color.DARK_GRAY);
 				windowSizeBtn.setForeground(Color.WHITE);
 				windowSizeBtn.setFocusable(false);
+				final JButton backOptionsBtn = new JButton("Back");
 				windowSizeBtn.addActionListener(new ActionListener(){
 					@Override
 					public void actionPerformed(ActionEvent arg0){
 						fullscreen = !fullscreen;
+						Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
 						if(fullscreen) {
-							windowSizeBtn.setText("windowed");
+							window.setSize(Toolkit.getDefaultToolkit().getScreenSize());
+							windowSizeBtn.setText("Windowed");
+							optionsLabel.setFont(new Font("TimesRoman", Font.BOLD, 100));
+							updateSize(windowSizeBtn, screen.getWidth() / 4, screen.getHeight() / 8);
+							updateSize(backOptionsBtn, screen.getWidth() / 4, screen.getHeight() / 8);
+							windowSizeBtn.setFont(new Font("TimesRoman", Font.PLAIN, 50));
+							backOptionsBtn.setFont(new Font("TimesRoman", Font.PLAIN, 50));
 						} else {
-							windowSizeBtn.setText("fullscreen");
+							window.setSize(200, 300);
+							optionsLabel.setFont(new Font("TimesRoman", Font.BOLD, 30));
+							updateSize(windowSizeBtn, 120, 40);
+							updateSize(backOptionsBtn, 120, 40);
+							windowSizeBtn.setFont(new Font("TimesRoman", Font.PLAIN, 12));
+							backOptionsBtn.setFont(new Font("TimesRoman", Font.PLAIN, 12));
+							windowSizeBtn.setText("Fullscreen");
 						}
+						writeOptions();
 					}
 				});
 				windowSizeBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
-				if(fullscreen) {
-					windowSizeBtn.setText("windowed");
-				} else {
-					windowSizeBtn.setText("fullscreen");
-				}
 				optionsPanel.add(windowSizeBtn);
 				optionsPanel.add(Box.createVerticalGlue());
+				backOptionsBtn.setBackground(Color.DARK_GRAY);
+				backOptionsBtn.setForeground(Color.WHITE);
+				backOptionsBtn.setFocusable(false);
+				backOptionsBtn.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						window.remove(optionsPanel);
+						STATE = "menu";
+						window.repaint();
+						window.setVisible(true);
+					}
+				});
+				backOptionsBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+				optionsPanel.add(backOptionsBtn);
+				optionsPanel.add(Box.createVerticalGlue());
+				Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
 				if(fullscreen) {
-					Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+					window.setSize(screen);
+					windowSizeBtn.setText("Windowed");
 					optionsLabel.setFont(new Font("TimesRoman", Font.BOLD, 100));
 					updateSize(windowSizeBtn, screen.getWidth() / 4, screen.getHeight() / 8);
+					updateSize(backOptionsBtn, screen.getWidth() / 4, screen.getHeight() / 8);
 					windowSizeBtn.setFont(new Font("TimesRoman", Font.PLAIN, 50));
+					backOptionsBtn.setFont(new Font("TimesRoman", Font.PLAIN, 50));
+				} else {
+					window.setSize(200, 300);
+					optionsLabel.setFont(new Font("TimesRoman", Font.BOLD, 30));
+					updateSize(windowSizeBtn, 120, 40);
+					updateSize(backOptionsBtn, 120, 40);
+					windowSizeBtn.setFont(new Font("TimesRoman", Font.PLAIN, 12));
+					backOptionsBtn.setFont(new Font("TimesRoman", Font.PLAIN, 12));
+					windowSizeBtn.setText("Fullscreen");
 				}
 				break;
 			}
@@ -1475,9 +1516,8 @@ public class Main {
 	}
 	
 	public static void loadOptions() {
-		FileReader optionsReader = null;
 		try {
-			optionsReader = new FileReader(new File("./config/options.bin"));
+			FileReader optionsReader = new FileReader(new File("./config/options.bin"));
 			if((char)optionsReader.read() == '1') {
 				fullscreen = true;
 			} else {
@@ -1493,7 +1533,27 @@ public class Main {
 					Main.clip.stop();
 				}
 			}
+			optionsReader.close();
 		} catch (IOException e) {	}
+	}
+	
+	public static void writeOptions() {
+		try {
+			FileWriter optionsWriter = new FileWriter(new File("./config/options.bin"));
+			String output = "";
+			if(fullscreen) {
+				output += "1";
+			} else {
+				output += "0";
+			}
+			if(Main.clip.isActive()) {
+				output += "1";
+			} else {
+				output += "0";
+			}
+			optionsWriter.write(output);
+			optionsWriter.close();
+		} catch(Exception e) {	}
 	}
 }
 
@@ -1508,6 +1568,7 @@ class MKeyListener extends KeyAdapter {
 				Main.clip.start();
 		        Main.clip.loop(Clip.LOOP_CONTINUOUSLY); 
 			}
+			Main.writeOptions();
 			break;
 		case KeyEvent.VK_Z:
 			Main.isZPressed = true;
