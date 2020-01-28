@@ -1078,7 +1078,9 @@ public class Main {
 						Thread.yield();
 						window.remove(gp);
 						window.setVisible(true);
-						while(flag.flag) {}
+						while(flag.flag) {
+							Thread.sleep(1000 / 30);
+						}
 					}
 					for(Player i: player) {
 						while((i.getX() - cameraX) < window.getWidth() / 4) {
