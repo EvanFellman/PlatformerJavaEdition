@@ -70,6 +70,7 @@ public class Main {
 	private static MKeyListener keyListener = new MKeyListener();
 	public static String paint = "wall";
 	private static JPanel editButtonPanel;
+	public static  JButton enemySpeedEdit;
 	private static JButton eraseEdit;
 	private static JButton wallEdit;
 	private static JButton blueGateEdit;
@@ -345,7 +346,7 @@ public class Main {
 		});
 		editNavButtonPanel.add(nextLevelEdit);
 		editNavButtonPanel.add(Box.createRigidArea(new Dimension(100, 10)));
-		final JButton enemySpeedEdit = new JButton("slow speed");
+		enemySpeedEdit = new JButton("slow speed");
 		enemySpeedEdit.setFocusable(false);
 		enemySpeedEdit.addActionListener(new ActionListener() {
 			@Override
@@ -515,8 +516,10 @@ public class Main {
 		powerUpEdit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if(paint == "shield") {
+				if(paint.equals("shield")) {
 					paint = "double jump";
+				} else if(paint.equals("double jump")) {
+					paint = "spike destroyer";
 				} else {
 					paint = "shield";
 				}
@@ -712,6 +715,9 @@ public class Main {
 						break;
 					case "double jump":
 						image.setRGB(x, y, (new Color(225, 0, 0).getRGB()));
+						break;
+					case "spike destroyer":
+						image.setRGB(x,  y, (new Color(224, 0, 0).getRGB()));
 						break;
 					}
 				}
@@ -1161,6 +1167,7 @@ public class Main {
 		switch(Main.paint){
 		case "shield":
 		case "double jump":
+		case "spike destroyer":
 			highlightButton(powerUpEdit, editButtonPanel);
 			break;
 		case "spike":
@@ -1273,6 +1280,8 @@ public class Main {
 		
 		if(paint.equals("double jump")) {
 			powerUpEdit.setText("Double Jump");
+		} else if(paint.equals("spike destroyer")) {
+			powerUpEdit.setText("Spike Destroyer");
 		} else {
 			powerUpEdit.setText("Shield");
 		}
@@ -1459,6 +1468,8 @@ public class Main {
 							level.add(new Shield(SPRITE_WIDTH * x, SPRITE_HEIGHT * y));
 						} else if(pixel.getRed() == 225 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
 							level.add(new DoubleJump(SPRITE_WIDTH * x, SPRITE_HEIGHT * y));
+						} else if(pixel.getRed() == 224 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
+							level.add(new SpikeDestroyer(SPRITE_WIDTH * x, SPRITE_HEIGHT * y));
 						}
 					}
 				}

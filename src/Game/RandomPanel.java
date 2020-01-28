@@ -208,6 +208,8 @@ public class RandomPanel extends javax.swing.JPanel {
 					templateLevel.add(new Shield(Main.SPRITE_WIDTH * x, Main.SPRITE_HEIGHT * y));
 				} else if(pixel.getRed() == 225 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
 					templateLevel.add(new DoubleJump(Main.SPRITE_WIDTH * x, Main.SPRITE_HEIGHT * y));
+				} else if(pixel.getRed() == 224 && pixel.getGreen() == 0 && pixel.getBlue() == 0) {
+					templateLevel.add(new SpikeDestroyer(Main.SPRITE_WIDTH * x, Main.SPRITE_HEIGHT * y));
 				}
 			}
 		}

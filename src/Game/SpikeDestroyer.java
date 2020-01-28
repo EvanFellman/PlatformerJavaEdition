@@ -1,22 +1,21 @@
 package Game;
 
-public class DoubleJump extends Thing{
+public class SpikeDestroyer extends Thing {
 
-	public DoubleJump(double x, double y) {
-		super(x, y, "double jump", 5, 3);
+	public SpikeDestroyer(double x, double y) {
+		super(x, y, "spike destroyer", 1, 5);
 	}
 	
-	@Override
 	public boolean move() {
 		for(Player p: Main.player) {
 			if(p.isTouching(this)) {
-				p.playerState.setValue(PlayerState.DOUBLEJUMP);
+				p.playerState.setValue(PlayerState.SPIKEDESTROYER);
 				this.die();
 			}
 		}
 		return false;
 	}
-	
+
 	@Override
 	public void die() {
 		Main.removeFromMap(this);

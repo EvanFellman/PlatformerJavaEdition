@@ -92,7 +92,7 @@ public class Player extends Thing {
 			for(int i = 0; i < Main.level.size(); i++) {
 				Thing a = Main.level.get(i);
 				if(!this.equals(a) && this.isTouching(a)) {
-					if(a.id.contains("wall") || a.id.equals("spike") || (!this.equals(a) && a.id.equals("player"))) {
+					if(a.id.contains("wall") || (a.id.equals("spike") && !this.playerState.equals(PlayerState.SPIKEDESTROYER)) || (!this.equals(a) && a.id.equals("player"))) {
 						if(a.y > this.y) {
 							if(a.id.equals("wall moving")) {
 								if(a.dy < 0) {
@@ -131,7 +131,11 @@ public class Player extends Thing {
 							}
 						}
 						if(a.id.equals("spike")) {
-							this.die();
+							if(this.playerState.equals(PlayerState.SPIKEDESTROYER)) {
+								a.die();
+							} else {
+								this.die();
+							}
 						}
 					} else if(a.id.equals("next level")) {
 						Main.levelNumber += 1;
@@ -200,11 +204,13 @@ class PlayerState{
 	public final static Integer DEAD = 1;
 	public final static Integer SHIELD = 2;
 	public final static Integer DOUBLEJUMP = 3;
+	public final static Integer SPIKEDESTROYER = 4;
 	private final static BufferedImage[] IMAGES = {
 			Main.texturedImg.getSubimage(1 * Main.SPRITE_WIDTH, 0, Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT),
 			Main.texturedImg.getSubimage(4 * Main.SPRITE_WIDTH, 4 * Main.SPRITE_HEIGHT, Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT),
 			Main.texturedImg.getSubimage(5 * Main.SPRITE_WIDTH, 0, Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT),
-			Main.texturedImg.getSubimage(5 * Main.SPRITE_WIDTH, 2 * Main.SPRITE_HEIGHT, Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT)
+			Main.texturedImg.getSubimage(5 * Main.SPRITE_WIDTH, 2 * Main.SPRITE_HEIGHT, Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT),
+			Main.texturedImg.getSubimage(0 * Main.SPRITE_WIDTH, 5 * Main.SPRITE_HEIGHT, Main.SPRITE_WIDTH, Main.SPRITE_HEIGHT)
 	};
 	public int timer;
 	private Integer value;

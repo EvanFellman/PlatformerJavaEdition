@@ -92,6 +92,24 @@ public class EditPanel extends JPanel implements MouseMotionListener, MouseListe
 					a = Main.getFromMapStable(mouseXLoc, mouseYLoc);
 				}
 				if(a != null) {
+					if(a instanceof EnemyBullet) {
+						Main.enemySpeed = ((EnemyBullet) a).speed;
+					} else if(a instanceof EnemyDumb) {
+						Main.enemySpeed = ((EnemyDumb) a).speed;
+					} else if(a instanceof EnemyNoJump) {
+						Main.enemySpeed = ((EnemyNoJump) a).speed;
+					} else if(a instanceof EnemySmart) {
+						Main.enemySpeed = ((EnemySmart) a).speed;
+					} else if(a instanceof Shooter) {
+						Main.enemySpeed = ((Shooter) a).speed;
+					} else if(a instanceof WallMoving) {
+						Main.enemySpeed = ((WallMoving) a).speed;
+					}
+					if(Main.enemySpeed == Main.FAST_SPEED) {
+						Main.enemySpeedEdit.setText("fast speed");
+					} else {
+						Main.enemySpeedEdit.setText("slow speed");
+					}
 					switch(a.id) {
 					case "enemy dumb":
 						if(((EnemyDumb) a).goLeft) {
@@ -159,6 +177,9 @@ public class EditPanel extends JPanel implements MouseMotionListener, MouseListe
 							break;
 						case "double jump":
 							toInsert = new DoubleJump(mouseX, mouseY);
+							break;
+						case "spike destroyer":
+							toInsert = new SpikeDestroyer(mouseX, mouseY);
 							break;
 						case "shield":
 							toInsert = new Shield(mouseX, mouseY);

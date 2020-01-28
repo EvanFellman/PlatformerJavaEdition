@@ -6,6 +6,7 @@ public class Spike extends Thing {
 		super(x, y, "spike", 1, 3);
 	}
 	
+	@SuppressWarnings("unlikely-arg-type")
 	public boolean move() {
 		for(int i = -1; i <= 1; i++) {
 			for(int j = -1; j <= 1; j++) {
@@ -14,12 +15,21 @@ public class Spike extends Thing {
 					if(a.id.contains("enemy")) {
 						a.die();
 					} else if(a.id.equals("player")) {
-						a.die();
-						return Main.deadPlayer;
+						if(((Player) a).playerState.equals(PlayerState.SPIKEDESTROYER)) {
+							this.die();
+						} else {
+							a.die();
+							return Main.deadPlayer;
+						}
 					}
 				}
 			}
 		}
 		return false;
+	}
+	
+	public void die() {
+		Main.removeFromMap(this);
+		Main.level.remove(this);
 	}
 }
