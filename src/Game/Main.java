@@ -1044,6 +1044,32 @@ public class Main {
 				windowSizeBtn.setBackground(Color.DARK_GRAY);
 				windowSizeBtn.setForeground(Color.WHITE);
 				windowSizeBtn.setFocusable(false);
+				final JButton musicBtn = new JButton();
+				musicBtn.setBackground(Color.DARK_GRAY);
+				musicBtn.setForeground(Color.WHITE);
+				musicBtn.setFocusable(false);
+				musicBtn.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						if(Main.clip.isActive()) {
+							Main.clip.stop();
+							musicBtn.setText("Music off");
+						} else {
+							Main.clip.start();
+					        Main.clip.loop(Clip.LOOP_CONTINUOUSLY); 
+					        musicBtn.setText("Music on");
+						}
+						writeOptions();
+					}
+				});
+				musicBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+				if(Main.clip.isActive()) {
+					musicBtn.setText("Music on");
+				} else {
+					musicBtn.setText("Music off");
+				}
+				optionsPanel.add(musicBtn);
+				optionsPanel.add(Box.createVerticalGlue());
 				final JButton backOptionsBtn = new JButton("Back");
 				windowSizeBtn.addActionListener(new ActionListener(){
 					@Override
@@ -1056,15 +1082,19 @@ public class Main {
 							optionsLabel.setFont(new Font("TimesRoman", Font.BOLD, 100));
 							updateSize(windowSizeBtn, screen.getWidth() / 4, screen.getHeight() / 8);
 							updateSize(backOptionsBtn, screen.getWidth() / 4, screen.getHeight() / 8);
+							updateSize(musicBtn, screen.getWidth() / 4, screen.getHeight() / 8);
 							windowSizeBtn.setFont(new Font("TimesRoman", Font.PLAIN, 50));
 							backOptionsBtn.setFont(new Font("TimesRoman", Font.PLAIN, 50));
+							musicBtn.setFont(new Font("TimesRoman", Font.PLAIN, 50));
 						} else {
 							window.setSize(200, 300);
 							optionsLabel.setFont(new Font("TimesRoman", Font.BOLD, 30));
 							updateSize(windowSizeBtn, 120, 40);
 							updateSize(backOptionsBtn, 120, 40);
+							updateSize(musicBtn, 120, 40);
 							windowSizeBtn.setFont(new Font("TimesRoman", Font.PLAIN, 12));
 							backOptionsBtn.setFont(new Font("TimesRoman", Font.PLAIN, 12));
+							musicBtn.setFont(new Font("TimesRoman", Font.PLAIN, 12));
 							windowSizeBtn.setText("Fullscreen");
 						}
 						writeOptions();
@@ -1090,20 +1120,22 @@ public class Main {
 				optionsPanel.add(Box.createVerticalGlue());
 				Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
 				if(fullscreen) {
-					window.setSize(screen);
 					windowSizeBtn.setText("Windowed");
 					optionsLabel.setFont(new Font("TimesRoman", Font.BOLD, 100));
 					updateSize(windowSizeBtn, screen.getWidth() / 4, screen.getHeight() / 8);
 					updateSize(backOptionsBtn, screen.getWidth() / 4, screen.getHeight() / 8);
+					updateSize(musicBtn, screen.getWidth() / 4, screen.getHeight() / 8);
 					windowSizeBtn.setFont(new Font("TimesRoman", Font.PLAIN, 50));
 					backOptionsBtn.setFont(new Font("TimesRoman", Font.PLAIN, 50));
+					musicBtn.setFont(new Font("TimesRoman", Font.PLAIN, 50));
 				} else {
-					window.setSize(200, 300);
 					optionsLabel.setFont(new Font("TimesRoman", Font.BOLD, 30));
 					updateSize(windowSizeBtn, 120, 40);
 					updateSize(backOptionsBtn, 120, 40);
+					updateSize(musicBtn, 120, 40);
 					windowSizeBtn.setFont(new Font("TimesRoman", Font.PLAIN, 12));
 					backOptionsBtn.setFont(new Font("TimesRoman", Font.PLAIN, 12));
+					musicBtn.setFont(new Font("TimesRoman", Font.PLAIN, 12));
 					windowSizeBtn.setText("Fullscreen");
 				}
 				break;

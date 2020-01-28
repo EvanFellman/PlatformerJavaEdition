@@ -102,7 +102,7 @@ public class EnemySmart extends Enemy {
 				boolean somethingToJumpTo = false;
 				boolean somethingToFallTo = false;
 				if(this.dx > 0) {
-					for(int i = 1; i <= (this.speed == Main.FAST_SPEED ? 3 : 2); i++) {
+					for(int i = 1; i <= (this.speed == Main.FAST_SPEED ? 4 : 3); i++) {
 						for(int j = -2; j <= 1; j++) {
 							Thing a = Main.getFromMapStable(this.x + (i * Main.SPRITE_WIDTH), this.y + (j * Main.SPRITE_HEIGHT));
 							Thing aboveA = Main.getFromMapStable(this.x + (i * Main.SPRITE_WIDTH), this.y + ((j - 1) * Main.SPRITE_HEIGHT));
@@ -115,7 +115,7 @@ public class EnemySmart extends Enemy {
 							}
 						}
 					}
-					for(int i = 0; i <= (this.speed == Main.FAST_SPEED ? 3 : 2); i++) {
+					for(int i = 0; i <= (this.speed == Main.FAST_SPEED ? 4 : 3); i++) {
 						for(int j = 2; j <= 5; j++) {
 							Thing a = Main.getFromMapStable(this.x + (i * Main.SPRITE_WIDTH), this.y + (j * Main.SPRITE_HEIGHT));
 							Thing aboveA = Main.getFromMapStable(this.x + (i * Main.SPRITE_WIDTH), this.y + ((j - 1) * Main.SPRITE_HEIGHT));
