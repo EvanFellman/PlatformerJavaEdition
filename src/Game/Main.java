@@ -90,6 +90,8 @@ public class Main {
 	public static JPanel menuPanel;
 	public static JPanel menuPanelFull;
 	public static BufferedImage texturedImg;
+	public static int highscore;
+	public static JPanel scorePanel;
 	public static void main(String[] args) throws IOException, InterruptedException {
 		try {
 			texturedImg = ImageIO.read(new File("config/textures.png"));
@@ -757,6 +759,70 @@ public class Main {
 				window.repaint();
 				window.setVisible(true);
 				break;
+			case "score":
+				STATE="score0";
+				scorePanel = new JPanel();
+				scorePanel.setBackground(Color.GRAY);
+				scorePanel.setLayout(new BoxLayout(scorePanel, 1));
+				JLabel scoreLabel = new JLabel("Score: " + Integer.toString(rp.score) + " pts");
+				scoreLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+				scoreLabel.setForeground(Color.WHITE);
+				JLabel highscoreLabel = new JLabel("Highscore: " + Integer.toString(highscore) + " pts");
+				highscoreLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+				highscoreLabel.setForeground(Color.WHITE);
+				JPanel exitBtnsPanel = new JPanel();
+				exitBtnsPanel.setBackground(Color.GRAY);
+				exitBtnsPanel.setLayout(new BoxLayout(exitBtnsPanel, BoxLayout.X_AXIS));
+				JButton exitToMenuBtn = new JButton("Exit to Menu");
+				exitToMenuBtn.setBackground(Color.DARK_GRAY);
+				exitToMenuBtn.setForeground(Color.WHITE);
+				exitToMenuBtn.setFocusable(false);
+				exitToMenuBtn.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						STATE = "menu";
+						window.remove(scorePanel);
+					}
+				});
+				JButton playAgainBtn = new JButton("Play Again");
+				playAgainBtn.setBackground(Color.DARK_GRAY);
+				playAgainBtn.setForeground(Color.WHITE);
+				playAgainBtn.setFocusable(false);
+				playAgainBtn.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						STATE = "random";
+						window.remove(scorePanel);
+					}
+				});
+				if(fullscreen) {
+					Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+					updateSize(exitToMenuBtn, screen.getWidth() / 4, screen.getHeight() / 8);
+					updateSize(playAgainBtn, screen.getWidth() / 4, screen.getHeight() / 8);
+					exitToMenuBtn.setFont(new Font("TimesRoman", Font.BOLD, 40));
+					playAgainBtn.setFont(new Font("TimesRoman", Font.BOLD, 40));
+					scoreLabel.setFont(new Font("TimesRoman", Font.BOLD, 100));
+					highscoreLabel.setFont(new Font("TimesRoman", Font.BOLD, 50));					
+				} else {
+					window.setSize(250, 250);
+					scoreLabel.setFont(new Font("TimesRoman", Font.BOLD, 25));
+					highscoreLabel.setFont(new Font("TimesRoman", Font.BOLD, 20));
+				}
+				window.add(scorePanel);
+				scorePanel.add(Box.createVerticalGlue());  
+				scorePanel.add(scoreLabel);
+				scorePanel.add(highscoreLabel);
+				scorePanel.add(Box.createVerticalGlue());
+				scorePanel.add(exitBtnsPanel);
+				scorePanel.add(Box.createVerticalGlue());
+				exitBtnsPanel.add(Box.createHorizontalGlue());
+				exitBtnsPanel.add(exitToMenuBtn);
+				exitBtnsPanel.add(Box.createHorizontalGlue());
+				exitBtnsPanel.add(playAgainBtn);
+				exitBtnsPanel.add(Box.createHorizontalGlue());
+				window.repaint();
+				window.setVisible(true);
+				break;
 			case "random":
 				STATE="random0";
 				isBlueGateOpen = false;
@@ -1084,7 +1150,7 @@ public class Main {
 						Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
 						if(fullscreen) {
 							window.setSize(Toolkit.getDefaultToolkit().getScreenSize());
-							windowSizeBtn.setText("Windowed");
+							windowSizeBtn.setText("Fullscreen");
 							optionsLabel.setFont(new Font("TimesRoman", Font.BOLD, 100));
 							updateSize(windowSizeBtn, screen.getWidth() / 4, screen.getHeight() / 8);
 							updateSize(backOptionsBtn, screen.getWidth() / 4, screen.getHeight() / 8);
@@ -1101,7 +1167,7 @@ public class Main {
 							windowSizeBtn.setFont(new Font("TimesRoman", Font.PLAIN, 12));
 							backOptionsBtn.setFont(new Font("TimesRoman", Font.PLAIN, 12));
 							musicBtn.setFont(new Font("TimesRoman", Font.PLAIN, 12));
-							windowSizeBtn.setText("Fullscreen");
+							windowSizeBtn.setText("Windowed");
 						}
 						writeOptions();
 					}
@@ -1126,7 +1192,7 @@ public class Main {
 				optionsPanel.add(Box.createVerticalGlue());
 				Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
 				if(fullscreen) {
-					windowSizeBtn.setText("Windowed");
+					windowSizeBtn.setText("Fullscreen");
 					optionsLabel.setFont(new Font("TimesRoman", Font.BOLD, 100));
 					updateSize(windowSizeBtn, screen.getWidth() / 4, screen.getHeight() / 8);
 					updateSize(backOptionsBtn, screen.getWidth() / 4, screen.getHeight() / 8);
@@ -1142,7 +1208,7 @@ public class Main {
 					windowSizeBtn.setFont(new Font("TimesRoman", Font.PLAIN, 12));
 					backOptionsBtn.setFont(new Font("TimesRoman", Font.PLAIN, 12));
 					musicBtn.setFont(new Font("TimesRoman", Font.PLAIN, 12));
-					windowSizeBtn.setText("Fullscreen");
+					windowSizeBtn.setText("Windowed");
 				}
 				break;
 			}
@@ -1576,6 +1642,12 @@ public class Main {
 					Main.clip.stop();
 				}
 			}
+			highscore = 0;
+			int c;
+			while((c = optionsReader.read()) != -1) {
+				highscore *= 10;
+				highscore += Character.getNumericValue((char) c);
+			}
 			optionsReader.close();
 		} catch (IOException e) {	}
 	}
@@ -1594,6 +1666,7 @@ public class Main {
 			} else {
 				output += "0";
 			}
+			output += Integer.toString(highscore);
 			optionsWriter.write(output);
 			optionsWriter.close();
 		} catch(Exception e) {	}
@@ -1618,9 +1691,8 @@ class MKeyListener extends KeyAdapter {
 			break;
 		case KeyEvent.VK_SPACE:
 			Main.isSpacePressed = true;
-			if(Main.STATE.equals("menu0")) {
-				Main.window.remove(Main.menuPanel);
-				Main.window.remove(Main.menuPanelFull);
+			if(Main.STATE.equals("score0")) {
+				Main.window.remove(Main.scorePanel);
 				Main.STATE="random";
 			}
 			break;

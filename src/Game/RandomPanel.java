@@ -12,8 +12,10 @@ public class RandomPanel extends javax.swing.JPanel {
 	private ArrayList<BufferedImage> templates;
 	private int nextX;
 	private int nextY;
+	public int score;
 	public RandomPanel() {
 		super();
+		this.score = 0;
 		Main.deadPlayer = false;
 		templates = new ArrayList<BufferedImage>();
 		int i = 1;
@@ -67,7 +69,17 @@ public class RandomPanel extends javax.swing.JPanel {
 			}
 			Main.deadPlayerCounter --;
 			if(Main.deadPlayerCounter == 0) {
-				Main.STATE = "menu";
+				this.score = 0;
+				for(Player p : Main.player) {
+					if(p.getX() > score) {
+						score = (int) p.getX();
+					}
+				}
+				if(this.score > Main.highscore) {
+					Main.highscore = this.score;
+					Main.writeOptions();
+				}
+				Main.STATE = "score";
 				Main.window.remove(Main.rp);
 				Main.window.repaint();
 			}
