@@ -994,6 +994,7 @@ public class Main {
 				loadingPanel.setBackground(Color.DARK_GRAY);
 				loadingPanel.add(Box.createVerticalStrut(200));
 				final JLabel loadingLabel = new JLabel("Loading...");
+				// Hey, I'm Evan and I think lame games are cool
 				loadingLabel.setFont(new Font("TimesRoman", Font.BOLD, 30));
 				loadingLabel.setForeground(Color.WHITE);
 				loadingLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
