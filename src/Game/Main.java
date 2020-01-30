@@ -11,10 +11,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
@@ -93,6 +96,66 @@ public class Main {
 	public static int highscore;
 	public static JPanel scorePanel;
 	public static void main(String[] args) throws IOException, InterruptedException {
+		window = new JFrame();
+		final JPanel loadingPanel = new JPanel();
+		loadingPanel.setLayout(new BoxLayout(loadingPanel, 1));
+		loadingPanel.setBackground(Color.DARK_GRAY);
+		loadingPanel.add(Box.createVerticalGlue());
+		final JLabel loadingLabel = new JLabel("Loading...");
+		loadingLabel.setFont(new Font("TimesRoman", Font.BOLD, 30));
+		loadingLabel.setForeground(Color.WHITE);
+		loadingLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+		loadingPanel.add(loadingLabel);
+		loadingPanel.add(Box.createVerticalGlue());
+		window.add(loadingPanel);
+		window.setSize(300, 200);
+		window.setVisible(true);
+		File configFile = new File("config");
+		if(!configFile.exists()) {
+			configFile.mkdir();
+			String myLink = "https://raw.githubusercontent.com/evanfellman/PlatformerJavaEdition/master/config/";
+			boolean flag = true;
+			int i = 0;
+			while(flag) {
+				try {
+					URL test = new URL(myLink + Integer.toString(i) + ".png");
+					BufferedImage image = ImageIO.read(test);
+					ImageIO.write(image, "PNG", new File("config/" + Integer.toString(i) + ".png"));
+					i++;
+				} catch(Exception e) {
+					flag = false;
+				}
+			}
+			try {
+				BufferedInputStream musicFromGitHub = new BufferedInputStream(new URL(myLink + "music.wav").openStream());
+				FileOutputStream musicOut = new FileOutputStream("config/music.wav");
+				byte data[] = new byte[1024];
+			    int byteContent;
+			    while ((byteContent = musicFromGitHub.read(data, 0, 1024)) != -1) {
+			        musicOut.write(data, 0, byteContent);
+			    }
+			    musicOut.close();
+			    musicFromGitHub.close();
+			} catch(Exception e) {	}
+			try {
+				URL test = new URL(myLink + "background.png");
+				BufferedImage image = ImageIO.read(test);
+				ImageIO.write(image, "PNG", new File("config/background.png"));
+				i++;
+			} catch(Exception e) {	}
+			try {
+				URL test = new URL(myLink + "textures.png");
+				BufferedImage image = ImageIO.read(test);
+				ImageIO.write(image, "PNG", new File("config/textures.png"));
+				i++;
+			} catch(Exception e) {	}
+			try {
+				File optionsFile = new File("config/options.bin");
+				FileWriter writer = new FileWriter(optionsFile);
+				writer.write("000");
+				writer.close();
+			} catch(Exception e) {	}
+		}
 		try {
 			texturedImg = ImageIO.read(new File("config/textures.png"));
 		} catch(Exception e) {	}
@@ -106,7 +169,6 @@ public class Main {
 			System.out.println(e);
 		}
 		background = ImageIO.read(new File("./config/background.png"));
-		window = new JFrame();
 		window.setResizable(false);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.addKeyListener(keyListener);
@@ -726,7 +788,7 @@ public class Main {
 				if(existsAPlayer) {
 					File outFile;
 					if(!editTemplates) {
-						outFile = new File("level" + Integer.toString(levelNumber) + ".png");
+						outFile = new File("config/level" + Integer.toString(levelNumber) + ".png");
 					} else {
 						outFile = new File("config/" + Integer.toString(levelNumber) + ".png");
 					}
@@ -744,6 +806,7 @@ public class Main {
 		highlightButton(wallEdit, editButtonPanel);		
 		loadOptions();
 		window.setVisible(true);
+		window.remove(loadingPanel);
 		while(true) {
 			Thread.sleep(1/30);
 			switch(STATE) {
@@ -753,7 +816,7 @@ public class Main {
 					window.setExtendedState(JFrame.MAXIMIZED_BOTH);
 					window.add(menuPanelFull);
 				} else {
-					window.setSize(200,300);
+					window.setSize(200, 300);
 					window.add(menuPanel);
 				}
 				window.repaint();
@@ -989,20 +1052,21 @@ public class Main {
 				break;
 			case "play":
 				STATE="play0";
-				final JPanel loadingPanel = new JPanel();
-				loadingPanel.setLayout(new BoxLayout(loadingPanel, 1));
-				loadingPanel.setBackground(Color.DARK_GRAY);
-				loadingPanel.add(Box.createVerticalStrut(200));
-				final JLabel loadingLabel = new JLabel("Loading...");
-				// Hey, I'm Evan and I think lame games are cool
-				loadingLabel.setFont(new Font("TimesRoman", Font.BOLD, 30));
-				loadingLabel.setForeground(Color.WHITE);
-				loadingLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-				loadingPanel.add(loadingLabel);
+				if(fullscreen) {
+					loadingLabel.setFont(new Font("TimesRoman", Font.BOLD, 100));
+				} else {
+					loadingLabel.setFont(new Font("TimesRoman", Font.BOLD, 30));
+				}
 				window.add(loadingPanel);
 				window.repaint();
 				levelNumber = 1;
-				loadLevel();
+				try {
+					loadLevel();
+				} catch(NullPointerException e) {
+					window.remove(loadingPanel);
+					STATE="menu";
+					continue;
+				}
 				gp = new GamePanel();
 				if(fullscreen) {
 					window.setSize(Toolkit.getDefaultToolkit().getScreenSize());
@@ -1430,7 +1494,7 @@ public class Main {
 		deadPlayer = false;
 		deadPlayerCounter = 100;
 		if(!editTemplates) {
-			imgFile = new File("./level" + Integer.toString(levelNumber) + ".png");
+			imgFile = new File("./config/level" + Integer.toString(levelNumber) + ".png");
 		} else {
 			imgFile = new File("config/" + Integer.toString(levelNumber) + ".png");
 		}
