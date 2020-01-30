@@ -21,6 +21,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.Scanner;
+
 import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -110,10 +112,34 @@ public class Main {
 		window.add(loadingPanel);
 		window.setSize(300, 200);
 		window.setVisible(true);
+		String myLink = "https://raw.githubusercontent.com/evanfellman/PlatformerJavaEdition/master/config/";
+		try {
+			FileReader versionReader = new FileReader("config/version");
+			String localVersion = "";
+			int u = 0;
+			while((u = versionReader.read()) != -1) {
+				localVersion += (char) u;
+			}
+			Scanner s = new Scanner((new URL(myLink + "version")).openStream());
+			if(!localVersion.equals(s.nextLine())) {
+				File jarFile = new File("./platformer.jar");
+				jarFile.delete();
+				BufferedInputStream jarFromGitHub = new BufferedInputStream(new URL("https://raw.githubusercontent.com/evanfellman/PlatformerJavaEdition/master/platformer.jar").openStream());
+				FileOutputStream localJar = new FileOutputStream("./platformer.jar");
+				byte data[] = new byte[1024];
+			    int byteContent;
+			    while ((byteContent = jarFromGitHub.read(data, 0, 1024)) != -1) {
+			        localJar.write(data, 0, byteContent);
+			    }
+			    localJar.close();
+			    jarFromGitHub.close();
+			}
+			s.close();
+			versionReader.close();
+		} catch(Exception e) {	}
 		File configFile = new File("config");
 		if(!configFile.exists()) {
 			configFile.mkdir();
-			String myLink = "https://raw.githubusercontent.com/evanfellman/PlatformerJavaEdition/master/config/";
 			boolean flag = true;
 			int i = 0;
 			while(flag) {
@@ -150,7 +176,7 @@ public class Main {
 				i++;
 			} catch(Exception e) {	}
 			try {
-				File optionsFile = new File("config/options.bin");
+				File optionsFile = new File("config/options");
 				FileWriter writer = new FileWriter(optionsFile);
 				writer.write("000");
 				writer.close();
@@ -1695,7 +1721,7 @@ public class Main {
 	
 	public static void loadOptions() {
 		try {
-			FileReader optionsReader = new FileReader(new File("./config/options.bin"));
+			FileReader optionsReader = new FileReader(new File("./config/options"));
 			if((char)optionsReader.read() == '1') {
 				fullscreen = true;
 			} else {
@@ -1723,7 +1749,7 @@ public class Main {
 	
 	public static void writeOptions() {
 		try {
-			FileWriter optionsWriter = new FileWriter(new File("./config/options.bin"));
+			FileWriter optionsWriter = new FileWriter(new File("./config/options"));
 			String output = "";
 			if(fullscreen) {
 				output += "1";
