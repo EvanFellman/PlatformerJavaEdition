@@ -21,8 +21,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
-import java.util.Scanner;
-
+import java.util.Stack;
 import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -112,16 +111,23 @@ public class Main {
 		window.add(loadingPanel);
 		window.setSize(300, 200);
 		window.setVisible(true);
+		String onlineVersion = "";
 		String myLink = "https://raw.githubusercontent.com/evanfellman/PlatformerJavaEdition/master/config/";
+		String localVersion = "";
 		try {
 			FileReader versionReader = new FileReader("config/version");
-			String localVersion = "";
 			int u = 0;
 			while((u = versionReader.read()) != -1) {
 				localVersion += (char) u;
 			}
-			Scanner s = new Scanner((new URL(myLink + "version")).openStream());
-			if(!localVersion.equals(s.nextLine())) {
+			BufferedInputStream versionFromGitHub = new BufferedInputStream(new URL(myLink + "version").openStream());
+			byte buffer[] = new byte[1024];
+		    onlineVersion = "";
+		    while (versionFromGitHub.read(buffer, 0, 1024) != -1) {
+		        onlineVersion += new String(buffer);
+		    }
+		    versionFromGitHub.close();
+			if(!localVersion.equals(onlineVersion)) {
 				File jarFile = new File("./platformer.jar");
 				jarFile.delete();
 				BufferedInputStream jarFromGitHub = new BufferedInputStream(new URL("https://raw.githubusercontent.com/evanfellman/PlatformerJavaEdition/master/platformer.jar").openStream());
@@ -134,12 +140,35 @@ public class Main {
 			    localJar.close();
 			    jarFromGitHub.close();
 			}
-			s.close();
 			versionReader.close();
 		} catch(Exception e) {	}
 		File configFile = new File("config");
-		if(!configFile.exists()) {
-			configFile.mkdir();
+		if(configFile.exists() && onlineVersion.substring(0,1).equals("a") && !localVersion.equals(onlineVersion)) {
+			Stack<File> s = new Stack<File>();
+			s.push(configFile);
+			while(!s.isEmpty()) {
+				File x = s.pop();
+				if(x.isDirectory()) {
+					for(File u : x.listFiles()) {
+						s.push(u);
+					}
+				}
+				if(!x.getName().contains("level") && !x.getName().contains("config")) {
+					x.delete();
+				}
+			}
+		} else if(configFile.exists() && !localVersion.equals(onlineVersion)) {
+			FileWriter versionWriter = new FileWriter("config/version", false);
+			versionWriter.write(onlineVersion);
+			versionWriter.close();
+		}
+		if(!configFile.exists() || (onlineVersion.substring(0,1).equals("a") && !localVersion.equals(onlineVersion))) {
+			if(!configFile.exists()) {
+				configFile.mkdir();
+			}
+			FileWriter versionWriter = new FileWriter("config/version", false);
+			versionWriter.write(onlineVersion);
+			versionWriter.close();
 			boolean flag = true;
 			int i = 0;
 			while(flag) {
