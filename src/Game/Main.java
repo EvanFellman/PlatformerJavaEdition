@@ -111,23 +111,42 @@ public class Main {
 		window.add(loadingPanel);
 		window.setSize(300, 200);
 		window.setVisible(true);
-		String onlineVersion = "";
+		String onlineVersionJar = "";
+		String onlineVersionConfig = "";
 		String myLink = "https://raw.githubusercontent.com/evanfellman/PlatformerJavaEdition/master/config/";
-		String localVersion = "";
+		String localVersionJar = "";
+		String localVersionConfig = "";
 		try {
 			FileReader versionReader = new FileReader("config/version");
 			int u = 0;
+			boolean config = false;
 			while((u = versionReader.read()) != -1) {
-				localVersion += (char) u;
+				if((char) u == ':') {
+					config = true;
+				} else if(config) {
+					localVersionConfig += (char) u;
+				} else {
+					localVersionJar += (char) u;
+				}
 			}
 			BufferedInputStream versionFromGitHub = new BufferedInputStream(new URL(myLink + "version").openStream());
 			byte buffer[] = new byte[1024];
-		    onlineVersion = "";
+		    config = false;
 		    while (versionFromGitHub.read(buffer, 0, 1024) != -1) {
-		        onlineVersion += new String(buffer);
+		    	String s = new String(buffer);
+		    	for(int i = 0; i < s.length(); i++) {
+		    		String currentLetter = s.substring(i, i+1);
+		    		if(currentLetter.equals(":")) {
+		    			config = true;
+		    		} else if(config) {
+		    			onlineVersionConfig += currentLetter;
+		    		} else {
+		    			onlineVersionJar += currentLetter;
+		    		}
+		    	}
 		    }
 		    versionFromGitHub.close();
-			if(!localVersion.equals(onlineVersion)) {
+			if(!localVersionJar.equals(onlineVersionJar)) {
 				File jarFile = new File("./platformer.jar");
 				jarFile.delete();
 				BufferedInputStream jarFromGitHub = new BufferedInputStream(new URL("https://raw.githubusercontent.com/evanfellman/PlatformerJavaEdition/master/platformer.jar").openStream());
@@ -143,7 +162,7 @@ public class Main {
 			versionReader.close();
 		} catch(Exception e) {	}
 		File configFile = new File("config");
-		if(configFile.exists() && onlineVersion.substring(0,1).equals("a") && !localVersion.equals(onlineVersion)) {
+		if(configFile.exists() && !localVersionConfig.equals(onlineVersionConfig)) {
 			Stack<File> s = new Stack<File>();
 			s.push(configFile);
 			while(!s.isEmpty()) {
@@ -157,17 +176,17 @@ public class Main {
 					x.delete();
 				}
 			}
-		} else if(configFile.exists() && !localVersion.equals(onlineVersion)) {
+		} else if(configFile.exists() && (!localVersionConfig.equals(onlineVersionConfig) || !localVersionJar.equals(onlineVersionJar))) {
 			FileWriter versionWriter = new FileWriter("config/version", false);
-			versionWriter.write(onlineVersion);
+			versionWriter.write(onlineVersionJar + ":" + onlineVersionConfig);
 			versionWriter.close();
 		}
-		if(!configFile.exists() || (onlineVersion.substring(0,1).equals("a") && !localVersion.equals(onlineVersion))) {
+		if(!configFile.exists() || !localVersionConfig.equals(onlineVersionConfig)) {
 			if(!configFile.exists()) {
 				configFile.mkdir();
 			}
 			FileWriter versionWriter = new FileWriter("config/version", false);
-			versionWriter.write(onlineVersion);
+			versionWriter.write(onlineVersionJar + ":" + onlineVersionConfig);
 			versionWriter.close();
 			boolean flag = true;
 			int i = 0;
