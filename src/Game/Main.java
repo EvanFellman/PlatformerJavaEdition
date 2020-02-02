@@ -129,19 +129,24 @@ public class Main {
 					localVersionJar += (char) u;
 				}
 			}
+			versionReader.close();
+		} catch(Exception e) {	}
+		try {
 			BufferedInputStream versionFromGitHub = new BufferedInputStream(new URL(myLink + "version").openStream());
 			byte buffer[] = new byte[1024];
-		    config = false;
+		    boolean config = false;
 		    while (versionFromGitHub.read(buffer, 0, 1024) != -1) {
 		    	String s = new String(buffer);
 		    	for(int i = 0; i < s.length(); i++) {
 		    		String currentLetter = s.substring(i, i+1);
-		    		if(currentLetter.equals(":")) {
-		    			config = true;
-		    		} else if(config) {
-		    			onlineVersionConfig += currentLetter;
-		    		} else {
-		    			onlineVersionJar += currentLetter;
+		    		if(currentLetter.matches("[a-zA-Z0-9]+") || currentLetter.equals(":")) {
+			    		if(currentLetter.equals(":")) {
+			    			config = true;
+			    		} else if(config) {
+			    			onlineVersionConfig += currentLetter;
+			    		} else {
+			    			onlineVersionJar += currentLetter;
+			    		}
 		    		}
 		    	}
 		    }
@@ -159,7 +164,6 @@ public class Main {
 			    localJar.close();
 			    jarFromGitHub.close();
 			}
-			versionReader.close();
 		} catch(Exception e) {	}
 		File configFile = new File("config");
 		if(configFile.exists() && !localVersionConfig.equals(onlineVersionConfig)) {
@@ -185,7 +189,7 @@ public class Main {
 			if(!configFile.exists()) {
 				configFile.mkdir();
 			}
-			FileWriter versionWriter = new FileWriter("config/version", false);
+			FileWriter versionWriter = new FileWriter("config/version");
 			versionWriter.write(onlineVersionJar + ":" + onlineVersionConfig);
 			versionWriter.close();
 			boolean flag = true;
