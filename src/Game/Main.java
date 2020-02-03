@@ -116,6 +116,7 @@ public class Main {
 		String myLink = "https://raw.githubusercontent.com/evanfellman/PlatformerJavaEdition/master/config/";
 		String localVersionJar = "";
 		String localVersionConfig = "";
+		boolean canAccessGitHub = false;
 		try {
 			FileReader versionReader = new FileReader("config/version");
 			int u = 0;
@@ -151,7 +152,10 @@ public class Main {
 		    	}
 		    }
 		    versionFromGitHub.close();
-			if(!localVersionJar.equals(onlineVersionJar)) {
+		    if(onlineVersionJar.length() > 0) {
+		    	canAccessGitHub = true;
+		    }
+			if(canAccessGitHub && !localVersionJar.equals(onlineVersionJar)) {
 				File jarFile = new File("./platformer.jar");
 				jarFile.delete();
 				BufferedInputStream jarFromGitHub = new BufferedInputStream(new URL("https://raw.githubusercontent.com/evanfellman/PlatformerJavaEdition/master/platformer.jar").openStream());
@@ -165,74 +169,76 @@ public class Main {
 			    jarFromGitHub.close();
 			}
 		} catch(Exception e) {	}
-		File configFile = new File("config");
-		if(configFile.exists() && !localVersionConfig.equals(onlineVersionConfig)) {
-			Stack<File> s = new Stack<File>();
-			s.push(configFile);
-			while(!s.isEmpty()) {
-				File x = s.pop();
-				if(x.isDirectory()) {
-					for(File u : x.listFiles()) {
-						s.push(u);
+		if(canAccessGitHub) {
+			File configFile = new File("config");
+			if(configFile.exists() && !localVersionConfig.equals(onlineVersionConfig)) {
+				Stack<File> s = new Stack<File>();
+				s.push(configFile);
+				while(!s.isEmpty()) {
+					File x = s.pop();
+					if(x.isDirectory()) {
+						for(File u : x.listFiles()) {
+							s.push(u);
+						}
+					}
+					if(!x.getName().contains("level") && !x.getName().contains("config")) {
+						x.delete();
 					}
 				}
-				if(!x.getName().contains("level") && !x.getName().contains("config")) {
-					x.delete();
+			} else if(configFile.exists() && (!localVersionConfig.equals(onlineVersionConfig) || !localVersionJar.equals(onlineVersionJar))) {
+				FileWriter versionWriter = new FileWriter("config/version", false);
+				versionWriter.write(onlineVersionJar + ":" + onlineVersionConfig);
+				versionWriter.close();
+			}
+			if(!configFile.exists() || !localVersionConfig.equals(onlineVersionConfig)) {
+				if(!configFile.exists()) {
+					configFile.mkdir();
 				}
-			}
-		} else if(configFile.exists() && (!localVersionConfig.equals(onlineVersionConfig) || !localVersionJar.equals(onlineVersionJar))) {
-			FileWriter versionWriter = new FileWriter("config/version", false);
-			versionWriter.write(onlineVersionJar + ":" + onlineVersionConfig);
-			versionWriter.close();
-		}
-		if(!configFile.exists() || !localVersionConfig.equals(onlineVersionConfig)) {
-			if(!configFile.exists()) {
-				configFile.mkdir();
-			}
-			FileWriter versionWriter = new FileWriter("config/version");
-			versionWriter.write(onlineVersionJar + ":" + onlineVersionConfig);
-			versionWriter.close();
-			boolean flag = true;
-			int i = 0;
-			while(flag) {
+				FileWriter versionWriter = new FileWriter("config/version");
+				versionWriter.write(onlineVersionJar + ":" + onlineVersionConfig);
+				versionWriter.close();
+				boolean flag = true;
+				int i = 0;
+				while(flag) {
+					try {
+						URL test = new URL(myLink + Integer.toString(i) + ".png");
+						BufferedImage image = ImageIO.read(test);
+						ImageIO.write(image, "PNG", new File("config/" + Integer.toString(i) + ".png"));
+						i++;
+					} catch(Exception e) {
+						flag = false;
+					}
+				}
 				try {
-					URL test = new URL(myLink + Integer.toString(i) + ".png");
+					BufferedInputStream musicFromGitHub = new BufferedInputStream(new URL(myLink + "music.wav").openStream());
+					FileOutputStream musicOut = new FileOutputStream("config/music.wav");
+					byte data[] = new byte[1024];
+				    int byteContent;
+				    while ((byteContent = musicFromGitHub.read(data, 0, 1024)) != -1) {
+				        musicOut.write(data, 0, byteContent);
+				    }
+				    musicOut.close();
+				    musicFromGitHub.close();
+				} catch(Exception e) {	}
+				try {
+					URL test = new URL(myLink + "background.png");
 					BufferedImage image = ImageIO.read(test);
-					ImageIO.write(image, "PNG", new File("config/" + Integer.toString(i) + ".png"));
+					ImageIO.write(image, "PNG", new File("config/background.png"));
 					i++;
-				} catch(Exception e) {
-					flag = false;
-				}
+				} catch(Exception e) {	}
+				try {
+					URL test = new URL(myLink + "textures.png");
+					BufferedImage image = ImageIO.read(test);
+					ImageIO.write(image, "PNG", new File("config/textures.png"));
+					i++;
+				} catch(Exception e) {	}
+				try {
+					File optionsFile = new File("config/options");
+					FileWriter writer = new FileWriter(optionsFile);
+					writer.write("000");
+					writer.close();
+				} catch(Exception e) {	}
 			}
-			try {
-				BufferedInputStream musicFromGitHub = new BufferedInputStream(new URL(myLink + "music.wav").openStream());
-				FileOutputStream musicOut = new FileOutputStream("config/music.wav");
-				byte data[] = new byte[1024];
-			    int byteContent;
-			    while ((byteContent = musicFromGitHub.read(data, 0, 1024)) != -1) {
-			        musicOut.write(data, 0, byteContent);
-			    }
-			    musicOut.close();
-			    musicFromGitHub.close();
-			} catch(Exception e) {	}
-			try {
-				URL test = new URL(myLink + "background.png");
-				BufferedImage image = ImageIO.read(test);
-				ImageIO.write(image, "PNG", new File("config/background.png"));
-				i++;
-			} catch(Exception e) {	}
-			try {
-				URL test = new URL(myLink + "textures.png");
-				BufferedImage image = ImageIO.read(test);
-				ImageIO.write(image, "PNG", new File("config/textures.png"));
-				i++;
-			} catch(Exception e) {	}
-			try {
-				File optionsFile = new File("config/options");
-				FileWriter writer = new FileWriter(optionsFile);
-				writer.write("000");
-				writer.close();
-			} catch(Exception e) {	}
 		}
 		try {
 			texturedImg = ImageIO.read(new File("config/textures.png"));
