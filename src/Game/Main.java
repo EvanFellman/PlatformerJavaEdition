@@ -167,6 +167,19 @@ public class Main {
 			    }
 			    localJar.close();
 			    jarFromGitHub.close();
+			    FileWriter versionWriter = new FileWriter("config/version", false);
+				versionWriter.write(onlineVersionJar + ":" + onlineVersionConfig);
+				versionWriter.close();
+			    loadingLabel.setText("Updated!");
+			    JLabel restartmeLabel = new JLabel("Please restart me");
+			    restartmeLabel.setFont(new Font("TimesRoman", Font.BOLD, 20));
+			    restartmeLabel.setForeground(Color.WHITE);
+			    restartmeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+			    loadingPanel.add(restartmeLabel);
+			    loadingPanel.add(Box.createVerticalGlue());
+			    while(true) {
+			    	Thread.sleep(1000000000);
+			    }
 			}
 		} catch(Exception e) {	}
 		if(canAccessGitHub) {
