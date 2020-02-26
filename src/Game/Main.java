@@ -167,22 +167,25 @@ public class Main {
 			    }
 			    localJar.close();
 			    jarFromGitHub.close();
-			    FileWriter versionWriter = new FileWriter("config/version", false);
+			    FileWriter versionWriter = new FileWriter("config/version");
 				versionWriter.write(onlineVersionJar + ":" + onlineVersionConfig);
 				versionWriter.close();
-			    loadingLabel.setText("Updated!");
+			}
+		} catch(Exception e) {	}
+		if(canAccessGitHub) {
+			if(!localVersionJar.equals(onlineVersionJar)) {
+				loadingLabel.setText("Updated!");
 			    JLabel restartmeLabel = new JLabel("Please restart me");
 			    restartmeLabel.setFont(new Font("TimesRoman", Font.BOLD, 20));
 			    restartmeLabel.setForeground(Color.WHITE);
 			    restartmeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 			    loadingPanel.add(restartmeLabel);
 			    loadingPanel.add(Box.createVerticalGlue());
+			    window.repaint();
 			    while(true) {
 			    	Thread.sleep(1000000000);
 			    }
 			}
-		} catch(Exception e) {	}
-		if(canAccessGitHub) {
 			File configFile = new File("config");
 			if(configFile.exists() && !localVersionConfig.equals(onlineVersionConfig)) {
 				Stack<File> s = new Stack<File>();
