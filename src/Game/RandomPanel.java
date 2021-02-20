@@ -56,7 +56,7 @@ public class RandomPanel extends javax.swing.JPanel {
 					try {
 						if(Main.level.get(i).getX() >= nextX) {
 							loadTemplate(nextX, nextY);
-						} else {
+						} else if(!Main.level.get(i).id.contains("player")){
 							Main.level.get(i).display(g);
 						}
 					} catch(Exception e) {

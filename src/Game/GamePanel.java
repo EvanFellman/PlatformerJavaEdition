@@ -41,7 +41,9 @@ public class GamePanel extends JPanel {
 				if(x <= Main.window.getWidth() && x >= - 1* Main.window.getWidth() && y <= Main.window.getHeight() && y >= -1 * Main.window.getHeight()) {
 					playerDied = playerDied || Main.level.get(i).move();
 					try {
-						Main.level.get(i).display(g);
+						if(!Main.level.get(i).id.contains("player")) {
+							Main.level.get(i).display(g);
+						}
 					} catch(Exception e) { }
 				}
 			}

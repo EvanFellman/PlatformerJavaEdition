@@ -5,3 +5,4 @@ public class Wall extends Thing {
 		super(x, y, "wall", 1, 1);
 	}
 }
+

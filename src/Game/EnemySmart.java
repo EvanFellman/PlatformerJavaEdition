@@ -2,9 +2,20 @@ package Game;
 
 public class EnemySmart extends Enemy {
 	public double speed;
+	private double maxSpeed;
+	
 	public EnemySmart(double x, double y, double speed) {
 		super(x, y, "enemy smart", 2, 3);
 		this.speed = speed;
+		this.maxSpeed = speed;
+	}
+	
+	private static double min(double x, double y) {
+		if(x < y) {
+			return x;
+		} else {
+			return y;
+		}
 	}
 	
 	public boolean move() {
@@ -16,11 +27,11 @@ public class EnemySmart extends Enemy {
 		}
 		//set dx
 		if(this.dx == 0) {
-			this.dx = player.getX() < this.x ? this.speed * -1 : this.speed;
+			this.dx = player.getX() < this.x ? this.maxSpeed * -1 : this.maxSpeed;
 		} else if(player.getX() < this.x - (Main.SPRITE_WIDTH * 2)) {
-			this.dx = this.speed * -1;
+			this.dx = this.maxSpeed * -1;
 		} else if(player.getX() > this.x + (Main.SPRITE_WIDTH * 2)) {
-			this.dx = this.speed;
+			this.dx = this.maxSpeed;
 		}
 		//Figure out if allowed to jump
 		boolean wallDirectlyBelow = false;
@@ -37,6 +48,7 @@ public class EnemySmart extends Enemy {
 			}
 		}
 		if(wallDirectlyBelow) {
+			this.maxSpeed = speed;
 			//Can jump
 			boolean wallNextToMe = false;
 			if(this.dx < 0) {
@@ -69,29 +81,27 @@ public class EnemySmart extends Enemy {
 			//Now I know if there is a wall directly next to me
 			boolean floorLeft = false;
 			if(this.dx < 0) {
-				for(int i = -1; i <= 0; i++) {
-					for(int j = 0; j <= 1; j++) {
-						Thing a = Main.getFromMapMoving(this.x + (i * Main.SPRITE_WIDTH), this.y + (j * Main.SPRITE_HEIGHT));
-						if (a != null && this.isNextTo(a) && !this.equals(a) && a.id.contains("enemy") && this.y < a.y) {
-							floorLeft = true;
-							break;
-						}
-						a = Main.getFromMapStable(this.x + (i * Main.SPRITE_WIDTH), this.y + (j * Main.SPRITE_HEIGHT));
-						if (a != null && this.isNextTo(a) && !this.equals(a) && a.id.contains("wall") && this.y < a.y) {
-							floorLeft = true;
-							break;
-						}
+				for(int j = 0; j <= 1; j++) {
+					Thing a = Main.getFromMapMoving(this.x + Main.SPRITE_WIDTH - (1 + this.speed), this.y + (j * Main.SPRITE_HEIGHT));
+					if (a != null && this.isNear(a) && !this.equals(a) && a.id.contains("enemy") && this.y < a.y) {
+						floorLeft = true;
+						break;
+					}
+					a = Main.getFromMapStable(this.x + Main.SPRITE_WIDTH - (1 + this.speed), this.y + (j * Main.SPRITE_HEIGHT));
+					if (a != null && this.isNear(a) && !this.equals(a) && a.id.contains("wall") && this.y < a.y) {
+						floorLeft = true;
+						break;
 					}
 				}
 			} else if(this.dx > 0) {
 				for(int j = 0; j <= 1; j++) {
-					Thing a = Main.getFromMapMoving(this.x + Main.SPRITE_WIDTH, this.y + (j * Main.SPRITE_HEIGHT));
-					if (a != null && this.isNextTo(a) && !this.equals(a) && a.id.contains("enemy") && this.y < a.y) {
+					Thing a = Main.getFromMapMoving(this.x + 0.5, this.y + (j * Main.SPRITE_HEIGHT));
+					if (a != null && this.isNear(a) && !this.equals(a) && a.id.contains("enemy") && this.y < a.y) {
 						floorLeft = true;
 						break;
 					}
-					a = Main.getFromMapStable(this.x + Main.SPRITE_WIDTH, this.y + (j * Main.SPRITE_HEIGHT));
-					if (a != null && this.isNextTo(a) && !this.equals(a) && a.id.contains("wall") && this.y < a.y) {
+					a = Main.getFromMapStable(this.x + 0.5, this.y + (j * Main.SPRITE_HEIGHT));
+					if (a != null && this.isNear(a) && !this.equals(a) && a.id.contains("wall") && this.y < a.y) {
 						floorLeft = true;
 						break;
 					}
@@ -102,59 +112,115 @@ public class EnemySmart extends Enemy {
 				boolean somethingToJumpTo = false;
 				boolean somethingToFallTo = false;
 				if(this.dx > 0) {
-					for(int i = 1; i <= (this.speed == Main.FAST_SPEED ? 4 : 3); i++) {
-						for(int j = -2; j <= 1; j++) {
-							Thing a = Main.getFromMapStable(this.x + (i * Main.SPRITE_WIDTH), this.y + (j * Main.SPRITE_HEIGHT));
-							Thing aboveA = Main.getFromMapStable(this.x + (i * Main.SPRITE_WIDTH), this.y + ((j - 1) * Main.SPRITE_HEIGHT));
+					for(double s = 0.5; s < this.maxSpeed; s += 0.1) {
+						for(double t = 1; t <= 100; t+=0.1) {
+							Thing a = Main.getFromMapStable(this.x + (int)(t * s), (int)(this.y + 1 + (t * -10) + (0.5 * Main.GRAVITY * t * t))); 
+							Thing aboveA = Main.getFromMapStable(this.x + (int)(t * s), (int)(this.y + (t * -10) + (0.5 * Main.GRAVITY * t * t)));
 							if((aboveA == null || !aboveA.id.contains("wall")) && a != null && a.id.contains("wall")) {
 								somethingToJumpTo = true;
+								this.maxSpeed = s;
 							}
-							a = Main.getFromMapMoving(this.x + (i * Main.SPRITE_WIDTH), this.y + (j * Main.SPRITE_HEIGHT));
+							a = Main.getFromMapMoving(this.x + (int)(t * s), (int)(this.y + 1 + (t * -10) + (0.5 * Main.GRAVITY * t * t))); 
 							if((aboveA == null || !aboveA.id.contains("wall")) && a != null && a.id.contains("enemy")) {
 								somethingToJumpTo = true;
+								this.maxSpeed = min(s, this.maxSpeed);
+							}
+						}
+//					for(int i = 1; i <= (this.speed == Main.FAST_SPEED ? 4 : 3); i++) {
+//						for(int j = -2; j <= 1; j++) {
+//							Thing a = Main.getFromMapStable(this.x + (i * Main.SPRITE_WIDTH), this.y + (j * Main.SPRITE_HEIGHT));
+//							Thing aboveA = Main.getFromMapStable(this.x + (i * Main.SPRITE_WIDTH), this.y + ((j - 1) * Main.SPRITE_HEIGHT));
+//							if((aboveA == null || !aboveA.id.contains("wall")) && a != null && a.id.contains("wall")) {
+//								somethingToJumpTo = true;
+//							}
+//							a = Main.getFromMapMoving(this.x + (i * Main.SPRITE_WIDTH), this.y + (j * Main.SPRITE_HEIGHT));
+//							if((aboveA == null || !aboveA.id.contains("wall")) && a != null && a.id.contains("enemy")) {
+//								somethingToJumpTo = true;
+//							}
+//						}
+//					}
+						for(double t = 1; t <= 100; t+=0.1) {
+							Thing a = Main.getFromMapStable(this.x + (int)(t * s), (int)(this.y + 1 + (0.5 * Main.GRAVITY * t * t))); 
+							Thing aboveA = Main.getFromMapStable(this.x + (int)(t * s), (int)(this.y + (t * -10) + (0.5 * Main.GRAVITY * t * t)));
+							if((aboveA == null || !aboveA.id.contains("wall")) && a != null && a.id.contains("wall")) {
+								somethingToFallTo = true;
+								this.maxSpeed = min(s, this.maxSpeed);
+							}
+							a = Main.getFromMapMoving(this.x + (int)(t * s), (int)(this.y + 1 + (0.5 * Main.GRAVITY * t * t))); 
+							if((aboveA == null || !aboveA.id.contains("wall")) && a != null && a.id.contains("enemy")) {
+								somethingToFallTo = true;
+								this.maxSpeed = min(s, this.maxSpeed);
 							}
 						}
 					}
-					for(int i = 0; i <= (this.speed == Main.FAST_SPEED ? 4 : 3); i++) {
-						for(int j = 2; j <= 5; j++) {
-							Thing a = Main.getFromMapStable(this.x + (i * Main.SPRITE_WIDTH), this.y + (j * Main.SPRITE_HEIGHT));
-							Thing aboveA = Main.getFromMapStable(this.x + (i * Main.SPRITE_WIDTH), this.y + ((j - 1) * Main.SPRITE_HEIGHT));
-							if((aboveA == null || !aboveA.id.contains("wall")) && a != null && a.id.contains("wall")) {
-								somethingToFallTo = true;
-							}
-							a = Main.getFromMapMoving(this.x + (i * Main.SPRITE_WIDTH), this.y + (j * Main.SPRITE_HEIGHT));
-							if((aboveA == null || !aboveA.id.contains("wall")) && a != null && a.id.contains("enemy")) {
-								somethingToFallTo = true;
-							}
-						}
-					}
+//					for(int i = 0; i <= (this.speed == Main.FAST_SPEED ? 4 : 3); i++) {
+//						for(int j = 2; j <= 5; j++) {
+//							Thing a = Main.getFromMapStable(this.x + (i * Main.SPRITE_WIDTH), this.y + (j * Main.SPRITE_HEIGHT));
+//							Thing aboveA = Main.getFromMapStable(this.x + (i * Main.SPRITE_WIDTH), this.y + ((j - 1) * Main.SPRITE_HEIGHT));
+//							if((aboveA == null || !aboveA.id.contains("wall")) && a != null && a.id.contains("wall")) {
+//								somethingToFallTo = true;
+//							}
+//							a = Main.getFromMapMoving(this.x + (i * Main.SPRITE_WIDTH), this.y + (j * Main.SPRITE_HEIGHT));
+//							if((aboveA == null || !aboveA.id.contains("wall")) && a != null && a.id.contains("enemy")) {
+//								somethingToFallTo = true;
+//							}
+//						}
+//					}
 				} else {
-					for(int i = (this.speed == Main.FAST_SPEED ? -3 : -2); i <= -1; i++) {
-						for(int j = -2; j <= 1; j++) {
-							Thing a = Main.getFromMapStable(this.x + (i * Main.SPRITE_WIDTH), this.y + (j * Main.SPRITE_HEIGHT));
-							Thing aboveA = Main.getFromMapStable(this.x + (i * Main.SPRITE_WIDTH), this.y + ((j - 1) * Main.SPRITE_HEIGHT));
+					for(double s = 0.5; s < this.maxSpeed; s += 0.1) {
+						for(double t = 1; t <= 100; t+=0.1) {
+							Thing a = Main.getFromMapStable(this.x - (int)(t * s), (int)(this.y + 1 + (t * -10) + (0.5 * Main.GRAVITY * t * t))); 
+							Thing aboveA = Main.getFromMapStable(this.x - (int)(t * s), (int)(this.y + (t * -10) + (0.5 * Main.GRAVITY * t * t)));
 							if((aboveA == null || !aboveA.id.contains("wall")) && a != null && a.id.contains("wall")) {
 								somethingToJumpTo = true;
+								this.maxSpeed = min(s, this.maxSpeed);
 							}
-							a = Main.getFromMapMoving(this.x + (i * Main.SPRITE_WIDTH), this.y + (j * Main.SPRITE_HEIGHT));
+							a = Main.getFromMapMoving(this.x - (int)(t * s), (int)(this.y + 1 + (t * -10) + (0.5 * Main.GRAVITY * t * t))); 
 							if((aboveA == null || !aboveA.id.contains("wall")) && a != null && a.id.contains("enemy")) {
 								somethingToJumpTo = true;
+								this.maxSpeed = min(s, this.maxSpeed);
+							}
+						}
+//					for(int i = (this.speed == Main.FAST_SPEED ? -3 : -2); i <= -1; i++) {
+//						for(int j = -2; j <= 1; j++) {
+//							Thing a = Main.getFromMapStable(this.x + (i * Main.SPRITE_WIDTH), this.y + (j * Main.SPRITE_HEIGHT));
+//							Thing aboveA = Main.getFromMapStable(this.x + (i * Main.SPRITE_WIDTH), this.y + ((j - 1) * Main.SPRITE_HEIGHT));
+//							if((aboveA == null || !aboveA.id.contains("wall")) && a != null && a.id.contains("wall")) {
+//								somethingToJumpTo = true;
+//							}
+//							a = Main.getFromMapMoving(this.x + (i * Main.SPRITE_WIDTH), this.y + (j * Main.SPRITE_HEIGHT));
+//							if((aboveA == null || !aboveA.id.contains("wall")) && a != null && a.id.contains("enemy")) {
+//								somethingToJumpTo = true;
+//							}
+//						}
+//					}
+						for(double t = 1; t <= 100; t+=0.1) {
+							Thing a = Main.getFromMapStable(this.x - (int)(t * s), (int)(this.y + 1 + (0.5 * Main.GRAVITY * t * t))); 
+							Thing aboveA = Main.getFromMapStable(this.x - (int)(t * s), (int)(this.y + (t * -10) + (0.5 * Main.GRAVITY * t * t)));
+							if((aboveA == null || !aboveA.id.contains("wall")) && a != null && a.id.contains("wall")) {
+								somethingToFallTo = true;
+								this.maxSpeed = min(s, this.maxSpeed);
+							}
+							a = Main.getFromMapMoving(this.x - (int)(t * s), (int)(this.y + 1 + (0.5 * Main.GRAVITY * t * t))); 
+							if((aboveA == null || !aboveA.id.contains("wall")) && a != null && a.id.contains("enemy") && !a.equals(this)) {
+								somethingToFallTo = true;
+								this.maxSpeed = min(s, this.maxSpeed);
 							}
 						}
 					}
-					for(int i = (this.speed == Main.FAST_SPEED ? -3 : -2); i <= 0; i++) {
-						for(int j = 2; j <= 5; j++) {
-							Thing a = Main.getFromMapStable(this.x + (i * Main.SPRITE_WIDTH), this.y + (j * Main.SPRITE_HEIGHT));
-							Thing aboveA = Main.getFromMapStable(this.x + (i * Main.SPRITE_WIDTH), this.y + ((j - 1) * Main.SPRITE_HEIGHT));
-							if((aboveA == null || !aboveA.id.contains("wall")) && a != null && a.id.contains("wall")) {
-								somethingToFallTo = true;
-							}
-							a = Main.getFromMapMoving(this.x + (i * Main.SPRITE_WIDTH), this.y + (j * Main.SPRITE_HEIGHT));
-							if((aboveA == null || !aboveA.id.contains("wall")) && a != null && a.id.contains("enemy")) {
-								somethingToFallTo = true;
-							}
-						}
-					}
+//					for(int i = (this.speed == Main.FAST_SPEED ? -3 : -2); i <= 0; i++) {
+//						for(int j = 2; j <= 5; j++) {
+//							Thing a = Main.getFromMapStable(this.x + (i * Main.SPRITE_WIDTH), this.y + (j * Main.SPRITE_HEIGHT));
+//							Thing aboveA = Main.getFromMapStable(this.x + (i * Main.SPRITE_WIDTH), this.y + ((j - 1) * Main.SPRITE_HEIGHT));
+//							if((aboveA == null || !aboveA.id.contains("wall")) && a != null && a.id.contains("wall")) {
+//								somethingToFallTo = true;
+//							}
+//							a = Main.getFromMapMoving(this.x + (i * Main.SPRITE_WIDTH), this.y + (j * Main.SPRITE_HEIGHT));
+//							if((aboveA == null || !aboveA.id.contains("wall")) && a != null && a.id.contains("enemy")) {
+//								somethingToFallTo = true;
+//							}
+//						}
+//					}
 				}
 				if(!somethingToFallTo && somethingToJumpTo) {
 					this.dy = -10;

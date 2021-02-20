@@ -48,6 +48,15 @@ public abstract class Thing {
 		double y = this.y - other.getY();
 		return x <= Main.SPRITE_WIDTH && x >= -1 * Main.SPRITE_WIDTH && y <= Main.SPRITE_HEIGHT && y >= -1 * Main.SPRITE_HEIGHT; 
 	}
+
+	public boolean isNear(Thing other) {
+		if(other == null) {
+			return false;
+		}
+		double x = this.x - other.getX();
+		double y = this.y - other.getY();
+		return x <= 1.5 * Main.SPRITE_WIDTH && x >= -1.5 * Main.SPRITE_WIDTH && y <= 2 * Main.SPRITE_HEIGHT && y >= -2 * Main.SPRITE_HEIGHT; 
+	}
 	
 	public boolean toLeftOf(Thing other) {
 		double x = this.x - other.getX();
